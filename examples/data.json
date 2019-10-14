@@ -1,0 +1,797 @@
+{
+    "data": {
+        "geometries": [
+            {
+                "type": "Point",
+                "coordinates": [
+                    37.462268102,
+                    55.721059521
+                ]
+            }
+        ],
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                37.462268102,
+                55.721059521
+            ]
+        },
+        "properties": {
+            "name": "\u041f\u043e\u043b\u0438\u043a\u043b\u0438\u043d\u0438\u043a\u0430 \u2116 40",
+            "description": "\u041f\u043e\u043b\u0438\u043a\u043b\u0438\u043d\u0438\u043a\u0430 \u2116 40",
+            "currentTime": 1571038105016,
+            "tzOffset": 10800,
+            "StopMetaData": {
+                "id": "stop__9650362",
+                "name": "\u041f\u043e\u043b\u0438\u043a\u043b\u0438\u043d\u0438\u043a\u0430 \u2116 40",
+                "type": "urban",
+                "region": {
+                    "id": 213,
+                    "type": 6,
+                    "parent_id": 1,
+                    "capital_id": 0,
+                    "geo_parent_id": 0,
+                    "city_id": 213,
+                    "name": "moscow",
+                    "native_name": "",
+                    "iso_name": "RU MOW",
+                    "is_main": true,
+                    "en_name": "Moscow",
+                    "short_en_name": "MSK",
+                    "phone_code": "495 499",
+                    "phone_code_old": "095",
+                    "zip_code": "",
+                    "population": 12506468,
+                    "synonyms": "Moskau, Moskva",
+                    "latitude": 55.753215,
+                    "longitude": 37.622504,
+                    "latitude_size": 0.878654,
+                    "longitude_size": 1.164423,
+                    "zoom": 10,
+                    "tzname": "Europe/Moscow",
+                    "official_languages": "ru",
+                    "widespread_languages": "ru",
+                    "suggest_list": [],
+                    "is_eu": false,
+                    "services_names": [
+                        "bs",
+                        "yaca",
+                        "weather",
+                        "afisha",
+                        "maps",
+                        "tv",
+                        "ad",
+                        "etrain",
+                        "subway",
+                        "delivery",
+                        "route"
+                    ],
+                    "ename": "moscow",
+                    "bounds": [
+                        [
+                            37.0402925,
+                            55.31141404514547
+                        ],
+                        [
+                            38.2047155,
+                            56.190068045145466
+                        ]
+                    ],
+                    "names": {
+                        "ablative": "",
+                        "accusative": "\u041c\u043e\u0441\u043a\u0432\u0443",
+                        "dative": "\u041c\u043e\u0441\u043a\u0432\u0435",
+                        "directional": "",
+                        "genitive": "\u041c\u043e\u0441\u043a\u0432\u044b",
+                        "instrumental": "\u041c\u043e\u0441\u043a\u0432\u043e\u0439",
+                        "locative": "",
+                        "nominative": "\u041c\u043e\u0441\u043a\u0432\u0430",
+                        "preposition": "\u0432",
+                        "prepositional": "\u041c\u043e\u0441\u043a\u0432\u0435"
+                    },
+                    "parent": {
+                        "id": 1,
+                        "type": 5,
+                        "parent_id": 3,
+                        "capital_id": 213,
+                        "geo_parent_id": 0,
+                        "city_id": 213,
+                        "name": "moscow-and-moscow-oblast",
+                        "native_name": "",
+                        "iso_name": "RU-MOS",
+                        "is_main": true,
+                        "en_name": "Moscow and Moscow Oblast",
+                        "short_en_name": "RU-MOS",
+                        "phone_code": "495 496 498 499",
+                        "phone_code_old": "",
+                        "zip_code": "",
+                        "population": 7503385,
+                        "synonyms": "\u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c, \u041f\u043e\u0434\u043c\u043e\u0441\u043a\u043e\u0432\u044c\u0435, Podmoskovye",
+                        "latitude": 55.815792,
+                        "longitude": 37.380031,
+                        "latitude_size": 2.705659,
+                        "longitude_size": 5.060749,
+                        "zoom": 8,
+                        "tzname": "Europe/Moscow",
+                        "official_languages": "ru",
+                        "widespread_languages": "ru",
+                        "suggest_list": [
+                            213,
+                            10716,
+                            10747,
+                            10758,
+                            20728,
+                            10740,
+                            10738,
+                            20523,
+                            10735,
+                            10734,
+                            10743,
+                            21622
+                        ],
+                        "is_eu": false,
+                        "services_names": [
+                            "bs",
+                            "yaca",
+                            "ad"
+                        ],
+                        "ename": "moscow-and-moscow-oblast",
+                        "bounds": [
+                            [
+                                34.8496565,
+                                54.439456064325434
+                            ],
+                            [
+                                39.9104055,
+                                57.14511506432543
+                            ]
+                        ],
+                        "names": {
+                            "ablative": "",
+                            "accusative": "\u041c\u043e\u0441\u043a\u0432\u0443 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0443\u044e \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+                            "dative": "\u041c\u043e\u0441\u043a\u0432\u0435 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438",
+                            "directional": "",
+                            "genitive": "\u041c\u043e\u0441\u043a\u0432\u044b \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438",
+                            "instrumental": "\u041c\u043e\u0441\u043a\u0432\u043e\u0439 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u044c\u044e",
+                            "locative": "",
+                            "nominative": "\u041c\u043e\u0441\u043a\u0432\u0430 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+                            "preposition": "\u0432",
+                            "prepositional": "\u041c\u043e\u0441\u043a\u0432\u0435 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438"
+                        },
+                        "parent": {
+                            "id": 225,
+                            "type": 3,
+                            "parent_id": 10001,
+                            "capital_id": 213,
+                            "geo_parent_id": 0,
+                            "city_id": 213,
+                            "name": "russia",
+                            "native_name": "",
+                            "iso_name": "RU",
+                            "is_main": false,
+                            "en_name": "Russia",
+                            "short_en_name": "RU",
+                            "phone_code": "7",
+                            "phone_code_old": "",
+                            "zip_code": "",
+                            "population": 146880432,
+                            "synonyms": "Russian Federation,\u0420\u043e\u0441\u0441\u0438\u0439\u0441\u043a\u0430\u044f \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044f",
+                            "latitude": 61.698653,
+                            "longitude": 99.505405,
+                            "latitude_size": 40.700127,
+                            "longitude_size": 171.643239,
+                            "zoom": 3,
+                            "tzname": "",
+                            "official_languages": "ru",
+                            "widespread_languages": "ru",
+                            "suggest_list": [
+                                213,
+                                2,
+                                65,
+                                54,
+                                47,
+                                43,
+                                66,
+                                51,
+                                56,
+                                172,
+                                39,
+                                62
+                            ],
+                            "is_eu": false,
+                            "services_names": [
+                                "bs",
+                                "yaca",
+                                "ad"
+                            ],
+                            "ename": "russia",
+                            "bounds": [
+                                [
+                                    13.683785499999999,
+                                    35.290400699917846
+                                ],
+                                [
+                                    -174.6729755,
+                                    75.99052769991785
+                                ]
+                            ],
+                            "names": {
+                                "ablative": "",
+                                "accusative": "\u0420\u043e\u0441\u0441\u0438\u044e",
+                                "dative": "\u0420\u043e\u0441\u0441\u0438\u0438",
+                                "directional": "",
+                                "genitive": "\u0420\u043e\u0441\u0441\u0438\u0438",
+                                "instrumental": "\u0420\u043e\u0441\u0441\u0438\u0435\u0439",
+                                "locative": "",
+                                "nominative": "\u0420\u043e\u0441\u0441\u0438\u044f",
+                                "preposition": "\u0432",
+                                "prepositional": "\u0420\u043e\u0441\u0441\u0438\u0438"
+                            }
+                        }
+                    }
+                },
+                "Transport": [
+                    {
+                        "lineId": "2036924115",
+                        "name": "641",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "213A_641_bus_mosgortrans",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644873",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    },
+                                    {
+                                        "id": "stop__9644900",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Estimated": {
+                                                "value": "1571038836",
+                                                "tzOffset": 10800,
+                                                "text": "10:40"
+                                            },
+                                            "vehicleId": "codd%5Fnew|38168%5F1013218"
+                                        },
+                                        {
+                                            "Estimated": {
+                                                "value": "1571039416",
+                                                "tzOffset": 10800,
+                                                "text": "10:50"
+                                            },
+                                            "vehicleId": "codd%5Fnew|38052%5F9985215"
+                                        }
+                                    ],
+                                    "Frequency": {
+                                        "text": "10\u00a0\u043c\u0438\u043d",
+                                        "value": 600,
+                                        "begin": {
+                                            "value": "1571021847",
+                                            "tzOffset": 10800,
+                                            "text": "5:57"
+                                        },
+                                        "end": {
+                                            "value": "1571092047",
+                                            "tzOffset": 10800,
+                                            "text": "1:27"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=2036924115&ll=37.467819%2C55.714310&name=641&r=1326&type=bus",
+                        "seoname": "641"
+                    },
+                    {
+                        "lineId": "213_104_bus_mosgortrans",
+                        "name": "104",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "213A_104_bus_mosgortrans",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644114",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0424\u0438\u043b\u0451\u0432\u0441\u043a\u0438\u0439 \u043f\u0430\u0440\u043a"
+                                    },
+                                    {
+                                        "id": "3222621337",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0424\u0438\u043b\u0451\u0432\u0441\u043a\u0438\u0439 \u043f\u0430\u0440\u043a"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Estimated": {
+                                                "value": "1571038652",
+                                                "tzOffset": 10800,
+                                                "text": "10:37"
+                                            },
+                                            "vehicleId": "codd%5Fnew|57950%5F8540"
+                                        }
+                                    ],
+                                    "Frequency": {
+                                        "text": "23\u00a0\u043c\u0438\u043d",
+                                        "value": 1380,
+                                        "begin": {
+                                            "value": "1571032732",
+                                            "tzOffset": 10800,
+                                            "text": "8:58"
+                                        },
+                                        "end": {
+                                            "value": "1571057572",
+                                            "tzOffset": 10800,
+                                            "text": "15:52"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "threadId": "104lA_bus_default",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9649243",
+                                        "name": "\u041b\u0435\u0441"
+                                    },
+                                    {
+                                        "id": "3222621337",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0424\u0438\u043b\u0451\u0432\u0441\u043a\u0438\u0439 \u043f\u0430\u0440\u043a"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [],
+                                    "Frequency": {
+                                        "text": "25\u00a0\u043c\u0438\u043d",
+                                        "value": 1500,
+                                        "begin": {
+                                            "value": "1571060535",
+                                            "tzOffset": 10800,
+                                            "text": "16:42"
+                                        },
+                                        "end": {
+                                            "value": "1571072175",
+                                            "tzOffset": 10800,
+                                            "text": "19:56"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "threadId": "213G_104_bus_mosgortrans",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644114",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0424\u0438\u043b\u0451\u0432\u0441\u043a\u0438\u0439 \u043f\u0430\u0440\u043a"
+                                    },
+                                    {
+                                        "id": "stop__9649243",
+                                        "name": "\u041b\u0435\u0441"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": []
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=213_104_bus_mosgortrans&ll=37.450442%2C55.737056&name=104&r=3200&type=bus",
+                        "seoname": "104"
+                    },
+                    {
+                        "lineId": "213_77_bus_mosgortrans",
+                        "name": "77",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "213A_77_bus_mosgortrans",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644873",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    },
+                                    {
+                                        "id": "stop__9644900",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Scheduled": {
+                                                "value": "1571038620",
+                                                "tzOffset": 10800,
+                                                "text": "10:37"
+                                            },
+                                            "Estimated": {
+                                                "value": "1571038597",
+                                                "tzOffset": 10800,
+                                                "text": "10:36"
+                                            },
+                                            "vehicleId": "codd%5Fnew|56439%5F8278"
+                                        },
+                                        {
+                                            "Scheduled": {
+                                                "value": "1571039700",
+                                                "tzOffset": 10800,
+                                                "text": "10:55"
+                                            }
+                                        },
+                                        {
+                                            "Scheduled": {
+                                                "value": "1571040720",
+                                                "tzOffset": 10800,
+                                                "text": "11:12"
+                                            }
+                                        }
+                                    ],
+                                    "departureTime": "10:37"
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=213_77_bus_mosgortrans&ll=37.471418%2C55.714410&name=77&r=1248&type=bus",
+                        "seoname": "77"
+                    },
+                    {
+                        "lineId": "3236900387",
+                        "name": "325",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "3236925757",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9646857",
+                                        "name": "\u041c\u0413\u0423"
+                                    },
+                                    {
+                                        "id": "stop__9646860",
+                                        "name": "\u041c\u0413\u0423"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [],
+                                    "Frequency": {
+                                        "text": "30\u00a0\u043c\u0438\u043d",
+                                        "value": 1800,
+                                        "begin": {
+                                            "value": "1571024701",
+                                            "tzOffset": 10800,
+                                            "text": "6:45"
+                                        },
+                                        "end": {
+                                            "value": "1571078341",
+                                            "tzOffset": 10800,
+                                            "text": "21:39"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=3236900387&ll=37.491630%2C55.713138&name=325&r=2260&type=bus",
+                        "seoname": "325"
+                    },
+                    {
+                        "lineId": "329_bus_default",
+                        "name": "329",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "329A_bus_default",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9713960",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u042e\u0433\u043e-\u0417\u0430\u043f\u0430\u0434\u043d\u0430\u044f"
+                                    },
+                                    {
+                                        "id": "stop__9713960",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u042e\u0433\u043e-\u0417\u0430\u043f\u0430\u0434\u043d\u0430\u044f"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Estimated": {
+                                                "value": "1571038481",
+                                                "tzOffset": 10800,
+                                                "text": "10:34"
+                                            },
+                                            "vehicleId": "codd%5Fnew|34923%5F9965203"
+                                        },
+                                        {
+                                            "Estimated": {
+                                                "value": "1571039317",
+                                                "tzOffset": 10800,
+                                                "text": "10:48"
+                                            },
+                                            "vehicleId": "codd%5Fnew|34903%5F9965207"
+                                        }
+                                    ],
+                                    "Frequency": {
+                                        "text": "18\u00a0\u043c\u0438\u043d",
+                                        "value": 1080,
+                                        "begin": {
+                                            "value": "1571025145",
+                                            "tzOffset": 10800,
+                                            "text": "6:52"
+                                        },
+                                        "end": {
+                                            "value": "1571074405",
+                                            "tzOffset": 10800,
+                                            "text": "20:33"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=329_bus_default&ll=37.473609%2C55.694358&name=329&r=3689&type=bus",
+                        "seoname": "329"
+                    },
+                    {
+                        "lineId": "641k_bus_default",
+                        "name": "641\u043a",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "641kA_bus_default",
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644873",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    },
+                                    {
+                                        "id": "stop__9644900",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Estimated": {
+                                                "value": "1571038478",
+                                                "tzOffset": 10800,
+                                                "text": "10:34"
+                                            },
+                                            "vehicleId": "codd%5Fnew|38206%5F1024502"
+                                        },
+                                        {
+                                            "Estimated": {
+                                                "value": "1571039106",
+                                                "tzOffset": 10800,
+                                                "text": "10:45"
+                                            },
+                                            "vehicleId": "codd%5Fnew|38204%5F1024505"
+                                        }
+                                    ],
+                                    "Frequency": {
+                                        "text": "14\u00a0\u043c\u0438\u043d",
+                                        "value": 840,
+                                        "begin": {
+                                            "value": "1571021311",
+                                            "tzOffset": 10800,
+                                            "text": "5:48"
+                                        },
+                                        "end": {
+                                            "value": "1571091511",
+                                            "tzOffset": 10800,
+                                            "text": "1:18"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=641k_bus_default&ll=37.474030%2C55.716879&name=641%D0%BA&r=1243&type=bus",
+                        "seoname": "641k"
+                    }
+                ]
+            }
+        },
+        "searchResult": {
+            "requestId": "1571038105036123-2347066765-man2-5729",
+            "title": "\u041f\u043e\u043b\u0438\u043a\u043b\u0438\u043d\u0438\u043a\u0430 \u2116 40",
+            "description": "\u0420\u043e\u0441\u0441\u0438\u044f, \u041c\u043e\u0441\u043a\u0432\u0430, \u041a\u0440\u0435\u043c\u0435\u043d\u0447\u0443\u0433\u0441\u043a\u0430\u044f \u0443\u043b\u0438\u0446\u0430",
+            "address": "\u0420\u043e\u0441\u0441\u0438\u044f, \u041c\u043e\u0441\u043a\u0432\u0430, \u041a\u0440\u0435\u043c\u0435\u043d\u0447\u0443\u0433\u0441\u043a\u0430\u044f \u0443\u043b\u0438\u0446\u0430",
+            "coordinates": [
+                37.462268,
+                55.72106
+            ],
+            "bounds": [
+                [
+                    37.458284,
+                    55.7136968
+                ],
+                [
+                    37.466252,
+                    55.7284218
+                ]
+            ],
+            "displayCoordinates": [
+                37.462268,
+                55.72106
+            ],
+            "metro": [
+                {
+                    "id": "station__9858904",
+                    "name": "\u0421\u043b\u0430\u0432\u044f\u043d\u0441\u043a\u0438\u0439 \u0431\u0443\u043b\u044c\u0432\u0430\u0440",
+                    "distance": "1,5\u00a0\u043a\u043c",
+                    "distanceValue": 1463.09,
+                    "coordinates": [
+                        37.472940154,
+                        55.729326207
+                    ],
+                    "type": "metro",
+                    "color": "#003399"
+                },
+                {
+                    "id": "station__9858839",
+                    "name": "\u041a\u0443\u043d\u0446\u0435\u0432\u0441\u043a\u0430\u044f",
+                    "distance": "2\u00a0\u043a\u043c",
+                    "distanceValue": 1951.93,
+                    "coordinates": [
+                        37.446516101,
+                        55.73067404
+                    ],
+                    "type": "metro",
+                    "color": "#003399"
+                },
+                {
+                    "id": "station__9858840",
+                    "name": "\u041a\u0443\u043d\u0446\u0435\u0432\u0441\u043a\u0430\u044f",
+                    "distance": "2\u00a0\u043a\u043c",
+                    "distanceValue": 1969.47,
+                    "coordinates": [
+                        37.446472371,
+                        55.730818916
+                    ],
+                    "type": "metro",
+                    "color": "#0099cc"
+                }
+            ],
+            "stops": [
+                {
+                    "id": "stop__9650362",
+                    "name": "\u041f\u043e\u043b\u0438\u043a\u043b\u0438\u043d\u0438\u043a\u0430 \u2116 40",
+                    "distance": "0\u00a0\u043c",
+                    "distanceValue": 0.0537141,
+                    "coordinates": [
+                        37.462268102,
+                        55.721059521
+                    ],
+                    "type": "common"
+                },
+                {
+                    "id": "stop__9641466",
+                    "name": "\u0423\u043b\u0438\u0446\u0430 \u0412\u0430\u0442\u0443\u0442\u0438\u043d\u0430",
+                    "distance": "290\u00a0\u043c",
+                    "distanceValue": 285.61,
+                    "coordinates": [
+                        37.460696286,
+                        55.722396889
+                    ],
+                    "type": "common"
+                },
+                {
+                    "id": "stop__9641612",
+                    "name": "\u0423\u043b\u0438\u0446\u0430 \u0410\u043b\u0435\u043a\u0441\u0435\u044f \u0421\u0432\u0438\u0440\u0438\u0434\u043e\u0432\u0430",
+                    "distance": "680\u00a0\u043c",
+                    "distanceValue": 683.389,
+                    "coordinates": [
+                        37.458540034,
+                        55.725551698
+                    ],
+                    "type": "common"
+                },
+                {
+                    "id": "stop__9641274",
+                    "name": "\u0423\u043b\u0438\u0446\u0430 \u0410\u0440\u0442\u0430\u043c\u043e\u043d\u043e\u0432\u0430 \u2013 \u041c\u0443\u0437\u044b\u043a\u0430\u043b\u044c\u043d\u0430\u044f \u0448\u043a\u043e\u043b\u0430",
+                    "distance": "1\u00a0\u043a\u043c",
+                    "distanceValue": 1001.98,
+                    "coordinates": [
+                        37.450711996,
+                        55.718480288
+                    ],
+                    "type": "common"
+                },
+                {
+                    "id": "stop__9645990",
+                    "name": "\u0423\u043b\u0438\u0446\u0430 \u041a\u043b\u043e\u0447\u043a\u043e\u0432\u0430",
+                    "distance": "1,1\u00a0\u043a\u043c",
+                    "distanceValue": 1103.79,
+                    "coordinates": [
+                        37.449751795,
+                        55.72272752
+                    ],
+                    "type": "common"
+                }
+            ],
+            "logId": "dHlwZT1iaXpmaW5kZXI7aWQ9NjA5NDAxMjc5MzE=",
+            "type": "business",
+            "id": "60940127931",
+            "shortTitle": "\u041f\u043e\u043b\u0438\u043a\u043b\u0438\u043d\u0438\u043a\u0430 \u2116 40",
+            "additionalAddress": "",
+            "fullAddress": "\u0420\u043e\u0441\u0441\u0438\u044f, \u041c\u043e\u0441\u043a\u0432\u0430, \u041a\u0440\u0435\u043c\u0435\u043d\u0447\u0443\u0433\u0441\u043a\u0430\u044f \u0443\u043b\u0438\u0446\u0430",
+            "postalCode": "",
+            "addressDetails": {
+                "locality": "\u041c\u043e\u0441\u043a\u0432\u0430",
+                "street": "\u041a\u0440\u0435\u043c\u0435\u043d\u0447\u0443\u0433\u0441\u043a\u0430\u044f \u0443\u043b\u0438\u0446\u0430"
+            },
+            "categories": [
+                {
+                    "name": "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u043e\u0431\u0449\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u0430",
+                    "class": "bus stop",
+                    "seoname": "public_transport_stop",
+                    "pluralName": "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0438 \u043e\u0431\u0449\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u0430",
+                    "id": "223677355200"
+                }
+            ],
+            "status": "open",
+            "businessLinks": [],
+            "businessProperties": {
+                "geoproduct_poi_color": "#ABAEB3",
+                "snippet_show_title": "short_title",
+                "snippet_show_rating": "five_star_rating",
+                "snippet_show_photo": "single_photo",
+                "snippet_show_eta": "show_eta",
+                "snippet_show_category": "single_category",
+                "snippet_show_subline": [
+                    "no_subline"
+                ],
+                "snippet_show_geoproduct_offer": "show_geoproduct_offer",
+                "snippet_show_bookmark": "show_bookmark",
+                "detailview_show_claim_organization": "not_show_claim_organization",
+                "detailview_show_reviews": "show_reviews",
+                "detailview_show_add_photo_button": "show_add_photo_button",
+                "detailview_show_taxi_button": "show_taxi_button",
+                "sensitive": "1"
+            },
+            "seoname": "poliklinika_40",
+            "geoId": 117007,
+            "uri": "ymapsbm1://org?oid=60940127931",
+            "uriList": [
+                "ymapsbm1://org?oid=60940127931",
+                "ymapsbm1://transit/stop?id=stop__9650362"
+            ],
+            "references": [
+                {
+                    "id": "2036952912",
+                    "scope": "nyak"
+                }
+            ],
+            "ratingData": {
+                "ratingCount": 0,
+                "ratingValue": 0,
+                "reviewCount": 0
+            },
+            "sources": [
+                {
+                    "id": "yandex",
+                    "name": "\u042f\u043d\u0434\u0435\u043a\u0441",
+                    "href": "https://www.yandex.ru"
+                }
+            ],
+            "analyticsId": "1"
+        },
+        "toponymSeoname": "kremenchugskaya_ulitsa"
+    }
+}
