@@ -14,7 +14,7 @@ for i in range(len(minutes_list)):
     for j in minutes_list[i].findAll('span', {'class' : 'minutes'}):
         if i - grayhour_counter >= len(hours_list):
             break
-        output[int(hours_list[i].text)].append(j.text)
+        output[int(hours_list[i-grayhour_counter].text)].append(j.text)
 
 for i in range(len(output)):
     for j in range(len(output[i])):
