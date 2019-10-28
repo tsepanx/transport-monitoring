@@ -1,16 +1,18 @@
 from bs4 import BeautifulSoup
 import requests
-request = requests.get("http://www.mosgortrans.org/pass3/shedule.php?type=avto&way=732&date=1111100&direction=AB&waypoint=all")
+
+bus_number = input()
+
+request = requests.get("http://www.mosgortrans.org/pass3/shedule.php?type=avto&way="+ bus_number +"&date=1111100&direction=AB&waypoint=all")
 soup = BeautifulSoup(''.join(request.text), features="html.parser")
 
 h2 = soup.findAll('h2')
 h2.pop()
 for i in range(len(h2)): h2[i] = h2[i].text
 all_stations = dict.fromkeys(h2)
-#for i in h2: print(i)
 
 timetable = soup.findAll('table', {'border': '0', 'cellspacing' : 0, 'cellpadding' : '0'})
-#for i in timetable: print (i)
+
 for i in range(1, len(timetable)):
     hours_list = timetable[i].findAll('span', {'class': 'hour'})
     minutes_list = timetable[i].findAll('td',  {'align': 'left'})
@@ -33,5 +35,4 @@ for subj in all_stations:
         for j in range(len(all_stations[subj][i])):
             if all_stations[subj][i][j] != 0: print(i, all_stations[subj][i][j])
 
-#"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way=732&date=1111100&direction=AB&waypoint=all"
-#http://www.mosgortrans.org/pass3/shedule.php?type=avto&way=723&date=1111100&direction=BA&waypoint=all
+print(all_stations)
