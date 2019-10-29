@@ -24,7 +24,7 @@ def pretty_print_timetable(timetable):
         #     print(minutes_convert(arr[i]), end=", ")
     # print()
 
-def get_bus_timetable(bus_number=1, stop_filter="all"):
+def get_bus_timetable(bus_number="1", stop_filter="all"):
     request = requests.get(f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={bus_number}&date=1111100&direction=AB&waypoint={stop_filter}")
     soup = BeautifulSoup(''.join(request.text), features="html.parser")
 
@@ -66,7 +66,7 @@ def get_bus_timetable(bus_number=1, stop_filter="all"):
 
     return res_dict
 
-def get_stops_list(bus_number=1, routes=[ROUTE_AB, ROUTE_BA], days=[WORKDAYS, WEEKENDS]):
+def get_stops_list(bus_number="1", routes=[ROUTE_AB, ROUTE_BA], days=[WORKDAYS, WEEKENDS]):
     res = dict()
 
     for day in days:

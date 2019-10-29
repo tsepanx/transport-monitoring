@@ -1,39 +1,41 @@
-bus_number = int(input())
 from functions import *
 
-stops = get_stops_list(bus_number)
-timetable = get_bus_timetable(bus_number)
+fin = open("buses", "r")
+buses = list(map(str.strip, fin.readlines()))[1:]
+
+print(buses)
+
+# stops = get_stops_list(bus_number, ROUTE_AB, WORKDAYS)
+# timetable = get_bus_timetable(bus_number, 0)
 
 # pretty_print_timetable(timetable)
 # print(*stops, sep="\n")
-for i in stops:
-    print(i)
-    print(stops[i])
-    print("-------")
 
-# print(stops[(ROUTE_AB, WEEKENDS)] == stops[(ROUTE_AB, WORKDAYS)])
-# print(stops[(ROUTE_BA, WEEKENDS)] == stops[(ROUTE_BA, WORKDAYS)])
+id = 0
+while id < len(buses):
+    
+    n = buses[id]
 
-n = 0
-while n < 1100:
-
-    if not get_bus_timetable(n):
-        print(n, "lol")
-        n += 1
+    tt = get_bus_timetable(n)
+    if not tt:
+        print(n, "Bus Doesn't exist!")
+        id += 1
         continue
 
-    arr = get_stops_list(n)
+    stops_tt = [i for i in tt]
+    stops = get_stops_list(n)
 
-    arr[(ROUTE_BA, WEEKENDS)].reverse()
-    arr[(ROUTE_BA, WORKDAYS)].reverse()
+    stops[(ROUTE_BA, WEEKENDS)].reverse()
+    stops[(ROUTE_BA, WORKDAYS)].reverse()
 
     flag = True
 
-    for i in arr.values():
-        if i != arr[(ROUTE_AB, WEEKENDS)]:
+    for i in stops.values():
+        i1 = stops[(ROUTE_AB, WORKDAYS)]
+        # print(i, i1)
+        if i != i1:
             flag = False
             break
     
-    print(n, " : ", flag)
-
-    n += 1
+    print(n, flag, len(stops[(ROUTE_AB, WORKDAYS)]), len(stops_tt), sep=" : ")
+    id += 1
