@@ -24,21 +24,21 @@ def pretty_print_timetable(timetable):
         #     print(minutes_convert(arr[i]), end=", ")
     # print()
 
-def get_bus_timetable(bus_number="1", stop_filter="all"):
-    request = requests.get(f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={bus_number}&date=1111100&direction=AB&waypoint={stop_filter}")
+def get_bus_timetable(bus_number="1", stop_filter="all", route=ROUTE_AB, days=WORKDAYS):
+    request = requests.get(f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={bus_number}&date={days}&direction={route}&waypoint={stop_filter}")
     soup = BeautifulSoup(''.join(request.text), features="html.parser")
 
-    stop_names = soup.findAll('h2')
-    stop_names.pop()
+    stop_names = soup.findAll('h2')[:-1]
 
     for i in range(len(stop_names)): stop_names[i] = stop_names[i].text
     res_dict = dict.fromkeys(stop_names)
 
+    for i in res_dict:
+        res_dict[i] = []
+    # print(res_dict)
+
     if stop_names == []:
         return False
-
-    for i in res_dict.keys():
-        res_dict[i] = []
 
     timetable = soup.findAll('table', {'border': '0', 'cellspacing' : 0, 'cellpadding' : '0'})
 

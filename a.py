@@ -3,14 +3,6 @@ from functions import *
 fin = open("buses", "r")
 buses = list(map(str.strip, fin.readlines()))[1:]
 
-print(buses)
-
-# stops = get_stops_list(bus_number, ROUTE_AB, WORKDAYS)
-# timetable = get_bus_timetable(bus_number, 0)
-
-# pretty_print_timetable(timetable)
-# print(*stops, sep="\n")
-
 id = 0
 while id < len(buses):
     
@@ -28,14 +20,12 @@ while id < len(buses):
     stops[(ROUTE_BA, WEEKENDS)].reverse()
     stops[(ROUTE_BA, WORKDAYS)].reverse()
 
-    flag = True
-
-    for i in stops.values():
-        i1 = stops[(ROUTE_AB, WORKDAYS)]
-        # print(i, i1)
-        if i != i1:
-            flag = False
-            break
+    types_stops = [i for i in stops.values()]
     
-    print(n, flag, len(stops[(ROUTE_AB, WORKDAYS)]), len(stops_tt), sep=" : ")
+    print(n)
+
+    for i in types_stops:
+        print(len(i), end=" : ")
+    print("\n")
+    
     id += 1

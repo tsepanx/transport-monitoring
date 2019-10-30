@@ -5,7 +5,9 @@ db = SqliteDatabase('people.db')
 class Person(Model):
     name = CharField()
     birthday = DateField()
-    is_relative = BooleanField()
-    class Meta:
-        database = db
 
+    class Meta:
+        database = db # this model uses the "people.db" database
+
+db.connect()
+db.create_tables([Person])
