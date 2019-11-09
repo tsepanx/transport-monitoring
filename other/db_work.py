@@ -1,15 +1,31 @@
 from peewee import *
+from datetime import *
 
 db = SqliteDatabase('people.db')
 
-
-class Person(Model):
+class Bus(Model):
+    # id = IntegerField()
     name = CharField()
-    birthday = DateField()
+
 
     class Meta:
-        database = db  # this model uses the "people.db" database
+        database = db
+
+class Time(Model):
+    # id = IntegerField()
+    stop_name = CharField()
+    bus = ForeignKeyField(Bus, related_name="bus")
+    time = DateField()
+    
+
+    class Meta:
+        database = db
 
 
 db.connect()
-db.create_tables([Person])
+db.create_tables([Bus, Time])
+
+bus1 = Bus.create(id=1, name="101")
+bus2 = Bus.create(id=300, name="200")
+
+time1 = Time.create(id=1, stop_name="lol", bus=bus2, time=date(2019, 1, 1))

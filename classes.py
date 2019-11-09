@@ -10,7 +10,6 @@ ROUTE_BA = "BA"
 def time_convert(h, m):
     return h * 60 + m
 
-
 def minutes_convert(m):
     return m // 60, m % 60
 
@@ -27,8 +26,8 @@ class Path:
         self.days = days
         self.stops = path
 
-    def __eq__(a, b):
-        return a.stops == b.stops
+    def __eq__(self, b):
+        return self.stops == b.stops
 
 
 class Bus:
@@ -85,18 +84,21 @@ class Bus:
 
         return res_dict
 
-    def get_stops_list(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
+    def get_all_stops_route(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         res = []
         for day in days:
             for route in routes:
-                url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.number}&date={day}&direction={route}'
-                # print(url_string)
-                raw_stops_list = requests.get(url_string)
-                stops_list = []
-                for stop in raw_stops_list.text.split('\n'):
-                    if stop != "":
-                        stops_list.append(stop)
 
-                p = Path(self.number, route, day, stops_list)
-                res.append(p)
         self.path_list = res[:]
+
+    def get_stops_l(self, route=ROUTE_AB, days=WORKDAYS):
+        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.number}&date={days}&direction={route}'
+        # print(url_string)
+        raw_stops_list = requests.get(url_string)
+        stops_list = []
+        for stop in raw_stops_list.text.split('\n'):
+            if stop != "":
+                stops_list.append(stop)
+
+        p = Path(self.number, route, day, stops_list)
+        res.append(p)

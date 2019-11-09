@@ -1,6 +1,8 @@
 from classes import *
 
-fin = open("buses", "r")
+BUSES_LIST_FILE_PATH = "other/buses"
+
+fin = open(BUSES_LIST_FILE_PATH, "r")
 buses = list(map(str.strip, fin.readlines()))
 
 id = 0
