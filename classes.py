@@ -1,4 +1,5 @@
 import requests
+from datetime import *
 from bs4 import BeautifulSoup
 
 WORKDAYS = "1111100"
@@ -6,12 +7,11 @@ WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
+# def time_convert(h, m):
+#     return h * 60 + m
 
-def time_convert(h, m):
-    return h * 60 + m
-
-def minutes_convert(m):
-    return m // 60, m % 60
+# def minutes_convert(m):
+#     return m // 60, m % 60
 
 
 class Path:
@@ -32,14 +32,14 @@ class Path:
 
 class Bus:
     number = 0
-    path_list = []
+    paths_list = []
 
     def __init__(self, n="0"):
         self.number = n
-        self.get_stops_list()
+        self.get_all_stops()
 
     def get_path(self, route=ROUTE_AB, days=WORKDAYS):
-        for i in self.path_list:
+        for i in self.paths_list:
             if i.route == route and i.days == days:
                 return i
 
@@ -78,22 +78,14 @@ class Bus:
                     hours = int(hours_list[g - gray_cnt].text)
                     minutes = int(j.text)
 
-                    output.append(time_convert(hours, minutes))
+                    output.append(time(hours, minutes))
 
             res_dict[stop_names[i - 1]] = output
 
         return res_dict
 
-    def get_all_stops_route(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
-        res = []
-        for day in days:
-            for route in routes:
-
-        self.path_list = res[:]
-
-    def get_stops_l(self, route=ROUTE_AB, days=WORKDAYS):
-        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.number}&date={days}&direction={route}'
-        # print(url_string)
+    def get_stops(self, route=ROUTE_AB, day=WORKDAYS):
+        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.number}&date={day}&direction={route}'
         raw_stops_list = requests.get(url_string)
         stops_list = []
         for stop in raw_stops_list.text.split('\n'):
@@ -101,4 +93,16 @@ class Bus:
                 stops_list.append(stop)
 
         p = Path(self.number, route, day, stops_list)
-        res.append(p)
+        # res.append(p)
+        return p
+
+    def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
+        res = []
+        for day in days:
+            for route in routes:
+                p = self.get_stops(route, day)
+                res.append(p)
+
+        self.paths_list = res[:]
+
+        

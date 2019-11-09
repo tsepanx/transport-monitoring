@@ -4,7 +4,6 @@ from datetime import *
 db = SqliteDatabase('people.db')
 
 class Bus(Model):
-    # id = IntegerField()
     name = CharField()
 
 
@@ -12,10 +11,9 @@ class Bus(Model):
         database = db
 
 class Time(Model):
-    # id = IntegerField()
     stop_name = CharField()
     bus = ForeignKeyField(Bus, related_name="bus")
-    time = DateField()
+    time = TimeField()
     
 
     class Meta:
@@ -28,4 +26,4 @@ db.create_tables([Bus, Time])
 bus1 = Bus.create(id=1, name="101")
 bus2 = Bus.create(id=300, name="200")
 
-time1 = Time.create(id=1, stop_name="lol", bus=bus2, time=date(2019, 1, 1))
+time1 = Time.create(id=1, stop_name="lol", bus=bus2, time=time(hour=5, minute=36))
