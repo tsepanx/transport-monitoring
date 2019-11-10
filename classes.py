@@ -10,23 +10,10 @@ WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
-class DB_Bus(Model):
-    name = CharField()
-
-    class Meta:
-        database = db
-
-class Time(Model):
-    stop_name = CharField()
-    bus = ForeignKeyField(DB_Bus, related_name="bus")
-    time = TimeField()
-    
-
-    class Meta:
-        database = db
 
 class Bus:
     paths_list = []
+    timetable = dict()
 
     def __init__(self, name="0"):
         self.name = name
@@ -37,9 +24,9 @@ class Bus:
             if i.route == route and i.days == days:
                 return i
 
-    def get_bus_timetable(self, stop_filter="all", route=ROUTE_AB, days=WORKDAYS):
+    def get_bus_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
 
-        url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.number}&date={days}&direction={route}&waypoint={stop_filter}"
+        url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
 
         request = requests.get(url_string)
         soup = BeautifulSoup(''.join(request.text), features="html.parser")
@@ -76,17 +63,18 @@ class Bus:
 
             res_dict[stop_names[i - 1]] = output
 
+        # self.timetable = res_dict
         return res_dict
 
-    def get_stops(self, route=ROUTE_AB, day=WORKDAYS):
-        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.number}&date={day}&direction={route}'
+    def get_stops(self, route=ROUTE_AB, days=WORKDAYS):
+        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
         raw_stops_list = requests.get(url_string)
         stops_list = []
         for stop in raw_stops_list.text.split('\n'):
             if stop != "":
                 stops_list.append(stop)
 
-        p = Path(self.number, route, day, stops_list)
+        p = Path(self.name, route, days, stops_list)
         return p
 
     def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
@@ -97,6 +85,16 @@ class Bus:
                 res.append(p)
 
         self.paths_list = res[:]
+    
+    def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
+        res = dict()
+        for route in routes:
+            res[route] = dict()
+            for day in days:
+                res[route][day] = self.get_bus_timetable(route, day)
+                print(res[route][day])
+                print(route, day)
+        self.timetable = res
 
 class Path:
     name = ""
@@ -113,13 +111,20 @@ class Path:
     def __eq__(self, b):
         return self.stops == b.stops
 
-def init_database():
-    db.connect()
-    db.create_tables([DB_Bus, Time])
+class BusesDB(Model):
+    name = CharField()
+    bus_class = Bus(name)
 
-    bus1 = DB_Bus.create(id=1, name="101")
-    bus2 = DB_Bus.create(id=300, name="200")
+    class Meta:
+        database = db
 
-    time1 = Time.create(id=1, stop_name="lol", bus=bus2, time=time(hour=5, minute=36))
+class Time(Model):
+    stop_name = CharField()
+    route = CharField()
+    days = CharField()
+    bus = ForeignKeyField(BusesDB, related_name="bus")
+    time = TimeField()
+    
 
-init_database()
+    class Meta:
+        database = db
