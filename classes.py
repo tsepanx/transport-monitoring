@@ -1,41 +1,35 @@
 import requests
 from datetime import *
 from bs4 import BeautifulSoup
+from peewee import *
+
+db = SqliteDatabase('db.db')
 
 WORKDAYS = "1111100"
 WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
-# def time_convert(h, m):
-#     return h * 60 + m
+class DB_Bus(Model):
+    name = CharField()
 
-# def minutes_convert(m):
-#     return m // 60, m % 60
+    class Meta:
+        database = db
 
+class Time(Model):
+    stop_name = CharField()
+    bus = ForeignKeyField(DB_Bus, related_name="bus")
+    time = TimeField()
+    
 
-class Path:
-    name = ""
-    route = 0
-    days = 0
-    stops = []
-
-    def __init__(self, name, route=ROUTE_AB, days=WORKDAYS, path=()):
-        self.name = name
-        self.route = route
-        self.days = days
-        self.stops = path
-
-    def __eq__(self, b):
-        return self.stops == b.stops
-
+    class Meta:
+        database = db
 
 class Bus:
-    number = 0
     paths_list = []
 
-    def __init__(self, n="0"):
-        self.number = n
+    def __init__(self, name="0"):
+        self.name = name
         self.get_all_stops()
 
     def get_path(self, route=ROUTE_AB, days=WORKDAYS):
@@ -93,7 +87,6 @@ class Bus:
                 stops_list.append(stop)
 
         p = Path(self.number, route, day, stops_list)
-        # res.append(p)
         return p
 
     def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
@@ -105,4 +98,28 @@ class Bus:
 
         self.paths_list = res[:]
 
-        
+class Path:
+    name = ""
+    route = 0
+    days = 0
+    stops = []
+
+    def __init__(self, name, route=ROUTE_AB, days=WORKDAYS, path=()):
+        self.name = name
+        self.route = route
+        self.days = days
+        self.stops = path
+
+    def __eq__(self, b):
+        return self.stops == b.stops
+
+def init_database():
+    db.connect()
+    db.create_tables([DB_Bus, Time])
+
+    bus1 = DB_Bus.create(id=1, name="101")
+    bus2 = DB_Bus.create(id=300, name="200")
+
+    time1 = Time.create(id=1, stop_name="lol", bus=bus2, time=time(hour=5, minute=36))
+
+init_database()
