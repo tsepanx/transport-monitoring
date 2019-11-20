@@ -3,7 +3,7 @@ from datetime import *
 from bs4 import BeautifulSoup
 from peewee import *
 
-db = SqliteDatabase('db.db')
+db = SqliteDatabase('db2.db')
 
 WORKDAYS = "1111100"
 WEEKENDS = "0000011"

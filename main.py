@@ -1,43 +1,32 @@
 from classes import *
 
-first_buses = 1
-
-buses_arr = []
-
-def init_database(raw_buses_list):
-      db.connect()
+def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
       db.create_tables([BusesDB, Time])
       
       for i in range(first_buses):
             b = Bus(raw_buses_list[i])
             bus = BusesDB.create(name=raw_buses_list[i])
-            b.get_all_timetable()
+            b.get_all_timetable() # TODO make filters work
+                                    # routes=filter_routes, days=filter_days)
             for route in b.timetable:
                   for day in b.timetable[route]:
                         for stop_name in b.timetable[route][day]:
                               for time in b.timetable[route][day][stop_name]:
                                     print(b.name, route, day, stop_name, time)
+                                    
                                     time = Time.create(stop_name=stop_name, 
                                     bus=bus, 
                                     time=time, 
                                     route=route, 
                                     days=day)
 
-BUSES_LIST_FILE_PATH = "other/buses"
+first_buses = 1
+buses_arr = []
 
+db.connect()
+
+BUSES_LIST_FILE_PATH = "other/buses"
 fin = open(BUSES_LIST_FILE_PATH, "r")
 buses = list(map(str.strip, fin.readlines()))
 
-init_database(buses)
-
-# id = 0
-# while id < len(buses):
-#     bus_num = buses[id]
-#     b = Bus(bus_num)
-
-#     eq = (b.get_path(ROUTE_AB, WORKDAYS) == b.get_path(ROUTE_AB, WEEKENDS) and
-#           b.get_path(ROUTE_BA, WORKDAYS) == b.get_path(ROUTE_BA, WEEKENDS))
-
-#     print(bus_num, "__________________" if not eq else "")
-
-#     id += 1
+init_database(buses) #, filter_routes=(ROUTE_AB), filter_days=(WORKDAYS))
