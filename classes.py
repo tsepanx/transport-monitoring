@@ -3,7 +3,7 @@ from datetime import *
 from bs4 import BeautifulSoup
 from peewee import *
 
-db = SqliteDatabase('db2.db')
+db = SqliteDatabase('db3.db')
 
 WORKDAYS = "1111100"
 WEEKENDS = "0000011"
@@ -13,7 +13,12 @@ ROUTE_BA = "BA"
 
 class Bus:
     paths_list = []
-    timetable = dict()
+    timetable = {
+                ROUTE_AB : 
+                    {WORKDAYS : [], WEEKENDS : []}, 
+                ROUTE_BA : 
+                    {WORKDAYS : [], WEEKENDS : []}
+                }
 
     def __init__(self, name="0"):
         self.name = name
@@ -24,7 +29,7 @@ class Bus:
             if i.route == route and i.days == days:
                 return i
 
-    def get_bus_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
+    def get_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
 
         url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
 
@@ -63,8 +68,7 @@ class Bus:
 
             res_dict[stop_names[i - 1]] = output
 
-        # self.timetable = res_dict
-        return res_dict
+        self.timetable[route][days] = res_dict
 
     def get_stops(self, route=ROUTE_AB, days=WORKDAYS):
         url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
@@ -87,14 +91,9 @@ class Bus:
         self.paths_list = res[:]
     
     def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
-        res = dict()
         for route in routes:
-            res[route] = dict()
             for day in days:
-                res[route][day] = self.get_bus_timetable(route, day)
-                print(res[route][day])
-                print(route, day)
-        self.timetable = res
+                self.timetable[route][day] = self.get_timetable(route, day)
 
 class Path:
     name = ""

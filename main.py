@@ -8,8 +8,7 @@ def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_day
 
             b = Bus(raw_buses_list[i])
             bus = BusesDB.create(name=raw_buses_list[i])
-            b.get_all_timetable() # TODO make filters work
-                                    # routes=filter_routes, days=filter_days)
+            b.get_timetable()
             for route in b.timetable:
                   for day in b.timetable[route]:
                         for stop_name in b.timetable[route][day]:
