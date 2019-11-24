@@ -123,7 +123,7 @@ class Time(Model):
     route = CharField()
     days = CharField()
     bus = ForeignKeyField(BusesDB, related_name="bus")
-    time = TimeField()
+    arrival_time = TimeField()
     
 
     class Meta:

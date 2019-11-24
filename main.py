@@ -4,6 +4,8 @@ def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_day
       db.create_tables([BusesDB, Time])
       
       for i in range(first_buses):
+            data_source = []
+
             b = Bus(raw_buses_list[i])
             bus = BusesDB.create(name=raw_buses_list[i])
             b.get_all_timetable() # TODO make filters work
@@ -13,14 +15,22 @@ def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_day
                         for stop_name in b.timetable[route][day]:
                               for time in b.timetable[route][day][stop_name]:
                                     print(b.name, route, day, stop_name, time)
+                                    data_source.append((stop_name, bus, time, route, day))
                                     
-                                    time = Time.create(stop_name=stop_name, 
-                                    bus=bus, 
-                                    time=time, 
-                                    route=route, 
-                                    days=day)
+                                    # time = Time.create(stop_name=stop_name, 
+                                    # bus=bus, 
+                                    # time=time, 
+                                    # route=route, 
+                                    # days=day)
+            
+            Time.insert_many(data_source, fields=[
+                  Time.stop_name, 
+                  Time.bus, 
+                  Time.arrival_time, 
+                  Time.route, 
+                  Time.days]).execute()
 
-first_buses = 1
+first_buses = 10
 buses_arr = []
 
 db.connect()
