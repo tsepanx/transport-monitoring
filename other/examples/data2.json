@@ -6,18 +6,18 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "213%5Fa7|4957179%5F475%5FTRANSNAVI01",
+                        "id": "mosobl%5Fdta|1332",
                         "Transport": {
-                            "id": "213%5Fa7|4957179%5F475%5FTRANSNAVI01",
-                            "threadId": "1AA_bus_default",
-                            "lineId": "1A_bus_default",
-                            "name": "1\u0410",
+                            "id": "mosobl%5Fdta|1332",
+                            "threadId": "6f6fA_33_bus_default",
+                            "lineId": "6f6f_33_bus_default",
+                            "name": "33",
                             "Types": [
                                 "bus"
                             ],
                             "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=1A_bus_default&ll=37.505875%2C55.942425&name=1%D0%90&r=1027&type=bus",
-                            "seoname": "1A"
+                            "uri": "ymapsbm1://transit/line?id=6f6f_33_bus_default&ll=37.535619%2C55.958319&name=33&r=2495&type=bus",
+                            "seoname": "33"
                         }
                     }
                 },
@@ -27,12 +27,12 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.519034999999995,
-                                    55.937622999999995
+                                    37.519211,
+                                    55.937678
                                 ],
                                 [
-                                    37.519036,
-                                    55.937624
+                                    37.519211999999996,
+                                    55.937678999999996
                                 ]
                             ]
                         },
@@ -40,7 +40,7 @@
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
                                 "duration": 86400,
-                                "time": 1573456660
+                                "time": 1574427176
                             }
                         }
                     }
@@ -51,18 +51,18 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "213%5Fa7|4957211%5F497%5FTRANSNAVI01",
+                        "id": "mosobl%5Fdta|1027",
                         "Transport": {
-                            "id": "213%5Fa7|4957211%5F497%5FTRANSNAVI01",
-                            "threadId": "1AA_bus_default",
-                            "lineId": "1A_bus_default",
-                            "name": "1\u0410",
+                            "id": "mosobl%5Fdta|1027",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
                             "Types": [
                                 "bus"
                             ],
                             "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=1A_bus_default&ll=37.505875%2C55.942425&name=1%D0%90&r=1027&type=bus",
-                            "seoname": "1A"
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
                         }
                     }
                 },
@@ -72,12 +72,12 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.51889,
-                                    55.937529999999995
+                                    37.520143,
+                                    55.937909999999995
                                 ],
                                 [
-                                    37.518890999999996,
-                                    55.937531
+                                    37.520143999999995,
+                                    55.937911
                                 ]
                             ]
                         },
@@ -85,7 +85,7 @@
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
                                 "duration": 86400,
-                                "time": 1573456648
+                                "time": 1574427171
                             }
                         }
                     }
@@ -96,18 +96,18 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "213%5Fa7|4957296%5F729%5FTRANSNAVI01",
+                        "id": "mosobl%5Fdta|388",
                         "Transport": {
-                            "id": "213%5Fa7|4957296%5F729%5FTRANSNAVI01",
-                            "threadId": "2037274807",
-                            "lineId": "2037269749",
-                            "name": "4",
+                            "id": "mosobl%5Fdta|388",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
                             "Types": [
                                 "bus"
                             ],
                             "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=2037269749&ll=37.514341%2C55.950057&name=4&r=1422&type=bus",
-                            "seoname": "4"
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
                         }
                     }
                 },
@@ -117,24 +117,73 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.519002,
-                                    55.937585999999996
+                                    37.519580999999995,
+                                    55.9377
+                                ],
+                                [
+                                    37.519582,
+                                    55.937701
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427187
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|789",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|789",
+                            "threadId": "2037276855",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.518251,
+                                    55.937459
+                                ],
+                                [
+                                    37.518476,
+                                    55.937495999999996
                                 ],
                                 [
                                     37.519363,
                                     55.937647999999996
                                 ],
                                 [
-                                    37.519571,
-                                    55.937683
+                                    37.519574999999996,
+                                    55.937684
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 32,
-                                "time": 1573456665
+                                "duration": 48,
+                                "time": 1574427265
                             }
                         }
                     },
@@ -143,8 +192,8 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.519571,
-                                    55.937683
+                                    37.519574999999996,
+                                    55.937684
                                 ],
                                 [
                                     37.519760999999995,
@@ -155,16 +204,16 @@
                                     55.937737
                                 ],
                                 [
-                                    37.519954999999996,
-                                    55.937749
+                                    37.519957999999995,
+                                    55.937749999999994
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 7,
-                                "time": 1573456697
+                                "duration": 6,
+                                "time": 1574427313
                             }
                         }
                     },
@@ -173,20 +222,20 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.519954999999996,
-                                    55.937749
+                                    37.519957999999995,
+                                    55.937749999999994
                                 ],
                                 [
-                                    37.519954999999996,
-                                    55.937749
+                                    37.519957999999995,
+                                    55.937749999999994
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 4,
-                                "time": 1573456704
+                                "duration": 6,
+                                "time": 1574427319
                             }
                         }
                     }
@@ -197,144 +246,9 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|810",
+                        "id": "mosobl%5Fdta|791",
                         "Transport": {
-                            "id": "mosobl%5Fdta|810",
-                            "threadId": "2037276853",
-                            "lineId": "2037268550",
-                            "name": "368",
-                            "Types": [
-                                "bus"
-                            ],
-                            "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
-                            "seoname": "368"
-                        }
-                    }
-                },
-                "features": [
-                    {
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    37.520044999999996,
-                                    55.937895
-                                ],
-                                [
-                                    37.520046,
-                                    55.937895999999995
-                                ]
-                            ]
-                        },
-                        "properties": {
-                            "type": "Feature",
-                            "TrajectorySegmentMetaData": {
-                                "duration": 86400,
-                                "time": 1573456603
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "FeatureCollection",
-                "properties": {
-                    "type": "FeatureCollection",
-                    "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|890",
-                        "Transport": {
-                            "id": "mosobl%5Fdta|890",
-                            "threadId": "2037271137",
-                            "lineId": "2037271798",
-                            "name": "1078",
-                            "Types": [
-                                "bus"
-                            ],
-                            "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=2037271798&ll=37.487443%2C55.917996&name=1078&r=3543&type=bus",
-                            "seoname": "1078"
-                        }
-                    }
-                },
-                "features": [
-                    {
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    37.520506,
-                                    55.937915999999994
-                                ],
-                                [
-                                    37.520506999999995,
-                                    55.937917
-                                ]
-                            ]
-                        },
-                        "properties": {
-                            "type": "Feature",
-                            "TrajectorySegmentMetaData": {
-                                "duration": 86400,
-                                "time": 1573456604
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "FeatureCollection",
-                "properties": {
-                    "type": "FeatureCollection",
-                    "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|962",
-                        "Transport": {
-                            "id": "mosobl%5Fdta|962",
-                            "threadId": "2037276853",
-                            "lineId": "2037268550",
-                            "name": "368",
-                            "Types": [
-                                "bus"
-                            ],
-                            "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
-                            "seoname": "368"
-                        }
-                    }
-                },
-                "features": [
-                    {
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    37.520326,
-                                    55.937953
-                                ],
-                                [
-                                    37.520327,
-                                    55.937954
-                                ]
-                            ]
-                        },
-                        "properties": {
-                            "type": "Feature",
-                            "TrajectorySegmentMetaData": {
-                                "duration": 86400,
-                                "time": 1573456516
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "FeatureCollection",
-                "properties": {
-                    "type": "FeatureCollection",
-                    "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|1053",
-                        "Transport": {
-                            "id": "mosobl%5Fdta|1053",
+                            "id": "mosobl%5Fdta|791",
                             "threadId": "2037276855",
                             "lineId": "2037268550",
                             "name": "368",
@@ -353,12 +267,12 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.52017,
-                                    55.937929999999994
+                                    37.520123,
+                                    55.937825
                                 ],
                                 [
-                                    37.520171,
-                                    55.937931
+                                    37.520123999999996,
+                                    55.937825999999994
                                 ]
                             ]
                         },
@@ -366,7 +280,7 @@
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
                                 "duration": 86400,
-                                "time": 1573456543
+                                "time": 1574427196
                             }
                         }
                     }
@@ -377,10 +291,117 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|1102",
+                        "id": "mosobl%5Fdta|812",
                         "Transport": {
-                            "id": "mosobl%5Fdta|1102",
-                            "threadId": "2037276855",
+                            "id": "mosobl%5Fdta|812",
+                            "threadId": "2037281384",
+                            "lineId": "2037272262",
+                            "name": "472",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037272262&ll=37.473564%2C55.898943&name=472&r=5832&type=bus",
+                            "seoname": "472"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.516473,
+                                    55.940261
+                                ],
+                                [
+                                    37.516532,
+                                    55.940144
+                                ],
+                                [
+                                    37.516568,
+                                    55.940073999999996
+                                ],
+                                [
+                                    37.516793,
+                                    55.939629
+                                ],
+                                [
+                                    37.516920999999996,
+                                    55.939377
+                                ],
+                                [
+                                    37.516948,
+                                    55.939322
+                                ],
+                                [
+                                    37.516996999999996,
+                                    55.939226999999995
+                                ],
+                                [
+                                    37.517132,
+                                    55.938964
+                                ],
+                                [
+                                    37.517196999999996,
+                                    55.938837
+                                ],
+                                [
+                                    37.517314999999996,
+                                    55.938598999999996
+                                ],
+                                [
+                                    37.517415,
+                                    55.938401
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 49,
+                                "time": 1574427265
+                            }
+                        }
+                    },
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.517415,
+                                    55.938401
+                                ],
+                                [
+                                    37.517478,
+                                    55.938275
+                                ],
+                                [
+                                    37.517489,
+                                    55.938252999999996
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 11,
+                                "time": 1574427314
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|775",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|775",
+                            "threadId": "2037276853",
                             "lineId": "2037268550",
                             "name": "368",
                             "Types": [
@@ -398,12 +419,12 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.520216,
-                                    55.937905
+                                    37.520268,
+                                    55.937830999999996
                                 ],
                                 [
-                                    37.520216999999995,
-                                    55.937906
+                                    37.520269,
+                                    55.937832
                                 ]
                             ]
                         },
@@ -411,7 +432,7 @@
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
                                 "duration": 86400,
-                                "time": 1573456548
+                                "time": 1574427206
                             }
                         }
                     }
@@ -443,12 +464,12 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.5209,
-                                    55.937123
+                                    37.520978,
+                                    55.93705
                                 ],
                                 [
-                                    37.520900999999995,
-                                    55.937124
+                                    37.520979,
+                                    55.937051
                                 ]
                             ]
                         },
@@ -456,52 +477,7 @@
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
                                 "duration": 86400,
-                                "time": 1573456621
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "FeatureCollection",
-                "properties": {
-                    "type": "FeatureCollection",
-                    "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|545",
-                        "Transport": {
-                            "id": "mosobl%5Fdta|545",
-                            "threadId": "2037276855",
-                            "lineId": "2037268550",
-                            "name": "368",
-                            "Types": [
-                                "bus"
-                            ],
-                            "type": "bus",
-                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
-                            "seoname": "368"
-                        }
-                    }
-                },
-                "features": [
-                    {
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    37.520146,
-                                    55.937903
-                                ],
-                                [
-                                    37.520147,
-                                    55.937903999999996
-                                ]
-                            ]
-                        },
-                        "properties": {
-                            "type": "Feature",
-                            "TrajectorySegmentMetaData": {
-                                "duration": 86400,
-                                "time": 1573456577
+                                "time": 1574427228
                             }
                         }
                     }
@@ -533,20 +509,36 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.519721,
-                                    55.937636
+                                    37.517739,
+                                    55.937756
                                 ],
                                 [
-                                    37.519722,
-                                    55.937636999999995
+                                    37.517875,
+                                    55.937481999999996
+                                ],
+                                [
+                                    37.517914999999995,
+                                    55.937402999999996
+                                ],
+                                [
+                                    37.518083,
+                                    55.937431
+                                ],
+                                [
+                                    37.518476,
+                                    55.937495999999996
+                                ],
+                                [
+                                    37.519006,
+                                    55.937587
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 86400,
-                                "time": 1573456521
+                                "duration": 60,
+                                "time": 1574427265
                             }
                         }
                     }
@@ -557,9 +549,9 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|779",
+                        "id": "mosobl%5Fdta|773",
                         "Transport": {
-                            "id": "mosobl%5Fdta|779",
+                            "id": "mosobl%5Fdta|773",
                             "threadId": "2037276855",
                             "lineId": "2037268550",
                             "name": "368",
@@ -578,12 +570,12 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.520255999999996,
-                                    55.937796
+                                    37.520333,
+                                    55.937825999999994
                                 ],
                                 [
-                                    37.520257,
-                                    55.937796999999996
+                                    37.520334,
+                                    55.937827
                                 ]
                             ]
                         },
@@ -591,7 +583,7 @@
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
                                 "duration": 86400,
-                                "time": 1573456605
+                                "time": 1574427220
                             }
                         }
                     }
@@ -602,9 +594,99 @@
                 "properties": {
                     "type": "FeatureCollection",
                     "VehicleMetaData": {
-                        "id": "mosobl%5Fdta|899",
+                        "id": "mosobl%5Fdta|767",
                         "Transport": {
-                            "id": "mosobl%5Fdta|899",
+                            "id": "mosobl%5Fdta|767",
+                            "threadId": "2037276855",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520305,
+                                    55.937937999999995
+                                ],
+                                [
+                                    37.520306,
+                                    55.937939
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427209
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|777",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|777",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520688,
+                                    55.937798
+                                ],
+                                [
+                                    37.520689,
+                                    55.937799
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427211
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|843",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|843",
                             "threadId": "2037281384",
                             "lineId": "2037272262",
                             "name": "472",
@@ -623,40 +705,294 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.515041,
-                                    55.941753999999996
+                                    37.520185999999995,
+                                    55.937839999999994
                                 ],
                                 [
-                                    37.515668,
-                                    55.941855
-                                ],
-                                [
-                                    37.515716,
-                                    55.941758
-                                ],
-                                [
-                                    37.515971,
-                                    55.941266
-                                ],
-                                [
-                                    37.516051,
-                                    55.941098
-                                ],
-                                [
-                                    37.516093999999995,
-                                    55.941012
-                                ],
-                                [
-                                    37.516217,
-                                    55.940768999999996
+                                    37.520187,
+                                    55.937841
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 29,
-                                "time": 1573456665
+                                "duration": 86400,
+                                "time": 1574427154
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|770",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|770",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520340999999995,
+                                    55.937903
+                                ],
+                                [
+                                    37.520342,
+                                    55.937903999999996
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427171
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|788",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|788",
+                            "threadId": "2037276855",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520128,
+                                    55.937808
+                                ],
+                                [
+                                    37.520129,
+                                    55.937808999999994
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427212
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|793",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|793",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520221,
+                                    55.937843
+                                ],
+                                [
+                                    37.520222,
+                                    55.937844
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427166
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|1026",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|1026",
+                            "threadId": "2037281384",
+                            "lineId": "2037272262",
+                            "name": "472",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037272262&ll=37.473564%2C55.898943&name=472&r=5832&type=bus",
+                            "seoname": "472"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.518948,
+                                    55.937554999999996
+                                ],
+                                [
+                                    37.518949,
+                                    55.937556
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427198
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|1029",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|1029",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520218,
+                                    55.937912999999995
+                                ],
+                                [
+                                    37.520219,
+                                    55.937914
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427131
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|842",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|842",
+                            "threadId": "2037276855",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.518813,
+                                    55.937554
+                                ],
+                                [
+                                    37.519363,
+                                    55.937647999999996
+                                ],
+                                [
+                                    37.519574999999996,
+                                    55.937684
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 27,
+                                "time": 1574427265
                             }
                         }
                     },
@@ -665,24 +1001,28 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.516217,
-                                    55.940768999999996
+                                    37.519574999999996,
+                                    55.937684
                                 ],
                                 [
-                                    37.516258,
-                                    55.940687
+                                    37.519760999999995,
+                                    55.937715999999995
                                 ],
                                 [
-                                    37.516326,
-                                    55.940552999999994
+                                    37.519887,
+                                    55.937737
+                                ],
+                                [
+                                    37.519957999999995,
+                                    55.937749999999994
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 3,
-                                "time": 1573456694
+                                "duration": 6,
+                                "time": 1574427292
                             }
                         }
                     },
@@ -691,20 +1031,110 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.516326,
-                                    55.940552999999994
+                                    37.519957999999995,
+                                    55.937749999999994
                                 ],
                                 [
-                                    37.516326,
-                                    55.940552999999994
+                                    37.519957999999995,
+                                    55.937749999999994
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 7,
-                                "time": 1573456697
+                                "duration": 6,
+                                "time": 1574427298
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|1505",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|1505",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.520319,
+                                    55.937946999999994
+                                ],
+                                [
+                                    37.52032,
+                                    55.937948
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427248
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|794",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|794",
+                            "threadId": "2037276853",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.516957999999995,
+                                    55.939302999999995
+                                ],
+                                [
+                                    37.516957999999995,
+                                    55.939302999999995
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 4,
+                                "time": 1574427265
                             }
                         }
                     },
@@ -713,70 +1143,149 @@
                             "type": "LineString",
                             "coordinates": [
                                 [
-                                    37.516326,
-                                    55.940552999999994
+                                    37.516957999999995,
+                                    55.939302999999995
                                 ],
                                 [
-                                    37.516329,
-                                    55.940546
-                                ],
-                                [
-                                    37.516435,
-                                    55.940337
-                                ]
-                            ]
-                        },
-                        "properties": {
-                            "type": "Feature",
-                            "TrajectorySegmentMetaData": {
-                                "duration": 2,
-                                "time": 1573456704
-                            }
-                        }
-                    },
-                    {
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [
-                                [
-                                    37.516435,
-                                    55.940337
-                                ],
-                                [
-                                    37.516532,
-                                    55.940144
-                                ],
-                                [
-                                    37.516568,
-                                    55.940073999999996
-                                ],
-                                [
-                                    37.516793,
-                                    55.939629
-                                ],
-                                [
-                                    37.516920999999996,
-                                    55.939377
+                                    37.516953,
+                                    55.939311999999994
                                 ],
                                 [
                                     37.516948,
                                     55.939322
                                 ],
                                 [
-                                    37.516996999999996,
-                                    55.939226999999995
+                                    37.516920999999996,
+                                    55.939377
                                 ],
                                 [
-                                    37.517078,
-                                    55.939068999999996
+                                    37.516847999999996,
+                                    55.939519
                                 ]
                             ]
                         },
                         "properties": {
                             "type": "Feature",
                             "TrajectorySegmentMetaData": {
-                                "duration": 19,
-                                "time": 1573456706
+                                "duration": 5,
+                                "time": 1574427269
+                            }
+                        }
+                    },
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.516847999999996,
+                                    55.939519
+                                ],
+                                [
+                                    37.516793,
+                                    55.939629
+                                ],
+                                [
+                                    37.516568,
+                                    55.940073999999996
+                                ],
+                                [
+                                    37.516532,
+                                    55.940144
+                                ],
+                                [
+                                    37.516258,
+                                    55.940687
+                                ],
+                                [
+                                    37.516127999999995,
+                                    55.940946
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 43,
+                                "time": 1574427274
+                            }
+                        }
+                    },
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.516127999999995,
+                                    55.940946
+                                ],
+                                [
+                                    37.516093999999995,
+                                    55.941012
+                                ],
+                                [
+                                    37.516051,
+                                    55.941098
+                                ],
+                                [
+                                    37.515971,
+                                    55.941266
+                                ],
+                                [
+                                    37.515938999999996,
+                                    55.941326999999994
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 8,
+                                "time": 1574427317
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "FeatureCollection",
+                "properties": {
+                    "type": "FeatureCollection",
+                    "VehicleMetaData": {
+                        "id": "mosobl%5Fdta|961",
+                        "Transport": {
+                            "id": "mosobl%5Fdta|961",
+                            "threadId": "2037276855",
+                            "lineId": "2037268550",
+                            "name": "368",
+                            "Types": [
+                                "bus"
+                            ],
+                            "type": "bus",
+                            "uri": "ymapsbm1://transit/line?id=2037268550&ll=37.494181%2C55.912725&name=368&r=3997&type=bus",
+                            "seoname": "368"
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    37.52035,
+                                    55.937965999999996
+                                ],
+                                [
+                                    37.520351,
+                                    55.937967
+                                ]
+                            ]
+                        },
+                        "properties": {
+                            "type": "Feature",
+                            "TrajectorySegmentMetaData": {
+                                "duration": 86400,
+                                "time": 1574427139
                             }
                         }
                     }
@@ -785,42 +1294,12 @@
         ],
         "regionInfo": {
             "id": 214,
-            "type": 6,
-            "parent_id": 120999,
-            "capital_id": 0,
-            "geo_parent_id": 0,
-            "city_id": 214,
-            "name": "dolgoprudniy",
-            "native_name": "",
-            "iso_name": "RU DOL",
-            "is_main": true,
-            "en_name": "Dolgoprudniy",
-            "short_en_name": "DOL",
-            "phone_code": "495 498 496",
-            "phone_code_old": "49622 495579 495408 495576 498713",
-            "zip_code": "",
-            "population": 108861,
-            "synonyms": "",
-            "latitude": 55.93362,
-            "longitude": 37.514401,
-            "latitude_size": 0.098615,
-            "longitude_size": 0.082357,
-            "zoom": 14,
-            "tzname": "Europe/Moscow",
-            "official_languages": "ru",
-            "widespread_languages": "ru",
-            "suggest_list": [],
-            "is_eu": false,
-            "services_names": [
-                "bs",
-                "yaca",
-                "weather",
-                "maps",
-                "ad",
-                "etrain",
-                "delivery"
+            "hierarchy": [
+                225,
+                1,
+                214
             ],
-            "ename": "dolgoprudniy",
+            "name": "dolgoprudniy",
             "bounds": [
                 [
                     37.4732225,
@@ -831,158 +1310,7 @@
                     55.98289612376189
                 ]
             ],
-            "names": {
-                "ablative": "",
-                "accusative": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u044b\u0439",
-                "dative": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u043e\u043c\u0443",
-                "directional": "",
-                "genitive": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u043e\u0433\u043e",
-                "instrumental": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u044b\u043c",
-                "locative": "",
-                "nominative": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u044b\u0439",
-                "preposition": "\u0432",
-                "prepositional": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u043e\u043c"
-            },
-            "parent": {
-                "id": 1,
-                "type": 5,
-                "parent_id": 3,
-                "capital_id": 213,
-                "geo_parent_id": 0,
-                "city_id": 213,
-                "name": "moscow-and-moscow-oblast",
-                "native_name": "",
-                "iso_name": "RU-MOS",
-                "is_main": true,
-                "en_name": "Moscow and Moscow Oblast",
-                "short_en_name": "RU-MOS",
-                "phone_code": "495 496 498 499",
-                "phone_code_old": "",
-                "zip_code": "",
-                "population": 7503385,
-                "synonyms": "\u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c, \u041f\u043e\u0434\u043c\u043e\u0441\u043a\u043e\u0432\u044c\u0435, Podmoskovye",
-                "latitude": 55.815792,
-                "longitude": 37.380031,
-                "latitude_size": 2.705659,
-                "longitude_size": 5.060749,
-                "zoom": 8,
-                "tzname": "Europe/Moscow",
-                "official_languages": "ru",
-                "widespread_languages": "ru",
-                "suggest_list": [
-                    213,
-                    10716,
-                    10747,
-                    10758,
-                    20728,
-                    10740,
-                    10738,
-                    20523,
-                    10735,
-                    10734,
-                    10743,
-                    21622
-                ],
-                "is_eu": false,
-                "services_names": [
-                    "bs",
-                    "yaca",
-                    "ad"
-                ],
-                "ename": "moscow-and-moscow-oblast",
-                "bounds": [
-                    [
-                        34.8496565,
-                        54.439456064325434
-                    ],
-                    [
-                        39.9104055,
-                        57.14511506432543
-                    ]
-                ],
-                "names": {
-                    "ablative": "",
-                    "accusative": "\u041c\u043e\u0441\u043a\u0432\u0443 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0443\u044e \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
-                    "dative": "\u041c\u043e\u0441\u043a\u0432\u0435 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438",
-                    "directional": "",
-                    "genitive": "\u041c\u043e\u0441\u043a\u0432\u044b \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438",
-                    "instrumental": "\u041c\u043e\u0441\u043a\u0432\u043e\u0439 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u044c\u044e",
-                    "locative": "",
-                    "nominative": "\u041c\u043e\u0441\u043a\u0432\u0430 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
-                    "preposition": "\u0432",
-                    "prepositional": "\u041c\u043e\u0441\u043a\u0432\u0435 \u0438 \u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438"
-                },
-                "parent": {
-                    "id": 225,
-                    "type": 3,
-                    "parent_id": 10001,
-                    "capital_id": 213,
-                    "geo_parent_id": 0,
-                    "city_id": 213,
-                    "name": "russia",
-                    "native_name": "",
-                    "iso_name": "RU",
-                    "is_main": false,
-                    "en_name": "Russia",
-                    "short_en_name": "RU",
-                    "phone_code": "7",
-                    "phone_code_old": "",
-                    "zip_code": "",
-                    "population": 146880432,
-                    "synonyms": "Russian Federation,\u0420\u043e\u0441\u0441\u0438\u0439\u0441\u043a\u0430\u044f \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044f",
-                    "latitude": 61.698653,
-                    "longitude": 99.505405,
-                    "latitude_size": 40.700127,
-                    "longitude_size": 171.643239,
-                    "zoom": 3,
-                    "tzname": "",
-                    "official_languages": "ru",
-                    "widespread_languages": "ru",
-                    "suggest_list": [
-                        213,
-                        2,
-                        65,
-                        54,
-                        47,
-                        43,
-                        66,
-                        51,
-                        56,
-                        172,
-                        39,
-                        62
-                    ],
-                    "is_eu": false,
-                    "services_names": [
-                        "bs",
-                        "yaca",
-                        "ad"
-                    ],
-                    "ename": "russia",
-                    "bounds": [
-                        [
-                            13.683785499999999,
-                            35.290400699917846
-                        ],
-                        [
-                            -174.6729755,
-                            75.99052769991785
-                        ]
-                    ],
-                    "names": {
-                        "ablative": "",
-                        "accusative": "\u0420\u043e\u0441\u0441\u0438\u044e",
-                        "dative": "\u0420\u043e\u0441\u0441\u0438\u0438",
-                        "directional": "",
-                        "genitive": "\u0420\u043e\u0441\u0441\u0438\u0438",
-                        "instrumental": "\u0420\u043e\u0441\u0441\u0438\u0435\u0439",
-                        "locative": "",
-                        "nominative": "\u0420\u043e\u0441\u0441\u0438\u044f",
-                        "preposition": "\u0432",
-                        "prepositional": "\u0420\u043e\u0441\u0441\u0438\u0438"
-                    }
-                }
-            }
+            "title": "\u0414\u043e\u043b\u0433\u043e\u043f\u0440\u0443\u0434\u043d\u043e\u0433\u043e"
         }
     }
 }

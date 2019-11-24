@@ -28,8 +28,11 @@ if __name__ == '__main__':
 
       print('Counting trams on route "A"...')
       proxy = YandexTransportProxy('127.0.0.1', 25555)
+      a = proxy.get_all_info(url3)
       vehicles_data = proxy.get_vehicles_info_with_region(url3)
       vehicles_count = proxy.count_vehicles_on_route(vehicles_data)
       print(vehicles_data)
+      print("--------------")
+      print(a)
       with open('data2.json', 'w') as file:
             file.write(json.dumps(vehicles_data,indent=4, separators=(',', ': ')))
