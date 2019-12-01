@@ -36,6 +36,7 @@ buses_arr = []
 # print(x)
 fin = open("other/data4.json", "r")
 parsed_data = recursive_descent(json.loads(fin.read()))
+print(*parsed_data, sep="\n")
 # db.connect()
 
 # BUSES_LIST_FILE_PATH = "other/buses"

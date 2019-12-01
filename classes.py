@@ -27,15 +27,12 @@ def recursive_descent(data):
     
     if len(cur) == 2:
         if list(map(type, cur)) == [type(float())] * 2:
-            print("llllool", cur)
-            return cur
+            return [cur]
 
     for x in cur:        
         if type(x) in [type([]), type(dict())]:
             z = recursive_descent(x)
             res.extend(z)
-        else:
-            res.append(x)
     
     return res
             
@@ -121,13 +118,15 @@ class Bus:
         return p
 
     def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
-        res = []
-        for day in days:
-            for route in routes:
-                p = self.get_stops(route, day)
-                res.append(p)
-
-        self.paths_list = res[:]
+        try:
+            res = []
+            for day in days:
+                for route in routes:
+                    p = self.get_stops(route, day)
+                    res.append(p)
+            self.paths_list = res[:]
+        except Exception:
+            pass
     
     def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         for route in routes:
