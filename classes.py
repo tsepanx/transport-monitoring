@@ -2,6 +2,7 @@ import requests
 from datetime import *
 from bs4 import BeautifulSoup
 from peewee import *
+import json
 
 db = SqliteDatabase('db3.db')
 
@@ -10,6 +11,44 @@ WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
+def make_url(coords):
+    s = f"https://yandex.ru/maps/213/moscow/?ll=37.634438%2C55.741204&mode=search&sll=37.633301%2C55.743449&sspn=0.009463%2C0.003159&text={coords[0]},{coords[1]}&z=14"
+    return s
+
+def recursive_descent(data):
+    res = []
+    cur = []
+
+    if type(data) == type(dict()):
+        for i in data:
+            cur.append(data[i])
+    else:
+        cur = data
+    
+    if len(cur) == 2:
+        if list(map(type, cur)) == [type(float())] * 2:
+            print("llllool", cur)
+            return cur
+
+    for x in cur:        
+        if type(x) in [type([]), type(dict())]:
+            z = recursive_descent(x)
+            res.extend(z)
+        else:
+            res.append(x)
+    
+    return res
+            
+class Position:
+    x = 0
+    y = 0
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def distance(self, b):
+        return ((b.x - self.x) ** 2 + (b.y - self.y) ** 2) ** 0.5
 
 class Bus:
     paths_list = []

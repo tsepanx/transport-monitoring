@@ -32,10 +32,14 @@ def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_day
 first_buses = 10
 buses_arr = []
 
-db.connect()
+# x = make_url([55.937678999999996, 37.519211999999996])
+# print(x)
+fin = open("other/data4.json", "r")
+parsed_data = recursive_descent(json.loads(fin.read()))
+# db.connect()
 
-BUSES_LIST_FILE_PATH = "other/buses"
-fin = open(BUSES_LIST_FILE_PATH, "r")
-buses = list(map(str.strip, fin.readlines()))
+# BUSES_LIST_FILE_PATH = "other/buses"
+# fin = open(BUSES_LIST_FILE_PATH, "r")
+# buses = list(map(str.strip, fin.readlines()))
 
-init_database(buses) #, filter_routes=(ROUTE_AB), filter_days=(WORKDAYS))
+# init_database(buses) #, filter_routes=(ROUTE_AB), filter_days=(WORKDAYS))
