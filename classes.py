@@ -1,17 +1,43 @@
-import requests
+import requests, json, enum, time
 from datetime import *
 from bs4 import BeautifulSoup
 from peewee import *
-import json
 
 db = SqliteDatabase('db3.db')
 
+# class Constants(enum.Enum):
 WORKDAYS = "1111100"
 WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
-def make_url(coords):
+def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+    db.create_tables([BusesDB, Time])
+      
+    for i in range(first_buses):
+        data_source = []
+
+        b = Bus(raw_buses_list[i])
+        bus = BusesDB.create(name=raw_buses_list[i])
+        b.get_timetable()
+        for route in b.timetable:
+                for day in b.timetable[route]:
+                    for stop_name in b.timetable[route][day]:
+                            for time in b.timetable[route][day][stop_name]:
+                                print(b.name, route, day, stop_name, time)
+                                data_source.append((stop_name, bus, time, route, day))
+        
+        Time.insert_many(data_source, fields=[
+                Time.stop_name, 
+                Time.bus, 
+                Time.arrival_time, 
+                Time.route, 
+                Time.days]).execute()
+
+def get_stop_url(id):
+      return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
+
+def make_url_with_position(coords):
     s = f"https://yandex.ru/maps/213/moscow/?ll=37.634438%2C55.741204&mode=search&sll=37.633301%2C55.743449&sspn=0.009463%2C0.003159&text={coords[0]},{coords[1]}&z=14"
     return s
 
@@ -58,7 +84,6 @@ class Bus:
 
     def __init__(self, name="0"):
         self.name = name
-        self.get_all_stops()
 
     def get_path(self, route=ROUTE_AB, days=WORKDAYS):
         for i in self.paths_list:
@@ -126,7 +151,7 @@ class Bus:
                     res.append(p)
             self.paths_list = res[:]
         except Exception:
-            pass
+            raise "No internet connection"
     
     def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         for route in routes:

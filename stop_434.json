@@ -1,0 +1,217 @@
+
+                "Transport": [
+                    {
+                        "lineId": "343_bus_default",
+                        "name": "343",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "343B_bus_default",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9682526",
+                                        "name": "\u041d\u043e\u0432\u043e\u0433\u043e\u0440\u0441\u043a - \u0421\u0442\u0430\u0434\u0438\u043e\u043d"
+                                    },
+                                    {
+                                        "id": "stop__9970253",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0420\u0435\u0447\u043d\u043e\u0439 \u0432\u043e\u043a\u0437\u0430\u043b"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [],
+                                    "Frequency": {
+                                        "text": "45\u00a0\u043c\u0438\u043d",
+                                        "value": 2700,
+                                        "begin": {
+                                            "value": "1575342159",
+                                            "tzOffset": 10800,
+                                            "text": "6:02"
+                                        },
+                                        "end": {
+                                            "value": "1575402999",
+                                            "tzOffset": 10800,
+                                            "text": "22:56"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=343_bus_default&ll=37.420771%2C55.871617&name=343&r=5102&type=bus",
+                        "seoname": "343"
+                    },
+                    {
+                        "lineId": "3803_50_bus_default",
+                        "name": "50",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "3803B_50_bus_default",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9682526",
+                                        "name": "\u041d\u043e\u0432\u043e\u0433\u043e\u0440\u0441\u043a - \u0421\u0442\u0430\u0434\u0438\u043e\u043d"
+                                    },
+                                    {
+                                        "id": "stop__9685625",
+                                        "name": "\u041f\u043e\u0434\u0440\u0435\u0437\u043a\u043e\u0432\u043e"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [],
+                                    "Frequency": {
+                                        "text": "1\u00a0\u0447",
+                                        "value": 3600,
+                                        "begin": {
+                                            "value": "1575433659",
+                                            "tzOffset": 10800,
+                                            "text": "7:27"
+                                        },
+                                        "end": {
+                                            "value": "1575479559",
+                                            "tzOffset": 10800,
+                                            "text": "20:12"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=3803_50_bus_default&ll=37.347999%2C55.919495&name=50&r=3458&type=bus",
+                        "seoname": "50"
+                    },
+                    {
+                        "lineId": "434_minibus_default",
+                        "name": "434",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "434B_minibus_default",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9682526",
+                                        "name": "\u041d\u043e\u0432\u043e\u0433\u043e\u0440\u0441\u043a - \u0421\u0442\u0430\u0434\u0438\u043e\u043d"
+                                    },
+                                    {
+                                        "id": "stop__9650230",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u041f\u043b\u0430\u043d\u0435\u0440\u043d\u0430\u044f"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Estimated": {
+                                                "value": "1575393816",
+                                                "tzOffset": 10800,
+                                                "text": "20:23"
+                                            },
+                                            "vehicleId": "mosobl%5Fdta|1529"
+                                        }
+                                    ],
+                                    "Frequency": {
+                                        "text": "15\u00a0\u043c\u0438\u043d",
+                                        "value": 900,
+                                        "begin": {
+                                            "value": "1575343421",
+                                            "tzOffset": 10800,
+                                            "text": "6:23"
+                                        },
+                                        "end": {
+                                            "value": "1575403961",
+                                            "tzOffset": 10800,
+                                            "text": "23:12"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "threadId": "434V_minibus_default",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__10205961",
+                                        "name": "\u0416\u041a \u042d\u0434\u0435\u043c"
+                                    },
+                                    {
+                                        "id": "stop__9650230",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u041f\u043b\u0430\u043d\u0435\u0440\u043d\u0430\u044f"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [],
+                                    "Frequency": {
+                                        "text": "6\u00a0\u0447",
+                                        "value": 21600,
+                                        "begin": {
+                                            "value": "1575396977",
+                                            "tzOffset": 10800,
+                                            "text": "21:16"
+                                        },
+                                        "end": {
+                                            "value": "1575397037",
+                                            "tzOffset": 10800,
+                                            "text": "21:17"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=434_minibus_default&ll=37.391435%2C55.877195&name=434&r=3190&type=bus",
+                        "seoname": "434"
+                    },
+                    {
+                        "lineId": "6d48_27_bus_default",
+                        "name": "27",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "3717673934",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9682526",
+                                        "name": "\u041d\u043e\u0432\u043e\u0433\u043e\u0440\u0441\u043a - \u0421\u0442\u0430\u0434\u0438\u043e\u043d"
+                                    },
+                                    {
+                                        "id": "stop__9688783",
+                                        "name": "\u0421\u0442\u0430\u043d\u0446\u0438\u044f \u0425\u0438\u043c\u043a\u0438"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [],
+                                    "Frequency": {
+                                        "text": "30\u00a0\u043c\u0438\u043d",
+                                        "value": 1800,
+                                        "begin": {
+                                            "value": "1575343265",
+                                            "tzOffset": 10800,
+                                            "text": "6:21"
+                                        },
+                                        "end": {
+                                            "value": "1575398465",
+                                            "tzOffset": 10800,
+                                            "text": "21:41"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=6d48_27_bus_default&ll=37.398562%2C55.892938&name=27&r=3215&type=bus",
+                        "seoname": "27"
+                    }
+                ]
+            }
+        },

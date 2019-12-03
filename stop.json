@@ -1,0 +1,207 @@
+{
+    "data": {
+        "geometries": [
+            {
+                "type": "Point",
+                "coordinates": [
+                    37.467335817,
+                    55.708201906
+                ]
+            }
+        ],
+        "properties": {
+            "name": "\u0414\u043e\u043c \u0440\u0435\u0431\u0451\u043d\u043a\u0430",
+            "description": "\u0414\u043e\u043c \u0440\u0435\u0431\u0451\u043d\u043a\u0430",
+            "currentTime": 1575379280298,
+            "tzOffset": 10800,
+            "StopMetaData": {
+                "id": "stop__9644876",
+                "Transport": [
+                    {
+                        "lineId": "2036924115",
+                        "name": "641",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "213A_641_bus_mosgortrans",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644873",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    },
+                                    {
+                                        "id": "stop__9644900",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Estimated": {
+                                                "value": "1575379402",
+                                                "tzOffset": 10800,
+                                                "text": "16:23"
+                                            },
+                                            "vehicleId": "codd%5Fnew|42225%5F1013207"
+                                        },
+                                        {
+                                            "Estimated": {
+                                                "value": "1575379874",
+                                                "tzOffset": 10800,
+                                                "text": "16:31"
+                                            },
+                                            "vehicleId": "codd%5Fnew|42223%5F1013208"
+                                        }
+                                    ],
+                                    "Frequency": {
+                                        "text": "10\u00a0\u043c\u0438\u043d",
+                                        "value": 600,
+                                        "begin": {
+                                            "value": "1575340951",
+                                            "tzOffset": 10800,
+                                            "text": "5:42"
+                                        },
+                                        "end": {
+                                            "value": "1575411151",
+                                            "tzOffset": 10800,
+                                            "text": "1:12"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=2036924115&ll=37.467819%2C55.714310&name=641&r=1326&type=bus",
+                        "seoname": "641"
+                    },
+                    {
+                        "lineId": "2036926324",
+                        "name": "42",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "2036928392",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644873",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    },
+                                    {
+                                        "id": "stop__9644900",
+                                        "name": "\u041c\u0430\u0442\u0432\u0435\u0435\u0432\u0441\u043a\u043e\u0435"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Scheduled": {
+                                                "value": "1575379320",
+                                                "tzOffset": 10800,
+                                                "text": "16:22"
+                                            }
+                                        },
+                                        {
+                                            "Scheduled": {
+                                                "value": "1575380820",
+                                                "tzOffset": 10800,
+                                                "text": "16:47"
+                                            }
+                                        },
+                                        {
+                                            "Scheduled": {
+                                                "value": "1575382380",
+                                                "tzOffset": 10800,
+                                                "text": "17:13"
+                                            }
+                                        }
+                                    ],
+                                    "departureTime": "16:22"
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=2036926324&ll=37.486461%2C55.689206&name=42&r=2725&type=bus",
+                        "seoname": "42"
+                    },
+                    {
+                        "lineId": "213_107_bus_mosgortrans",
+                        "name": "107",
+                        "Types": [
+                            "bus"
+                        ],
+                        "type": "bus",
+                        "threads": [
+                            {
+                                "threadId": "213A_107_bus_mosgortrans",
+                                "noBoarding": false,
+                                "EssentialStops": [
+                                    {
+                                        "id": "stop__9644114",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0424\u0438\u043b\u0451\u0432\u0441\u043a\u0438\u0439 \u043f\u0430\u0440\u043a"
+                                    },
+                                    {
+                                        "id": "3222621337",
+                                        "name": "\u041c\u0435\u0442\u0440\u043e \u0424\u0438\u043b\u0451\u0432\u0441\u043a\u0438\u0439 \u043f\u0430\u0440\u043a"
+                                    }
+                                ],
+                                "BriefSchedule": {
+                                    "Events": [
+                                        {
+                                            "Scheduled": {
+                                                "value": "1575379320",
+                                                "tzOffset": 10800,
+                                                "text": "16:22"
+                                            },
+                                            "Estimated": {
+                                                "value": "1575379346",
+                                                "tzOffset": 10800,
+                                                "text": "16:22"
+                                            },
+                                            "vehicleId": "codd%5Fnew|1169744%5F410128"
+                                        },
+                                        {
+                                            "Scheduled": {
+                                                "value": "1575380040",
+                                                "tzOffset": 10800,
+                                                "text": "16:34"
+                                            },
+                                            "Estimated": {
+                                                "value": "1575380086",
+                                                "tzOffset": 10800,
+                                                "text": "16:34"
+                                            },
+                                            "vehicleId": "codd%5Fnew|1169745%5F410130"
+                                        },
+                                        {
+                                            "Scheduled": {
+                                                "value": "1575380700",
+                                                "tzOffset": 10800,
+                                                "text": "16:45"
+                                            },
+                                            "Estimated": {
+                                                "value": "1575380387",
+                                                "tzOffset": 10800,
+                                                "text": "16:39"
+                                            },
+                                            "vehicleId": "codd%5Fnew|1130178%5F410103"
+                                        }
+                                    ],
+                                    "departureTime": "16:22"
+                                }
+                            }
+                        ],
+                        "uri": "ymapsbm1://transit/line?id=213_107_bus_mosgortrans&ll=37.474024%2C55.720900&name=107&r=2124&type=bus",
+                        "seoname": "107"
+                    }
+                ]
+            }
+        },
+        "toponymSeoname": "nezhinskaya_ulitsa"
+    }
+}
