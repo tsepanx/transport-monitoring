@@ -1,5 +1,4 @@
 import requests, json, enum, time
-from datetime import *
 from bs4 import BeautifulSoup
 from peewee import *
 
