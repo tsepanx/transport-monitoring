@@ -4,34 +4,58 @@ from peewee import *
 
 db = SqliteDatabase('db3.db')
 
-# class Constants(enum.Enum):
 WORKDAYS = "1111100"
 WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
-def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
-    db.create_tables([BusesDB, Time])
-      
-    for i in range(first_buses):
-        data_source = []
+def get_stop_shedules(filename):
+    with open(filename, "r") as file:
+        data = json.loads(file.read())
+    
+    d = data["data"]["properties"]["StopMetaData"]["Transport"]
 
-        b = Bus(raw_buses_list[i])
-        bus = BusesDB.create(name=raw_buses_list[i])
-        b.get_timetable()
-        for route in b.timetable:
-                for day in b.timetable[route]:
-                    for stop_name in b.timetable[route][day]:
-                            for time in b.timetable[route][day][stop_name]:
-                                print(b.name, route, day, stop_name, time)
-                                data_source.append((stop_name, bus, time, route, day))
-        
-        Time.insert_many(data_source, fields=[
-                Time.stop_name, 
-                Time.bus, 
-                Time.arrival_time, 
-                Time.route, 
-                Time.days]).execute()
+    for bus in d:
+        name = bus["name"]
+        threads = bus["threads"]
+        print(name, "\n")
+        for thread in threads:
+            thread_id = thread["threadId"]
+            shedules = thread["BriefSchedule"]
+            events = shedules["Events"]
+
+            estimated_times = []
+
+            for event in events:
+                time_estimated = time.localtime(int(event["Estimated"]["value"]))
+                estimated_times.append(time_estimated)
+
+            frequency = shedules["Frequency"]["text"]
+            
+            first_arrival = time.localtime(int(shedules["Frequency"]["begin"]["value"]))
+            last_arrival = time.localtime(int(shedules["Frequency"]["end"]["value"]))
+
+            print("id", thread_id)
+            print("times", estimated_times)
+            print("first & last", first_arrival, last_arrival)
+            print("\n")
+
+
+    # return d
+
+def write_csv_file(filename, pos_arr):
+    fout = open(filename, "w")
+    for i in range(len(pos_arr)):
+        fout.write(";".join(map(str,
+            [pos_arr[i][1], pos_arr[i][0], i + 1, i + 1]
+            )))
+        fout.write("\n")
+
+def write_data_to_file(func, file, url):
+      print("---Requesting data---")
+      data = func(url)
+    #   with open(file, 'w') as fout:
+    #         fout.write(json.dumps(data, indent=4, separators=(',', ': ')))    
 
 def get_stop_url(id):
       return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
@@ -60,7 +84,36 @@ def recursive_descent(data):
             res.extend(z)
     
     return res
-            
+
+def get_all_coordinates_from_file(filename):
+    with open(filename, "r") as file:
+        data = json.loads(file.read())
+    return recursive_descent(data)
+
+def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+    db.create_tables([BusesDB, Time])
+      
+    for i in range(first_buses):
+        data_source = []
+
+        b = Bus(raw_buses_list[i])
+        bus = BusesDB.create(name=raw_buses_list[i])
+        b.get_timetable()
+        for route in b.timetable:
+                for day in b.timetable[route]:
+                    for stop_name in b.timetable[route][day]:
+                            for time in b.timetable[route][day][stop_name]:
+                                print(b.name, route, day, stop_name, time)
+                                data_source.append((stop_name, bus, time, route, day))
+        
+        Time.insert_many(data_source, fields=[
+                Time.stop_name, 
+                Time.bus, 
+                Time.arrival_time, 
+                Time.route, 
+                Time.days]).execute()
+
+
 class Position:
     x = 0
     y = 0
