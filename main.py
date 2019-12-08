@@ -4,6 +4,7 @@ from classes import *
 
 # write_csv_file("example.csv", get_all_coordinates_from_file("path_641.json"))
 
-# data = get_stop_shedules("stop_641.json")
+data = get_stop_shedules("stop_641.json")
 
-init_database(["732"])
+# init_database(["732"])
+# determine_path_type_for_today()

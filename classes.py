@@ -9,8 +9,12 @@ WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
+def is_today_weekend():
+    day = datetime.date.today().weekday()
+    return day in [5, 6]
+
 def pretty_time(time_struct):
-    return str(time_struct.tm_hour) +  ":" + str(time_struct.tm_min) +  ":" + str(time_struct.tm_sec)
+    return ":".join(map(str, [time_struct.tm_hour, time_struct.tm_min, time_struct.tm_sec]))
 
 def get_stop_shedules(filename):
     with open(filename, "r") as file:
@@ -37,11 +41,14 @@ def get_stop_shedules(filename):
 
             for event in events:
                 if "Estimated" in event:
+                    x = int(event["Estimated"]["value"])
 
-                    time_estimated = time.localtime(int(event["Estimated"]["value"]))
+                    time_estimated = time.localtime(x)
                     estimated_times.append(time_estimated)
                 else:
-                    time_scheduled = time.localtime(int(event["Scheduled"]["value"]))
+                    x = int(event["Scheduled"]["value"])
+
+                    time_scheduled = time.localtime(x)
                     scheduled_times.append(time_scheduled)
 
             if "Frequency" in shedules:
@@ -50,14 +57,11 @@ def get_stop_shedules(filename):
                 first_arrival = time.localtime(int(shedules["Frequency"]["begin"]["value"]))
                 last_arrival = time.localtime(int(shedules["Frequency"]["end"]["value"]))
 
-            # print("id", thread_id, "\n")
-            # print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
-            # print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
-            # print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
-            # print("\n")
-
-
-    # return d
+            print("id", thread_id, "\n")
+            print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
+            print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
+            print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
+            print("\n")
 
 def write_csv_file(filename, pos_arr):
     fout = open(filename, "w")
@@ -128,7 +132,6 @@ def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_day
                 Time.arrival_time, 
                 Time.route, 
                 Time.days]).execute()
-
 
 class Position:
     x = 0
