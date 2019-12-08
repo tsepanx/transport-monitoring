@@ -1,8 +1,8 @@
-import requests, json, enum, time
+import requests, json, enum, time, datetime
 from bs4 import BeautifulSoup
 from peewee import *
 
-db = SqliteDatabase('db3.db')
+db = SqliteDatabase('db_641.db')
 
 WORKDAYS = "1111100"
 WEEKENDS = "0000011"
@@ -15,6 +15,8 @@ def pretty_time(time_struct):
 def get_stop_shedules(filename):
     with open(filename, "r") as file:
         data = json.loads(file.read())
+
+    res_dict = dict()
     
     d = data["data"]["properties"]["StopMetaData"]["Transport"]
 
@@ -22,6 +24,9 @@ def get_stop_shedules(filename):
         name = bus["name"]
         threads = bus["threads"]
         print(name)
+
+        res_dict[name] = dict()
+
         for thread in threads:
             thread_id = thread["threadId"]
             shedules = thread["BriefSchedule"]
@@ -45,11 +50,11 @@ def get_stop_shedules(filename):
                 first_arrival = time.localtime(int(shedules["Frequency"]["begin"]["value"]))
                 last_arrival = time.localtime(int(shedules["Frequency"]["end"]["value"]))
 
-            print("id", thread_id, "\n")
-            print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
-            print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
-            print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
-            print("\n")
+            # print("id", thread_id, "\n")
+            # print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
+            # print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
+            # print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
+            # print("\n")
 
 
     # return d
@@ -104,7 +109,7 @@ def get_all_coordinates_from_file(filename):
 def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
     db.create_tables([BusesDB, Time])
       
-    for i in range(first_buses):
+    for i in range(len(raw_buses_list)):
         data_source = []
 
         b = Bus(raw_buses_list[i])
@@ -188,7 +193,8 @@ class Bus:
                     hours = int(hours_list[g - gray_cnt].text)
                     minutes = int(j.text)
 
-                    output.append(time(hours, minutes))
+                    output.append(datetime.time(hours, minutes))
+                    
 
             res_dict[stop_names[i - 1]] = output
 
