@@ -9,6 +9,9 @@ WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
+def pretty_time(time_struct):
+    return str(time_struct.tm_hour) +  ":" + str(time_struct.tm_min) +  ":" + str(time_struct.tm_sec)
+
 def get_stop_shedules(filename):
     with open(filename, "r") as file:
         data = json.loads(file.read())
@@ -18,7 +21,7 @@ def get_stop_shedules(filename):
     for bus in d:
         name = bus["name"]
         threads = bus["threads"]
-        print(name, "\n")
+        print(name)
         for thread in threads:
             thread_id = thread["threadId"]
             shedules = thread["BriefSchedule"]
@@ -42,10 +45,10 @@ def get_stop_shedules(filename):
                 first_arrival = time.localtime(int(shedules["Frequency"]["begin"]["value"]))
                 last_arrival = time.localtime(int(shedules["Frequency"]["end"]["value"]))
 
-            print("id", thread_id)
-            print("times", estimated_times)
-            print("scheduled", scheduled_times)
-            print("first & last", first_arrival, last_arrival, frequency)
+            print("id", thread_id, "\n")
+            print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
+            print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
+            print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
             print("\n")
 
 
