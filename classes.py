@@ -25,19 +25,27 @@ def get_stop_shedules(filename):
             events = shedules["Events"]
 
             estimated_times = []
+            scheduled_times = []
 
             for event in events:
-                time_estimated = time.localtime(int(event["Estimated"]["value"]))
-                estimated_times.append(time_estimated)
+                if "Estimated" in event:
 
-            frequency = shedules["Frequency"]["text"]
+                    time_estimated = time.localtime(int(event["Estimated"]["value"]))
+                    estimated_times.append(time_estimated)
+                else:
+                    time_scheduled = time.localtime(int(event["Scheduled"]["value"]))
+                    scheduled_times.append(time_scheduled)
+
+            if "Frequency" in shedules:
+                frequency = shedules["Frequency"]["text"]
             
-            first_arrival = time.localtime(int(shedules["Frequency"]["begin"]["value"]))
-            last_arrival = time.localtime(int(shedules["Frequency"]["end"]["value"]))
+                first_arrival = time.localtime(int(shedules["Frequency"]["begin"]["value"]))
+                last_arrival = time.localtime(int(shedules["Frequency"]["end"]["value"]))
 
             print("id", thread_id)
             print("times", estimated_times)
-            print("first & last", first_arrival, last_arrival)
+            print("scheduled", scheduled_times)
+            print("first & last", first_arrival, last_arrival, frequency)
             print("\n")
 
 
