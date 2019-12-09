@@ -1,0 +1,6 @@
+FILENAMES_PREFIX = "generated_files/"
+
+WORKDAYS = "1111100"
+WEEKENDS = "0000011"
+ROUTE_AB = "AB"
+ROUTE_BA = "BA"

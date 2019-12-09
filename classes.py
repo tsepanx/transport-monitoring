@@ -1,26 +1,28 @@
-import functions as f
+from functions import *
 import requests
 import json
+import time
+import datetime
+
+from constants import *
 from peewee import *
 from bs4 import BeautifulSoup
 
-WORKDAYS = "1111100"
-WEEKENDS = "0000011"
-ROUTE_AB = "AB"
-ROUTE_BA = "BA"
-
+db = SqliteDatabase(FILENAMES_PREFIX + 'test.db')
 
 class File:
 
     def __init__(self, filename, _type="w+"):
-        self.full_name = f.FILENAMES_PREFIX + filename
+        self.full_name = FILENAMES_PREFIX + filename
         self.__file_object = open(self.full_name, _type)
+        self.__file_extension = self.full_name.split(".")[1]
+        print(self.__file_extension)
 
     def write(self, data):
-        self.file_object.write(data)
+        self.__file_object.write(data)
 
     def write_json(self, data):
-        self.file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
+        self.__file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
 
     def write_csv(self, array_pos):
         for i in range(len(array_pos)):
@@ -28,20 +30,60 @@ class File:
             self.write("\n")
 
     def read(self):
-        return self.file_object.read()
+        return self.__file_object.read()
 
     def read_json(self):
-        return json.loads(self.file_object.read())
+        return json.loads(self.__file_object.read())
 
+    def get_all_points_list(self):
+        return recursive_descent(self.read_json())
 
-class Position:
+    def get_stop_schedules(self):
 
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        data = self.read_json()
 
-    def distance(self, b):
-        return ((b.x - self.x) ** 2 + (b.y - self.y) ** 2) ** 0.5
+        res_dict = dict()
+
+        d = data["data"]["properties"]["StopMetaData"]["Transport"]
+
+        for bus in d:
+            name = bus["name"]
+            threads = bus["threads"]
+            print(name)
+
+            res_dict[name] = dict()
+
+            for thread in threads:
+                thread_id = thread["threadId"]
+                schedules = thread["BriefSchedule"]
+                events = schedules["Events"]
+
+                estimated_times = []
+                scheduled_times = []
+
+                for event in events:
+                    if "Estimated" in event:
+                        x = int(event["Estimated"]["value"])
+
+                        time_estimated = time.localtime(x)
+                        estimated_times.append(time_estimated)
+                    else:
+                        x = int(event["Scheduled"]["value"])
+
+                        time_scheduled = time.localtime(x)
+                        scheduled_times.append(time_scheduled)
+
+                if "Frequency" in schedules:
+                    frequency = schedules["Frequency"]["text"]
+
+                    first_arrival = time.localtime(int(schedules["Frequency"]["begin"]["value"]))
+                    last_arrival = time.localtime(int(schedules["Frequency"]["end"]["value"]))
+
+                print("id", thread_id, "\n")
+                print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
+                print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
+                print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
+                print("\n")
 
 
 class Bus:
@@ -96,7 +138,7 @@ class Bus:
                     hours = int(hours_list[g - gray_cnt].text)
                     minutes = int(j.text)
 
-                    output.append(f.datetime.time(hours, minutes))
+                    output.append(datetime.time(hours, minutes))
 
             res_dict[stop_names[i - 1]] = output
 
@@ -142,13 +184,48 @@ class Path:
         return self.stops == b.stops
 
 
+class Database:
+
+    def __init__(self, db, list):
+        self.db = db
+        self.list = list
+        self.__init_database(list)
+
+    def __init_database(self, path_names, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+        self.db.create_tables([BusesDB, Time])
+
+        for i in range(len(path_names)):
+            data_source = []
+
+            b = Bus(path_names[i])
+            bus = BusesDB.create(name=path_names[i])
+            b.get_timetable()
+            for route in b.timetable:
+                for day in b.timetable[route]:
+                    for stop_name in b.timetable[route][day]:
+                        for time in b.timetable[route][day][stop_name]:
+                            print(b.name, route, day, stop_name, time)
+                            data_source.append((stop_name, bus, time, route, day))
+
+            Time.insert_many(data_source, fields=[
+                Time.stop_name,
+                Time.bus,
+                Time.arrival_time,
+                Time.route,
+                Time.days]).execute()
+
+    def write(self):
+        pass  # TODO write rows in to db with peewee
+
+    def read(self):
+        pass  # TODO read some info from db
+
 class BusesDB(Model):
     name = CharField()
     bus_class = Bus(name)
 
     class Meta:
-        database = f.db
-
+        database = db
 
 class Time(Model):
     stop_name = CharField()
@@ -158,4 +235,4 @@ class Time(Model):
     arrival_time = TimeField()
 
     class Meta:
-        database = f.db
+        database = db
