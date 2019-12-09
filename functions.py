@@ -1,15 +1,9 @@
 import datetime
-import json
 import time
 import classes as c
 
 from peewee import *
 from yandex_transport_webdriver_api import YandexTransportProxy
-
-WORKDAYS = "1111100"
-WEEKENDS = "0000011"
-ROUTE_AB = "AB"
-ROUTE_BA = "BA"
 
 FILENAMES_PREFIX = "generated_files/"
 
@@ -65,15 +59,6 @@ def get_stop_schedules(filename):
             print("\n")
 
 
-def write_csv_file(filename, pos_arr):
-    file = c.File(filename)
-    for i in range(len(pos_arr)):
-        file.file_object.write(";".join(map(str,
-                                [pos_arr[i][1], pos_arr[i][0], i + 1, i + 1]
-                                )))
-        file.file_object.write("\n")
-
-
 def get_stop_url(id):
     return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
 
@@ -115,3 +100,27 @@ def is_today_weekend():
 
 def pretty_time(time_struct):
     return ":".join(map(str, [time_struct.tm_hour, time_struct.tm_min, time_struct.tm_sec]))
+
+
+def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+    db.create_tables([c.BusesDB, c.Time])
+
+    for i in range(len(raw_buses_list)):
+        data_source = []
+
+        b = c.Bus(raw_buses_list[i])
+        bus = c.BusesDB.create(name=raw_buses_list[i])
+        b.get_timetable()
+        for route in b.timetable:
+            for day in b.timetable[route]:
+                for stop_name in b.timetable[route][day]:
+                    for time in b.timetable[route][day][stop_name]:
+                        print(b.name, route, day, stop_name, time)
+                        data_source.append((stop_name, bus, time, route, day))
+
+        c.Time.insert_many(data_source, fields=[
+            c.Time.stop_name,
+            c.Time.bus,
+            c.Time.arrival_time,
+            c.Time.route,
+            c.Time.days]).execute()

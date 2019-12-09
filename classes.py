@@ -1,51 +1,38 @@
-from functions import *
+import functions as f
 import requests
+import json
+from peewee import *
 from bs4 import BeautifulSoup
 
-
-def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
-    db.create_tables([BusesDB, Time])
-
-    for i in range(len(raw_buses_list)):
-        data_source = []
-
-        b = Bus(raw_buses_list[i])
-        bus = BusesDB.create(name=raw_buses_list[i])
-        b.get_timetable()
-        for route in b.timetable:
-            for day in b.timetable[route]:
-                for stop_name in b.timetable[route][day]:
-                    for time in b.timetable[route][day][stop_name]:
-                        print(b.name, route, day, stop_name, time)
-                        data_source.append((stop_name, bus, time, route, day))
-
-        Time.insert_many(data_source, fields=[
-            Time.stop_name,
-            Time.bus,
-            Time.arrival_time,
-            Time.route,
-            Time.days]).execute()
+WORKDAYS = "1111100"
+WEEKENDS = "0000011"
+ROUTE_AB = "AB"
+ROUTE_BA = "BA"
 
 
 class File:
-    full_name = ""
-    file_object = 0
 
     def __init__(self, filename, _type="w+"):
-        self.full_name = FILENAMES_PREFIX + filename
-        self.file_object = open(self.full_name, _type)
-
-    def write_json(self, data):
-        self.file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
-
-    def read_json(self):
-        return json.loads(self.file_object.read())
+        self.full_name = f.FILENAMES_PREFIX + filename
+        self.__file_object = open(self.full_name, _type)
 
     def write(self, data):
         self.file_object.write(data)
 
+    def write_json(self, data):
+        self.file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
+
+    def write_csv(self, array_pos):
+        for i in range(len(array_pos)):
+            self.write(";".join(map(str, [array_pos[i][1], array_pos[i][0], i + 1, i + 1])))
+            self.write("\n")
+
     def read(self):
         return self.file_object.read()
+
+    def read_json(self):
+        return json.loads(self.file_object.read())
+
 
 class Position:
     x = 0
@@ -111,7 +98,7 @@ class Bus:
                     hours = int(hours_list[g - gray_cnt].text)
                     minutes = int(j.text)
 
-                    output.append(datetime.time(hours, minutes))
+                    output.append(f.datetime.time(hours, minutes))
 
             res_dict[stop_names[i - 1]] = output
 
@@ -166,7 +153,7 @@ class BusesDB(Model):
     bus_class = Bus(name)
 
     class Meta:
-        database = db
+        database = f.db
 
 
 class Time(Model):
@@ -177,4 +164,4 @@ class Time(Model):
     arrival_time = TimeField()
 
     class Meta:
-        database = db
+        database = f.db
