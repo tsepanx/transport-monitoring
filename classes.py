@@ -1,5 +1,30 @@
 from functions import *
+import requests
 from bs4 import BeautifulSoup
+
+
+def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+    db.create_tables([BusesDB, Time])
+
+    for i in range(len(raw_buses_list)):
+        data_source = []
+
+        b = Bus(raw_buses_list[i])
+        bus = BusesDB.create(name=raw_buses_list[i])
+        b.get_timetable()
+        for route in b.timetable:
+            for day in b.timetable[route]:
+                for stop_name in b.timetable[route][day]:
+                    for time in b.timetable[route][day][stop_name]:
+                        print(b.name, route, day, stop_name, time)
+                        data_source.append((stop_name, bus, time, route, day))
+
+        Time.insert_many(data_source, fields=[
+            Time.stop_name,
+            Time.bus,
+            Time.arrival_time,
+            Time.route,
+            Time.days]).execute()
 
 
 class File:
@@ -13,9 +38,14 @@ class File:
     def write_json(self, data):
         self.file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
 
+    def read_json(self):
+        return json.loads(self.file_object.read())
+
     def write(self, data):
         self.file_object.write(data)
 
+    def read(self):
+        return self.file_object.read()
 
 class Position:
     x = 0
