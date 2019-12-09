@@ -102,7 +102,7 @@ def pretty_time(time_struct):
     return ":".join(map(str, [time_struct.tm_hour, time_struct.tm_min, time_struct.tm_sec]))
 
 
-def init_database(raw_buses_list, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+def init_database(raw_buses_list, filter_routes=(c.ROUTE_AB, c.ROUTE_BA), filter_days=(c.WORKDAYS, c.WEEKENDS)):
     db.create_tables([c.BusesDB, c.Time])
 
     for i in range(len(raw_buses_list)):

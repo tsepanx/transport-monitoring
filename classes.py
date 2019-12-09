@@ -35,8 +35,6 @@ class File:
 
 
 class Position:
-    x = 0
-    y = 0
 
     def __init__(self, x, y):
         self.x = x
@@ -133,10 +131,6 @@ class Bus:
 
 
 class Path:
-    name = ""
-    route = 0
-    days = 0
-    stops = []
 
     def __init__(self, name, route=ROUTE_AB, days=WORKDAYS, path=()):
         self.name = name

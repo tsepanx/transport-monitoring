@@ -5,8 +5,7 @@ __pycache__/
 
 .idea/
 .vscode/
-line*
-example.csv
+generated_files/
 
 # C extensions
 *.so
