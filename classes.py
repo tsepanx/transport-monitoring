@@ -1,6 +1,9 @@
 import requests, json, enum, time, datetime
 from bs4 import BeautifulSoup
 from peewee import *
+from yandex_transport_webdriver_api import YandexTransportProxy
+
+proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 db = SqliteDatabase('db_641.db')
 
@@ -71,14 +74,18 @@ def write_csv_file(filename, pos_arr):
             )))
         fout.write("\n")
 
-def write_data_to_file(func, file, url):
+def write_data_to_file(func, filename, url):
       print("---Requesting data---")
       data = func(url)
-    #   with open(file, 'w') as fout:
-    #         fout.write(json.dumps(data, indent=4, separators=(',', ': ')))    
+      print(data)
+      with open(filename, 'w') as fout:
+            fout.write(json.dumps(data, indent=4, separators=(',', ': ')))    
 
 def get_stop_url(id):
       return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
+
+def get_line_url(id, thread_id):
+    return f"https://yandex.ru/maps/213/moscow/?ll=37.679549,55.772203&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
 
 def make_url_with_position(coords):
     s = f"https://yandex.ru/maps/213/moscow/?ll=37.634438%2C55.741204&mode=search&sll=37.633301%2C55.743449&sspn=0.009463%2C0.003159&text={coords[0]},{coords[1]}&z=14"
