@@ -1,6 +1,7 @@
 from functions import *
 from bs4 import BeautifulSoup
 
+
 class File:
     full_name = ""
     file_object = 0
@@ -11,9 +12,10 @@ class File:
 
     def write_json(self, data):
         self.file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
-    
+
     def write(self, data):
         self.file_object.write(data)
+
 
 class Position:
     x = 0
@@ -26,14 +28,15 @@ class Position:
     def distance(self, b):
         return ((b.x - self.x) ** 2 + (b.y - self.y) ** 2) ** 0.5
 
+
 class Bus:
     paths_list = []
     timetable = {
-                ROUTE_AB : 
-                    {WORKDAYS : [], WEEKENDS : []}, 
-                ROUTE_BA : 
-                    {WORKDAYS : [], WEEKENDS : []}
-                }
+        ROUTE_AB:
+            {WORKDAYS: [], WEEKENDS: []},
+        ROUTE_BA:
+            {WORKDAYS: [], WEEKENDS: []}
+    }
 
     def __init__(self, name="0"):
         self.name = name
@@ -79,7 +82,6 @@ class Bus:
                     minutes = int(j.text)
 
                     output.append(datetime.time(hours, minutes))
-                    
 
             res_dict[stop_names[i - 1]] = output
 
@@ -105,12 +107,13 @@ class Bus:
                     res.append(p)
             self.paths_list = res[:]
         except Exception:
-            raise "No internet connection"
-    
+            raise Exception("No internet connection")
+
     def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         for route in routes:
             for day in days:
                 self.timetable[route][day] = self.get_timetable(route, day)
+
 
 class Path:
     name = ""
@@ -127,6 +130,7 @@ class Path:
     def __eq__(self, b):
         return self.stops == b.stops
 
+
 class BusesDB(Model):
     name = CharField()
     bus_class = Bus(name)
@@ -134,13 +138,13 @@ class BusesDB(Model):
     class Meta:
         database = db
 
+
 class Time(Model):
     stop_name = CharField()
     route = CharField()
     days = CharField()
     bus = ForeignKeyField(BusesDB, related_name="bus")
     arrival_time = TimeField()
-    
 
     class Meta:
         database = db
