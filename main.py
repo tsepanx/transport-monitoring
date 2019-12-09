@@ -15,10 +15,10 @@ from classes import *
 # data = get_all_coordinates_from_file("line.json")
 # write_csv_file("example.csv", data)
 
-url = get_line_url("2036924116", "641kA_bus_default")
-print(url)
+# url = get_line_url("2036924116", "641kA_bus_default")
+# print(url)
 
-write_data_to_file(proxy.get_line, "line2.json", url)
+# write_data_to_file(proxy.get_line, "line2.json", url)
 
 # init_database(["732"])
 # determine_path_type_for_today()
