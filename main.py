@@ -8,4 +8,9 @@ url_641 = "https://yandex.ru/maps/213/moscow/routes/bus_641/796d617073626d313a2f
 # File("vehicles_641.json").write_json(proxy.get_vehicles_info_with_region(url_641))
 
 
-x = Database(db, ["732"])
+# x = Database(db, [MAIN_BUS, "642", "212"])
+main_db = Database(db, [MAIN_BUS])
+
+# bus = Bus(MAIN_BUS)
+# bus.get_all_timetable()
+# print(bus.timetable)

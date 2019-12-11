@@ -1,10 +1,3 @@
-from constants import *
-from peewee import *
-from yandex_transport_webdriver_api import YandexTransportProxy
-
-proxy = YandexTransportProxy('127.0.0.1', 25555)
-
-
 def get_stop_url(id):
     return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
 

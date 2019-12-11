@@ -1,14 +1,17 @@
+from yandex_transport_webdriver_api import YandexTransportProxy
 from functions import *
+from constants import *
+from peewee import *
+from bs4 import BeautifulSoup
+
 import requests
 import json
 import time
 import datetime
 
-from constants import *
-from peewee import *
-from bs4 import BeautifulSoup
+db = SqliteDatabase(FILENAMES_PREFIX + MAIN_DB_NAME)
+proxy = YandexTransportProxy('127.0.0.1', 25555)
 
-db = SqliteDatabase(FILENAMES_PREFIX + 'test.db')
 
 class File:
 
@@ -90,20 +93,15 @@ class Bus:
     paths_list = []
     timetable = {
         ROUTE_AB:
-            {WORKDAYS: [], WEEKENDS: []},
+            {WORKDAYS: {}, WEEKENDS: {}},
         ROUTE_BA:
-            {WORKDAYS: [], WEEKENDS: []}
+            {WORKDAYS: {}, WEEKENDS: {}}
     }
 
     def __init__(self, name="0"):
         self.name = name
 
-    def get_path(self, route=ROUTE_AB, days=WORKDAYS):
-        for i in self.paths_list:
-            if i.route == route and i.days == days:
-                return i
-
-    def get_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
+    def __get_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
 
         url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
 
@@ -112,7 +110,9 @@ class Bus:
 
         stop_names = soup.findAll('h2')[:-1]
 
-        for i in range(len(stop_names)): stop_names[i] = stop_names[i].text
+        for i in range(len(stop_names)):
+            stop_names[i] = stop_names[i].text
+
         res_dict = dict.fromkeys(stop_names, [])
 
         if not stop_names:
@@ -144,7 +144,7 @@ class Bus:
 
         self.timetable[route][days] = res_dict
 
-    def get_stops(self, route=ROUTE_AB, days=WORKDAYS):
+    def __get_stops(self, route=ROUTE_AB, days=WORKDAYS):
         url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
         raw_stops_list = requests.get(url_string)
         stops_list = []
@@ -155,12 +155,17 @@ class Bus:
         p = Path(self.name, route, days, stops_list)
         return p
 
+    def get_path(self, route=ROUTE_AB, days=WORKDAYS):
+        for i in self.paths_list:
+            if i.route == route and i.days == days:
+                return i
+
     def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         try:
             res = []
             for day in days:
                 for route in routes:
-                    p = self.get_stops(route, day)
+                    p = self.__get_stops(route, day)
                     res.append(p)
             self.paths_list = res[:]
         except Exception:
@@ -169,7 +174,7 @@ class Bus:
     def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         for route in routes:
             for day in days:
-                self.timetable[route][day] = self.get_timetable(route, day)
+                self.__get_timetable(route=route, days=day)
 
 
 class Path:
@@ -199,7 +204,7 @@ class Database:
 
             b = Bus(path_names[i])
             bus = BusesDB.create(name=path_names[i])
-            b.get_timetable()
+            b.get_all_timetable()
             for route in b.timetable:
                 for day in b.timetable[route]:
                     for stop_name in b.timetable[route][day]:
@@ -220,12 +225,14 @@ class Database:
     def read(self):
         pass  # TODO read some info from db
 
+
 class BusesDB(Model):
     name = CharField()
     bus_class = Bus(name)
 
     class Meta:
         database = db
+
 
 class Time(Model):
     stop_name = CharField()
