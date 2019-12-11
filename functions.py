@@ -1,3 +1,6 @@
+import datetime
+
+
 def get_stop_url(id):
     return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
 
@@ -28,5 +31,5 @@ def recursive_descent(data):
     return res
 
 
-def pretty_time(time_struct):
-    return ":".join(map(str, [time_struct.tm_hour, time_struct.tm_min, time_struct.tm_sec]))
+def convert_time(value):
+    return datetime.time(value.tm_hour, value.tm_min, value.tm_sec)

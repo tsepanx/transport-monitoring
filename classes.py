@@ -8,41 +8,47 @@ import requests
 import json
 import time
 import datetime
+import pprint
 
-db = SqliteDatabase(FILENAMES_PREFIX + MAIN_DB_NAME)
+db = SqliteDatabase(FILENAMES_PREFIX + MAIN_DB_FILENAME)
 proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 
 class File:
 
-    def __init__(self, filename, _type="w+"):
+    def __init__(self, filename, _type="r"):
         self.full_name = FILENAMES_PREFIX + filename
-        self.__file_object = open(self.full_name, _type)
         self.__file_extension = self.full_name.split(".")[1]
-        print(self.__file_extension)
 
-    def write(self, data):
+        self.__open(_type)
+        print(self.full_name, self.__file_extension)
+
+    def __open(self, _type):
+        self.__file_object = open(self.full_name, _type)
+
+    def __write(self, data):
+        self.__open("w")
         self.__file_object.write(data)
 
     def write_json(self, data):
-        self.__file_object.write(json.dumps(data, indent=4, separators=(',', ': ')))
+        self.__write(json.dumps(data, indent=4, separators=(',', ': ')))
 
     def write_csv(self, array_pos):
         for i in range(len(array_pos)):
-            self.write(";".join(map(str, [array_pos[i][1], array_pos[i][0], i + 1, i + 1])))
-            self.write("\n")
+            self.__write(";".join(map(str, [array_pos[i][1], array_pos[i][0], i + 1, i + 1])))
+            self.__write("\n")
 
-    def read(self):
+    def __read(self):
+        self.__open("r")
         return self.__file_object.read()
 
     def read_json(self):
-        return json.loads(self.__file_object.read())
+        return json.loads(self.__read())
 
     def get_all_points_list(self):
         return recursive_descent(self.read_json())
 
     def get_stop_schedules(self):
-
         data = self.read_json()
 
         res_dict = dict()
@@ -50,43 +56,54 @@ class File:
         d = data["data"]["properties"]["StopMetaData"]["Transport"]
 
         for bus in d:
-            name = bus["name"]
-            threads = bus["threads"]
-            print(name)
+            if bus["type"] != "bus":
+                continue
 
-            res_dict[name] = dict()
+            print(__name__)
+            name = bus["name"]
+            line_id = bus[Tags.LINE_ID]
+
+            res_dict[name] = {
+                Tags.LINE_ID: line_id,
+                Tags.THREAD_ID: [],
+
+                Tags.SCHEDULED: [],
+                Tags.ESTIMATED: [],
+                Tags.FREQUENCY: None,
+
+                Tags.ESSENTIAL_STOPS: []
+            }
+
+            threads = bus["threads"]
 
             for thread in threads:
-                thread_id = thread["threadId"]
-                schedules = thread["BriefSchedule"]
-                events = schedules["Events"]
+                thread_id = thread[Tags.THREAD_ID]
+                schedules = thread[Tags.BRIEF_SCHEDULE]
+                events = schedules[Tags.EVENTS]
 
-                estimated_times = []
-                scheduled_times = []
+                res_dict[name][Tags.THREAD_ID].append(thread_id)
 
                 for event in events:
-                    if "Estimated" in event:
-                        x = int(event["Estimated"]["value"])
+                    for tag in event:
+                        if tag != "vehicleId":
+                            value = time.localtime(int(event[tag]["value"]))
+                            res_dict[name][tag].append(convert_time(value))
 
-                        time_estimated = time.localtime(x)
-                        estimated_times.append(time_estimated)
-                    else:
-                        x = int(event["Scheduled"]["value"])
+                if Tags.FREQUENCY in schedules:
+                    frequency = schedules[Tags.FREQUENCY]["value"] // 60
 
-                        time_scheduled = time.localtime(x)
-                        scheduled_times.append(time_scheduled)
+                    first_arrival = time.localtime(int(schedules[Tags.FREQUENCY]["begin"]["value"]))
+                    last_arrival = time.localtime(int(schedules[Tags.FREQUENCY]["end"]["value"]))
 
-                if "Frequency" in schedules:
-                    frequency = schedules["Frequency"]["text"]
+                    res_dict[name][Tags.FREQUENCY] = frequency
+                    res_dict[name][Tags.ESSENTIAL_STOPS] = [convert_time(first_arrival), convert_time(last_arrival)]
 
-                    first_arrival = time.localtime(int(schedules["Frequency"]["begin"]["value"]))
-                    last_arrival = time.localtime(int(schedules["Frequency"]["end"]["value"]))
+        pp = pprint.PrettyPrinter(indent=2)
+        pp.pprint(res_dict)
 
-                print("id", thread_id, "\n")
-                print("times :", *list(map(pretty_time, estimated_times)), sep="\n")
-                print("scheduled :", *list(map(pretty_time, scheduled_times)), "\n", sep="\n")
-                print("first & last", *list(map(pretty_time, [first_arrival, last_arrival])))
-                print("\n")
+        # json.dumps(res_dict, sort_keys=True, indent=4)
+
+        return res_dict
 
 
 class Bus:
@@ -218,9 +235,6 @@ class Database:
                 Time.arrival_time,
                 Time.route,
                 Time.days]).execute()
-
-    def write(self):
-        pass  # TODO write rows in to db with peewee
 
     def read(self):
         pass  # TODO read some info from db

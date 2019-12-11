@@ -1,16 +1,19 @@
 from classes import *
 
-url_641 = "https://yandex.ru/maps/213/moscow/routes/bus_641/796d617073626d313a2f2f7472616e7369742f6c696e653f69643d32303336393234313135266c6c3d33372e34363738313925324335352e373134333130266e616d653d36343126723d3133323626747970653d627573/?ll=37.474185%2C55.714808&z=14"
+start_time = time.time()
 
 # url = get_line_url("2036924115", "213A_641_bus_mosgortrans")
 
 # vehicles info with region
 # File("vehicles_641.json").write_json(proxy.get_vehicles_info_with_region(url_641))
 
+# main_db = Database(db, [MAIN_BUS])
 
-# x = Database(db, [MAIN_BUS, "642", "212"])
-main_db = Database(db, [MAIN_BUS])
 
-# bus = Bus(MAIN_BUS)
-# bus.get_all_timetable()
-# print(bus.timetable)
+file = File(MAIN_STOP_JSON_FILENAME)
+file.write_json(proxy.get_stop_info(get_stop_url(MAIN_STOP_ID)))
+file.get_stop_schedules()
+
+print(get_line_url(MAIN_LINE_ID, MAIN_THREAD_ID))
+
+print("Execution time :", round(time.time() - start_time, 2), "sec.")
