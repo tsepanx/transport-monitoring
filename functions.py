@@ -6,7 +6,7 @@ def get_stop_url(id):
 
 
 def get_line_url(id, thread_id):
-    return f"https://yandex.ru/maps/213/moscow/?ll=37.679549,55.772203&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
+    return f"https://yandex.ru/maps/213/moscow/?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
 
 
 def recursive_descent(data):

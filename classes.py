@@ -8,19 +8,18 @@ import requests
 import json
 import time
 import datetime
-import pprint
 
-db = SqliteDatabase(FILENAMES_PREFIX + MAIN_DB_FILENAME)
+db = SqliteDatabase(MAIN_DB_FILENAME)
 proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 
 class File:
 
-    def __init__(self, filename, _type="r"):
+    def __init__(self, filename, is_already_created=False):
         self.full_name = FILENAMES_PREFIX + filename
         self.__file_extension = self.full_name.split(".")[1]
 
-        self.__open(_type)
+        self.__open("r" if is_already_created else "w+")
         print(self.full_name, self.__file_extension)
 
     def __open(self, _type):
@@ -97,11 +96,6 @@ class File:
 
                     res_dict[name][Tags.FREQUENCY] = frequency
                     res_dict[name][Tags.ESSENTIAL_STOPS] = [convert_time(first_arrival), convert_time(last_arrival)]
-
-        pp = pprint.PrettyPrinter(indent=2)
-        pp.pprint(res_dict)
-
-        # json.dumps(res_dict, sort_keys=True, indent=4)
 
         return res_dict
 
@@ -194,24 +188,12 @@ class Bus:
                 self.__get_timetable(route=route, days=day)
 
 
-class Path:
-
-    def __init__(self, name, route=ROUTE_AB, days=WORKDAYS, path=()):
-        self.name = name
-        self.route = route
-        self.days = days
-        self.stops = path
-
-    def __eq__(self, b):
-        return self.stops == b.stops
-
-
 class Database:
 
-    def __init__(self, db, list):
+    def __init__(self, db, list, _filter_routes=(ROUTE_AB, ROUTE_BA), _filter_days=(WORKDAYS, WEEKENDS)):
         self.db = db
         self.list = list
-        self.__init_database(list)
+        self.__init_database(list, filter_routes=_filter_routes, filter_days=_filter_days)
 
     def __init_database(self, path_names, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
         self.db.create_tables([BusesDB, Time])
@@ -221,13 +203,14 @@ class Database:
 
             b = Bus(path_names[i])
             bus = BusesDB.create(name=path_names[i])
-            b.get_all_timetable()
+            b.get_all_timetable(routes=filter_routes, days=filter_days)
             for route in b.timetable:
                 for day in b.timetable[route]:
                     for stop_name in b.timetable[route][day]:
-                        for time in b.timetable[route][day][stop_name]:
-                            print(b.name, route, day, stop_name, time)
-                            data_source.append((stop_name, bus, time, route, day))
+                        for arrival_time in b.timetable[route][day][stop_name]:
+                            #  arrival_time = 0
+                            print(b.name, route, day, stop_name, arrival_time)
+                            data_source.append((stop_name, bus, arrival_time, route, day))
 
             Time.insert_many(data_source, fields=[
                 Time.stop_name,
@@ -257,3 +240,15 @@ class Time(Model):
 
     class Meta:
         database = db
+
+
+class Path:
+
+    def __init__(self, name, route=ROUTE_AB, days=WORKDAYS, path=()):
+        self.name = name
+        self.route = route
+        self.days = days
+        self.stops = path
+
+    def __eq__(self, b):
+        return self.stops == b.stops
