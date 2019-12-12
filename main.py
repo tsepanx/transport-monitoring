@@ -21,7 +21,7 @@ def get_estimated(rewrite_file=False):
     pp.pprint(data)
 
 
-get_estimated(rewrite_file=True)
+get_estimated(rewrite_file=False)
 
 # line_url = get_line_url(MAIN_LINE_ID, MAIN_THREAD_ID)
 #

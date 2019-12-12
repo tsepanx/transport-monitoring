@@ -15,7 +15,7 @@ proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 class File:
 
-    def __init__(self, filename, is_already_created=False):
+    def __init__(self, filename, is_already_created=True):
         self.full_name = FILENAMES_PREFIX + filename
         self.__file_extension = self.full_name.split(".")[1]
 
