@@ -8,12 +8,12 @@ start_time = time.time()
 # vehicles info with region
 # File("vehicles_641.json").write_json(proxy.get_vehicles_info_with_region(url_641))
 
-main_db = Database(db, [MAIN_BUS])  # , _filter_days=[WORKDAYS])
+# main_db = Database(db, [MAIN_BUS])  # , _filter_days=[WORKDAYS])
 
 
-def get_estimated(rewritefile=False):
+def get_estimated(rewrite_file=False):
     file = File(MAIN_STOP_JSON_FILENAME)
-    if rewritefile:
+    if rewrite_file:
         file.write_json(proxy.get_stop_info(get_stop_url(MAIN_STOP_ID)))
     data = file.get_stop_schedules()
 
@@ -21,7 +21,7 @@ def get_estimated(rewritefile=False):
     pp.pprint(data)
 
 
-# get_estimated(True)
+get_estimated(rewrite_file=True)
 
 # line_url = get_line_url(MAIN_LINE_ID, MAIN_THREAD_ID)
 #

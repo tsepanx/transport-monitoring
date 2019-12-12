@@ -9,6 +9,7 @@ __pycache__/
 .vscode/
 generated_files/
 #!*generated_files/732.db
+/ve
 
 # ___________________________ !!!
 
