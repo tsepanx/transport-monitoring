@@ -1,14 +1,12 @@
 from classes import *
 import pprint
 
-start_time = time.time()
 
-# url = get_line_url("2036924115", "213A_641_bus_mosgortrans")
-
-# vehicles info with region
-# File("vehicles_641.json").write_json(proxy.get_vehicles_info_with_region(url_641))
-
-# main_db = Database(db, [MAIN_BUS])  # , _filter_days=[WORKDAYS])
+def get_selected_rows_list(_stop_name, _route=ROUTE_AB, _days=WORKDAYS):
+    return Time.select().where(
+        Time.route == _route,
+        Time.days == _days,
+    ).order_by(Time.stop_name)
 
 
 def get_estimated(rewrite_file=False):
@@ -20,12 +18,27 @@ def get_estimated(rewrite_file=False):
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(data)
 
+    return data
 
-get_estimated(rewrite_file=False)
 
-# line_url = get_line_url(MAIN_LINE_ID, MAIN_THREAD_ID)
-#
-# file = File(MAIN_LINE_JSON_FILENAME)
-# file.write_json(proxy.get_line(get_line_url(MAIN_LINE_ID, MAIN_THREAD_ID)))
+start_time = time.time()
 
-print("Execution time :", round(time.time() - start_time, 2), "sec.")
+# main_db = Database(DB, [MAIN_BUS])  # , _filter_days=[WORKDAYS])
+
+stop_data_dict = get_estimated(rewrite_file=False)
+
+stop_name = stop_data_dict[Tags.STOP_NAME]
+estimated = stop_data_dict[MAIN_BUS_NAME][Tags.ESTIMATED]
+print(stop_name)
+print(estimated)
+
+db_filtered_times = []
+
+for row in get_selected_rows_list(stop_name):
+    if are_equals(row.stop_name, stop_name):
+        db_filtered_times.append(row.arrival_time)
+        print(row.id, row.stop_name, row.arrival_time)
+
+print(*db_filtered_times, sep="\n")
+
+print("Execution time :", round(time.time() - start_time, 3), "sec.")

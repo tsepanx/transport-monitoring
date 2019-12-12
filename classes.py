@@ -1,7 +1,5 @@
 from yandex_transport_webdriver_api import YandexTransportProxy
 from functions import *
-from constants import *
-from peewee import *
 from bs4 import BeautifulSoup
 
 import requests
@@ -9,7 +7,6 @@ import json
 import time
 import datetime
 
-db = SqliteDatabase(MAIN_DB_FILENAME)
 proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 
@@ -52,9 +49,13 @@ class File:
 
         res_dict = dict()
 
-        d = data["data"]["properties"]["StopMetaData"]["Transport"]
+        props = data["data"]["properties"]
+        stop_russian_fullname = props["name"]
+        transport_data = props["StopMetaData"]["Transport"]
 
-        for bus in d:
+        res_dict[Tags.STOP_NAME] = stop_russian_fullname
+
+        for bus in transport_data:
             if bus["type"] != "bus":
                 continue
 
@@ -219,28 +220,6 @@ class Database:
                 Time.route,
                 Time.days]).execute()
 
-    def read(self):
-        pass  # TODO read some info from db
-
-
-class BusesDB(Model):
-    name = CharField()
-    bus_class = Bus(name)
-
-    class Meta:
-        database = db
-
-
-class Time(Model):
-    stop_name = CharField()
-    route = CharField()
-    days = CharField()
-    bus = ForeignKeyField(BusesDB, related_name="bus")
-    arrival_time = TimeField()
-
-    class Meta:
-        database = db
-
 
 class Path:
 
@@ -252,3 +231,22 @@ class Path:
 
     def __eq__(self, b):
         return self.stops == b.stops
+
+
+class BusesDB(Model):
+    name = CharField()
+    bus_class = Bus(name)
+
+    class Meta:
+        database = DB
+
+
+class Time(Model):
+    stop_name = CharField()
+    route = CharField()
+    days = CharField()
+    bus = ForeignKeyField(BusesDB, related_name="bus")
+    arrival_time = TimeField()
+
+    class Meta:
+        database = DB

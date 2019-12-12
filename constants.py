@@ -5,7 +5,7 @@ WEEKENDS = "0000011"
 ROUTE_AB = "AB"
 ROUTE_BA = "BA"
 
-MAIN_BUS = "732"
+MAIN_BUS_NAME = "732"
 MAIN_STOP_JSON_FILENAME = "stop_732.json"
 MAIN_STOP_METRO_JSON_FILENAME = "stop_732_metro.json"
 MAIN_LINE_JSON_FILENAME = "line_732.json"
@@ -20,6 +20,8 @@ STOP_434_ID = 10110344
 
 
 class Tags:
+    STOP_NAME = "stopName"
+
     BRIEF_SCHEDULE = "BriefSchedule"
     THREAD_ID = "threadId"
     LINE_ID = "lineId"
