@@ -1,5 +1,6 @@
-from yandex_transport_webdriver_api import YandexTransportProxy
 from functions import *
+from deprecation import *
+from yandex_transport_webdriver_api import YandexTransportProxy
 from bs4 import BeautifulSoup
 
 import requests
@@ -113,7 +114,32 @@ class Bus:
     def __init__(self, name="0"):
         self.name = name
 
-    def __get_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
+    @deprecated("Use __get_timetable instead")
+    def get_stops(self, route=ROUTE_AB, days=WORKDAYS):
+        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
+        print(url_string)
+
+        raw_stops_list = requests.get(url_string)
+        stops_list = []
+        for stop in raw_stops_list.text.split('\n'):
+            if stop != "":
+                stops_list.append(stop)
+
+        return stops_list
+
+    @deprecated("Use get_all_timetable instead")
+    def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
+        try:
+            res = []
+            for day in days:
+                for route in routes:
+                    p = self.get_stops(route, day)
+                    res.append(p)
+            self.paths_list = res[:]
+        except Exception:
+            raise Exception("No internet connection")
+
+    def get_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
 
         url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
 
@@ -127,8 +153,10 @@ class Bus:
 
         res_dict = dict.fromkeys(stop_names, [])
 
+        # print(url_string)
+
         if not stop_names:
-            return False
+            raise Exception("NULL timetable got \n" + url_string)
 
         timetable = soup.findAll('table', {'border': '0', 'cellspacing': 0, 'cellpadding': '0'})
 
@@ -155,38 +183,12 @@ class Bus:
             res_dict[stop_names[i - 1]] = output
 
         self.timetable[route][days] = res_dict
-
-    def __get_stops(self, route=ROUTE_AB, days=WORKDAYS):
-        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
-        raw_stops_list = requests.get(url_string)
-        stops_list = []
-        for stop in raw_stops_list.text.split('\n'):
-            if stop != "":
-                stops_list.append(stop)
-
-        p = Path(self.name, route, days, stops_list)
-        return p
-
-    def get_path(self, route=ROUTE_AB, days=WORKDAYS):
-        for i in self.paths_list:
-            if i.route == route and i.days == days:
-                return i
-
-    def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
-        try:
-            res = []
-            for day in days:
-                for route in routes:
-                    p = self.__get_stops(route, day)
-                    res.append(p)
-            self.paths_list = res[:]
-        except Exception:
-            raise Exception("No internet connection")
+        return self.timetable[route][days]
 
     def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
         for route in routes:
             for day in days:
-                self.__get_timetable(route=route, days=day)
+                self.get_timetable(route=route, days=day)
 
 
 class Database:
@@ -232,18 +234,6 @@ class Database:
                 StopsDB.route,
                 StopsDB.bus
             ]).execute()
-
-
-class Path:
-
-    def __init__(self, name, route=ROUTE_AB, days=WORKDAYS, path=()):
-        self.name = name
-        self.route = route
-        self.days = days
-        self.stops = path
-
-    def __eq__(self, b):
-        return self.stops == b.stops
 
 
 class BusesDB(Model):

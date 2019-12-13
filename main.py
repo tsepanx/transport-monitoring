@@ -31,7 +31,7 @@ def get_estimated(rewrite_file=False):
 
 start_time = time.time()
 
-main_db = Database(DB, [MAIN_BUS_NAME], _filter_days=[WORKDAYS])
+# main_db = Database(DB, [MAIN_BUS_NAME], _filter_days=[WORKDAYS])
 
 stop_data_dict = get_estimated(rewrite_file=False)
 
@@ -40,9 +40,10 @@ estimated = stop_data_dict[MAIN_BUS_NAME][Tags.ESTIMATED]
 print(stop_name)
 print(estimated)
 
-db_filtered_times = []
-
-print(*db_filtered_times, sep="\n")
+b = Bus("732")
+# print(b.get_stops())
+# print(b.get_stops())
+print(list(b.get_timetable()) == b.get_stops())
 
 exec_time = round(time.time() - start_time, 3)
 print("Execution time :", round(time.time() - start_time, 3), "sec.")
