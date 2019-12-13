@@ -1,8 +1,7 @@
 from classes import *
-import pprint
 
 
-def get_filtered_rows_list(_stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
+def get_filtered_rows_from_db(bus, _stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
     res = []
     query = TimetableDB.select().where(
         TimetableDB.route == _route,
@@ -11,22 +10,10 @@ def get_filtered_rows_list(_stop_name, _route=TimetableFilter.ROUTE_AB, _days=Ti
 
     for row in query:
         if are_equals(row.stop_name, stop_name):
-            res.append(row.arrival_time)
+            if row.bus.name == bus:
+                res.append(row.arrival_time)
 
     return res
-
-
-def get_estimated(rewrite_file=False, _pprint=False):
-    file = File(MAIN_STOP_JSON_FILENAME)
-    if rewrite_file:
-        file.write_json(proxy.get_stop_info(get_stop_url(MAIN_STOP_ID)))
-    data = file.get_stop_schedules()
-
-    if _pprint:
-        pp = pprint.PrettyPrinter(indent=2)
-        pp.pprint(data)
-
-    return data
 
 
 start_time = time.time()
@@ -34,12 +21,16 @@ start_time = time.time()
 main_db = Database(DB, [MAIN_BUS_NAME], _filter_days=[TimetableFilter.WORKDAYS])
 # main_db.execute()
 
-stop_data_dict = get_estimated(rewrite_file=True, _pprint=True)
+file_732_stop = JsonFile(MAIN_BUS_NAME, _stop_id=MAIN_STOP_ID)
+stop_data_dict = file_732_stop.execute()
+print_dict(stop_data_dict)
+
+# stop_data_dict = get_transport_data_from_stop("stop_732.json", 1, rewrite_file=False, _pprint=True)
 
 stop_name = stop_data_dict[Tags.STOP_NAME]
 
 estimated = stop_data_dict[MAIN_BUS_NAME][Tags.ESTIMATED][0]
-times_from_db = get_filtered_rows_list(stop_name)
+times_from_db = get_filtered_rows_from_db(MAIN_BUS_NAME, stop_name)
 
 nearest_times = []
 

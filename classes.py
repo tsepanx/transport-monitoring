@@ -13,40 +13,54 @@ proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 class File:
 
-    def __init__(self, filename, is_already_created=True):
-        self.full_name = PROJECT_PREFIX + FILENAMES_PREFIX + filename
-        self.__file_extension = self.full_name.split(".")[1]
+    def __init__(self, filename, extension, is_already_created=True):
+        self.full_name = get_full_filename(filename, extension)
+        self.__extension = extension
 
         self.__open("r" if is_already_created else "w+")
-        print(self.full_name, self.__file_extension)
+        print(self.full_name, self.__extension)
 
     def __open(self, _type):
         self.__file_object = open(self.full_name, _type)
 
-    def __write(self, data):
-        self.__open("w")
+    def raw_write(self, data):
+        self.__open("w+")
         self.__file_object.write(data)
 
-    def write_json(self, data):
-        self.__write(json.dumps(data, indent=4, separators=(',', ': ')))
-
-    def write_csv(self, array_pos):
-        for i in range(len(array_pos)):
-            self.__write(";".join(map(str, [array_pos[i][1], array_pos[i][0], i + 1, i + 1])))
-            self.__write("\n")
-
-    def __read(self):
+    def raw_read(self):
         self.__open("r")
         return self.__file_object.read()
 
-    def read_json(self):
-        return json.loads(self.__read())
 
-    def get_all_points_list(self):
-        return recursive_descent(self.read_json())
+class JsonFile(File):
 
-    def get_stop_schedules(self):
-        data = self.read_json()
+    def __init__(self, bus, _stop_id=None):
+        self.data_dict = None
+        self.stop_id = _stop_id
+        self.request_type = Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
+
+        super().__init__(self.request_type.value + str(bus), "json", True)
+
+    def execute(self):
+        if self.request_type == Request.GET_STOP_INFO:
+            data = proxy.get_stop_info(get_stop_url(self.stop_id))
+            self.write(data)
+            self.data_dict = self.__get_transport_schedules()
+            return self.data_dict
+
+        elif self.request_type == Request.GET_LINE:
+            self.write(proxy.get_line(get_line_url(None, None)))  # TODO make it works
+            self.__get_line_request()
+
+    def write(self, data):
+        d = json.dumps(data, indent=4, separators=(',', ': '))
+        self.raw_write(d)
+
+    def read(self):
+        return json.loads(self.raw_read())
+
+    def __get_transport_schedules(self):
+        data = self.read()
 
         res_dict = dict()
 
@@ -100,6 +114,12 @@ class File:
                     res_dict[name][Tags.ESSENTIAL_STOPS] = [convert_time(first_arrival), convert_time(last_arrival)]
 
         return res_dict
+
+    def __get_line_request(self):
+        pass
+
+    def get_all_points_recursively(self):
+        return recursive_descent(self.raw_read())
 
 
 class Bus:

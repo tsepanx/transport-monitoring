@@ -1,8 +1,13 @@
 import datetime
+import pprint
 from peewee import *
 from constants import *
 
 DB = SqliteDatabase(MAIN_DB_FILENAME)
+
+
+def get_full_filename(filename, ext="json"):
+    return PROJECT_PREFIX + FILENAMES_PREFIX + filename + "." + ext
 
 
 def get_stop_url(id):
@@ -61,16 +66,12 @@ def convert_time(value):
     return datetime.time(value.tm_hour, value.tm_min, value.tm_sec)
 
 
-def pprint_time(t):
-    s = ""
-    s += str(t.hour) + ":" if t.hour > 0 else ""
-    s += str(t.minute) + ":" if t.minute > 0 else ""
-    s += str(t.second) if t.second > 0 else ""
-    return s
+def print_dict(data):
+    pp = pprint.PrettyPrinter(indent=2)
+    pp.pprint(data)
 
 
 def get_delta(a, b):
-
     x = datetime.datetime.combine(datetime.date.today(), a) - \
-           datetime.datetime.combine(datetime.date.today(), b)
+        datetime.datetime.combine(datetime.date.today(), b)
     return (datetime.datetime.min + x).time()
