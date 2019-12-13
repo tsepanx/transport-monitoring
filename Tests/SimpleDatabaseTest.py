@@ -8,11 +8,9 @@ class MyTestCase(unittest.TestCase):
 
     def test_mos_gor_trans_equals(self):
         self.maxDiff = None
-        a = [ROUTE_AB, ROUTE_BA]
-        b = [WORKDAYS, WEEKENDS]
 
-        for i in a:
-            for j in b:
+        for i in TimetableFilter.ROUTES:
+            for j in TimetableFilter.DAYS:
                 bus = Bus(MAIN_BUS_NAME)
                 l1 = set(bus.get_stops(i, j))
                 l2 = set(list(bus.get_timetable(i, j)))

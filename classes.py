@@ -105,20 +105,20 @@ class File:
 class Bus:
     paths_list = []
     timetable = {
-        ROUTE_AB:
-            {WORKDAYS: {}, WEEKENDS: {}},
-        ROUTE_BA:
-            {WORKDAYS: {}, WEEKENDS: {}}
+        TimetableFilter.ROUTE_AB:
+            {TimetableFilter.WORKDAYS: {}, TimetableFilter.WEEKENDS: {}},
+        TimetableFilter.ROUTE_BA:
+            {TimetableFilter.WORKDAYS: {}, TimetableFilter.WEEKENDS: {}}
     }
 
     def __init__(self, name="0"):
         self.name = name
 
     @deprecated("Use __get_timetable instead")
-    def get_stops(self, route=ROUTE_AB, days=WORKDAYS):
+    def get_stops(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS):
         url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
         print(url_string)
-
+        
         raw_stops_list = requests.get(url_string)
         stops_list = []
         for stop in raw_stops_list.text.split('\n'):
@@ -128,7 +128,7 @@ class Bus:
         return stops_list
 
     @deprecated("Use get_all_timetable instead")
-    def get_all_stops(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
+    def get_all_stops(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         try:
             res = []
             for day in days:
@@ -139,7 +139,7 @@ class Bus:
         except Exception:
             raise Exception("No internet connection")
 
-    def get_timetable(self, route=ROUTE_AB, days=WORKDAYS, stop_filter="all"):
+    def get_timetable(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS, stop_filter="all"):
 
         url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
 
@@ -185,7 +185,7 @@ class Bus:
         self.timetable[route][days] = res_dict
         return self.timetable[route][days]
 
-    def get_all_timetable(self, routes=(ROUTE_AB, ROUTE_BA), days=(WORKDAYS, WEEKENDS)):
+    def get_all_timetable(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         for route in routes:
             for day in days:
                 self.get_timetable(route=route, days=day)
@@ -193,12 +193,12 @@ class Bus:
 
 class Database:
 
-    def __init__(self, db, list, _filter_routes=(ROUTE_AB, ROUTE_BA), _filter_days=(WORKDAYS, WEEKENDS)):
+    def __init__(self, db, list, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db = db
         self.list = list
         self.__init_database(list, filter_routes=_filter_routes, filter_days=_filter_days)
 
-    def __init_database(self, bus_names, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+    def __init_database(self, bus_names, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db.create_tables([BusesDB, TimetableDB, StopsDB])
 
         for i in range(len(bus_names)):

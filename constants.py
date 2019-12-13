@@ -1,10 +1,5 @@
 FILENAMES_PREFIX = "generated_files/"
 
-WORKDAYS = "1111100"
-WEEKENDS = "0000011"
-ROUTE_AB = "AB"
-ROUTE_BA = "BA"
-
 MAIN_BUS_NAME = "732"
 MAIN_STOP_JSON_FILENAME = "stop_732.json"
 MAIN_STOP_METRO_JSON_FILENAME = "stop_732_metro.json"
@@ -34,3 +29,13 @@ class Tags:
     ESSENTIAL_STOPS = "EssentialStops"
 
     FREQUENCY = "Frequency"
+
+
+class TimetableFilter:
+    WORKDAYS = "1111100"
+    WEEKENDS = "0000011"
+    ROUTE_AB = "AB"
+    ROUTE_BA = "BA"
+
+    ROUTES = (ROUTE_AB, ROUTE_BA)
+    DAYS = (WORKDAYS, WEEKENDS)

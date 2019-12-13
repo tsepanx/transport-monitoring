@@ -2,7 +2,9 @@ from classes import *
 import pprint
 
 
-def get_selected_rows_list(_stop_name, _route=ROUTE_AB, _days=WORKDAYS):
+def get_selected_rows_list(_stop_name,
+                           _route=TimetableFilter.ROUTE_AB,
+                           _days=TimetableFilter.WORKDAYS):
     res = []
     query = TimetableDB.select().where(
         TimetableDB.route == _route,
@@ -39,11 +41,6 @@ stop_name = stop_data_dict[Tags.STOP_NAME]
 estimated = stop_data_dict[MAIN_BUS_NAME][Tags.ESTIMATED]
 print(stop_name)
 print(estimated)
-
-b = Bus("732")
-# print(b.get_stops())
-# print(b.get_stops())
-print(list(b.get_timetable()) == b.get_stops())
 
 exec_time = round(time.time() - start_time, 3)
 print("Execution time :", round(time.time() - start_time, 3), "sec.")
