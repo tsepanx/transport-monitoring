@@ -1,4 +1,5 @@
 FILENAMES_PREFIX = "generated_files/"
+PROJECT_PREFIX = "/home/stepan/TransportMonitoring/"
 
 MAIN_BUS_NAME = "732"
 MAIN_STOP_JSON_FILENAME = "stop_732.json"

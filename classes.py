@@ -14,7 +14,7 @@ proxy = YandexTransportProxy('127.0.0.1', 25555)
 class File:
 
     def __init__(self, filename, is_already_created=True):
-        self.full_name = FILENAMES_PREFIX + filename
+        self.full_name = PROJECT_PREFIX + FILENAMES_PREFIX + filename
         self.__file_extension = self.full_name.split(".")[1]
 
         self.__open("r" if is_already_created else "w+")
@@ -118,7 +118,7 @@ class Bus:
     def get_stops(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS):
         url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
         print(url_string)
-        
+
         raw_stops_list = requests.get(url_string)
         stops_list = []
         for stop in raw_stops_list.text.split('\n'):
@@ -128,7 +128,8 @@ class Bus:
         return stops_list
 
     @deprecated("Use get_all_timetable instead")
-    def get_all_stops(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
+    def get_all_stops(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+                      days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         try:
             res = []
             for day in days:
@@ -185,7 +186,8 @@ class Bus:
         self.timetable[route][days] = res_dict
         return self.timetable[route][days]
 
-    def get_all_timetable(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
+    def get_all_timetable(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+                          days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         for route in routes:
             for day in days:
                 self.get_timetable(route=route, days=day)
@@ -193,12 +195,18 @@ class Bus:
 
 class Database:
 
-    def __init__(self, db, list, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
+    def __init__(self, db, list, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+                 _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db = db
         self.list = list
-        self.__init_database(list, filter_routes=_filter_routes, filter_days=_filter_days)
+        self.filter_routes = _filter_routes
+        self.filter_days = _filter_days
 
-    def __init_database(self, bus_names, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA), filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
+    def execute(self):
+        self.__init_database(list, filter_routes=self.filter_routes, filter_days=self.filter_days)
+
+    def __init_database(self, bus_names, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+                        filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db.create_tables([BusesDB, TimetableDB, StopsDB])
 
         for i in range(len(bus_names)):
@@ -263,4 +271,3 @@ class StopsDB(Model):
 
     class Meta:
         database = DB
-

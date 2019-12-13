@@ -15,7 +15,7 @@ class MyTestCase(unittest.TestCase):
                 l1 = set(bus.get_stops(i, j))
                 l2 = set(list(bus.get_timetable(i, j)))
                 self.assertEqual(l1, l2,
-                                 i + j +
+                                 msg=i + j +
                                  "\n\n\n" +
                                  "\n".join(map(str, l1)) +
                                  "\n\n\n" +

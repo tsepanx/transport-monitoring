@@ -59,3 +59,8 @@ def are_equals(a, b):
 
 def convert_time(value):
     return datetime.time(value.tm_hour, value.tm_min, value.tm_sec)
+
+
+def get_delta(a, b):
+    return datetime.datetime.combine(datetime.date.today(), a) - \
+           datetime.datetime.combine(datetime.date.today(), b)
