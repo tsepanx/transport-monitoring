@@ -1,4 +1,5 @@
 import enum
+from peewee import *
 
 FILENAMES_PREFIX = "generated_files/"
 PROJECT_PREFIX = "/home/stepan/TransportMonitoring/"
@@ -7,7 +8,9 @@ JSON_LINE_PREFIX = "line_"
 JSON_STOP_PREFIX = "stop_"
 
 MAIN_BUS_NAME = "732"
-MAIN_DB_FILENAME = MAIN_BUS_NAME + ".db"
+MAIN_DB_FILENAME = "buses.db"  # MAIN_BUS_NAME + ".db"
+
+DB = SqliteDatabase(MAIN_DB_FILENAME)
 
 MAIN_STOP_ID = 9644642  # Давыдковская улица, 10
 MAIN_LINE_ID = "213_732_bus_mosgortrans"

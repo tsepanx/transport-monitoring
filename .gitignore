@@ -8,7 +8,7 @@ __pycache__/
 .idea/
 .vscode/
 generated_files/
-#!*generated_files/732.db
+#!*generated_files/buses.db
 /ve
 
 # ___________________________ !!!

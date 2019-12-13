@@ -1,9 +1,6 @@
 import datetime
 import pprint
-from peewee import *
 from constants import *
-
-DB = SqliteDatabase(MAIN_DB_FILENAME)
 
 
 def get_full_filename(filename, ext="json"):

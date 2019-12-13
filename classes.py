@@ -215,40 +215,55 @@ class Bus:
 
 class Database:
 
-    def __init__(self, db, list, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+    def __init__(self, db, _list, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
                  _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db = db
-        self.list = list
+        self.buses_list = _list
         self.filter_routes = _filter_routes
         self.filter_days = _filter_days
 
     def execute(self):
-        self.__init_database(list, filter_routes=self.filter_routes, filter_days=self.filter_days)
+        self.__init_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
 
-    def __init_database(self, bus_names, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+    @staticmethod
+    def get_filtered_rows_from_db(bus, stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
+        res = []
+        query = TimetableDB.select().where(
+            TimetableDB.route == _route,
+            TimetableDB.days == _days,
+        ).order_by(TimetableDB.stop_name)
+
+        for row in query:
+            if are_equals(row.stop_name, stop_name):
+                if row.bus.name == bus:
+                    res.append(row.arrival_time)
+
+        return res
+
+    def __init_database(self, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
                         filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db.create_tables([BusesDB, TimetableDB, StopsDB])
 
-        for i in range(len(bus_names)):
+        for bus_name in self.buses_list:
             time_data_source = []
             stop_data_source = []
 
-            b = Bus(bus_names[i])
-            b.get_all_timetable(routes=filter_routes, days=filter_days)
+            bus = Bus(bus_name)
+            bus.get_all_timetable(routes=filter_routes, days=filter_days)
 
-            bus_row = BusesDB.create(name=bus_names[i])
+            bus_row = BusesDB.create(name=bus.name)
 
-            for route in b.timetable:
-                for day in b.timetable[route]:
-                    for stop_name in b.timetable[route][day]:
+            for route in bus.timetable:
+                for day in bus.timetable[route]:
+                    for stop_name in bus.timetable[route][day]:
                         stop_data_source.append(
                             (stop_name,
                              route,
                              bus_row))
 
-                        for arrival_time in b.timetable[route][day][stop_name]:
+                        for arrival_time in bus.timetable[route][day][stop_name]:
                             #  arrival_time = 0
-                            print(b.name, route, day, stop_name, arrival_time)
+                            print(bus.name, route, day, stop_name, arrival_time)
                             time_data_source.append((stop_name, bus_row, arrival_time, route, day))
             TimetableDB.insert_many(time_data_source, fields=[
                 TimetableDB.stop_name,

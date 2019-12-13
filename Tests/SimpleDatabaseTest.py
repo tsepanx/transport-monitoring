@@ -6,7 +6,7 @@ class MyTestCase(unittest.TestCase):
     def test_is_not_empty(self):
         self.assertFalse(len(stop_data_dict) == 0)
 
-    def test_mos_gor_trans_equals(self):
+    def test_mos_gor_trans_funcs_equals(self):
         self.maxDiff = None
 
         for i in TimetableFilter.ROUTES:
@@ -20,6 +20,10 @@ class MyTestCase(unittest.TestCase):
                                  "\n".join(map(str, l1)) +
                                  "\n\n\n" +
                                  "\n".join(map(str, l2)))
+
+    def test_db_filter(self):
+        rows = main_db.get_filtered_rows_from_db(MAIN_BUS_NAME, stop_name)
+        self.assertNotEqual(rows, [])
 
 
 if __name__ == '__main__':
