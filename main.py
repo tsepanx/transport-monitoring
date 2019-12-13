@@ -51,13 +51,15 @@ for i, t in enumerate(times_from_db):
 exec_time = round(time.time() - start_time, 3)
 
 print("---", stop_name, "---")
+print()
 print("real value: ", estimated)
-print("db values: ", *nearest_times)
+print("db values: ", *nearest_times)  # , sep="\n")
 print()
 print("Bus will come",
-      get_delta(estimated, nearest_times[0]),
-      " earlier, or will be",
       get_delta(nearest_times[1], estimated),
+      "earlier, \n or will be  ",
+      get_delta(estimated, nearest_times[0]),
       "late")
 
+print()
 print("Execution time :", exec_time, "sec.")

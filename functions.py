@@ -61,6 +61,16 @@ def convert_time(value):
     return datetime.time(value.tm_hour, value.tm_min, value.tm_sec)
 
 
+def pprint_time(t):
+    s = ""
+    s += str(t.hour) + ":" if t.hour > 0 else ""
+    s += str(t.minute) + ":" if t.minute > 0 else ""
+    s += str(t.second) if t.second > 0 else ""
+    return s
+
+
 def get_delta(a, b):
-    return datetime.datetime.combine(datetime.date.today(), a) - \
+
+    x = datetime.datetime.combine(datetime.date.today(), a) - \
            datetime.datetime.combine(datetime.date.today(), b)
+    return (datetime.datetime.min + x).time()
