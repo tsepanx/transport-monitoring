@@ -3,10 +3,18 @@ import pprint
 
 
 def get_selected_rows_list(_stop_name, _route=ROUTE_AB, _days=WORKDAYS):
-    return Time.select().where(
-        Time.route == _route,
-        Time.days == _days,
-    ).order_by(Time.stop_name)
+    res = []
+    query = TimetableDB.select().where(
+        TimetableDB.route == _route,
+        TimetableDB.days == _days,
+    ).order_by(TimetableDB.stop_name)
+
+    for row in query:
+        if are_equals(row.stop_name, stop_name):
+            res.append(row.arrival_time)
+            # print(row.id, row.stop_name, row.arrival_time)
+
+    return res
 
 
 def get_estimated(rewrite_file=False):
@@ -23,7 +31,7 @@ def get_estimated(rewrite_file=False):
 
 start_time = time.time()
 
-# main_db = Database(DB, [MAIN_BUS])  # , _filter_days=[WORKDAYS])
+main_db = Database(DB, [MAIN_BUS_NAME], _filter_days=[WORKDAYS])
 
 stop_data_dict = get_estimated(rewrite_file=False)
 
@@ -34,11 +42,7 @@ print(estimated)
 
 db_filtered_times = []
 
-for row in get_selected_rows_list(stop_name):
-    if are_equals(row.stop_name, stop_name):
-        db_filtered_times.append(row.arrival_time)
-        print(row.id, row.stop_name, row.arrival_time)
-
 print(*db_filtered_times, sep="\n")
 
+exec_time = round(time.time() - start_time, 3)
 print("Execution time :", round(time.time() - start_time, 3), "sec.")

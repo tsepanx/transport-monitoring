@@ -196,29 +196,42 @@ class Database:
         self.list = list
         self.__init_database(list, filter_routes=_filter_routes, filter_days=_filter_days)
 
-    def __init_database(self, path_names, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
-        self.db.create_tables([BusesDB, Time])
+    def __init_database(self, bus_names, filter_routes=(ROUTE_AB, ROUTE_BA), filter_days=(WORKDAYS, WEEKENDS)):
+        self.db.create_tables([BusesDB, TimetableDB, StopsDB])
 
-        for i in range(len(path_names)):
-            data_source = []
+        for i in range(len(bus_names)):
+            time_data_source = []
+            stop_data_source = []
 
-            b = Bus(path_names[i])
-            bus = BusesDB.create(name=path_names[i])
+            b = Bus(bus_names[i])
             b.get_all_timetable(routes=filter_routes, days=filter_days)
+
+            bus_row = BusesDB.create(name=bus_names[i])
+
             for route in b.timetable:
                 for day in b.timetable[route]:
                     for stop_name in b.timetable[route][day]:
+                        stop_data_source.append(
+                            (stop_name,
+                             route,
+                             bus_row))
+
                         for arrival_time in b.timetable[route][day][stop_name]:
                             #  arrival_time = 0
                             print(b.name, route, day, stop_name, arrival_time)
-                            data_source.append((stop_name, bus, arrival_time, route, day))
+                            time_data_source.append((stop_name, bus_row, arrival_time, route, day))
+            TimetableDB.insert_many(time_data_source, fields=[
+                TimetableDB.stop_name,
+                TimetableDB.bus,
+                TimetableDB.arrival_time,
+                TimetableDB.route,
+                TimetableDB.days]).execute()
 
-            Time.insert_many(data_source, fields=[
-                Time.stop_name,
-                Time.bus,
-                Time.arrival_time,
-                Time.route,
-                Time.days]).execute()
+            StopsDB.insert_many(stop_data_source, fields=[
+                StopsDB.stop_name,
+                StopsDB.route,
+                StopsDB.bus
+            ]).execute()
 
 
 class Path:
@@ -241,7 +254,7 @@ class BusesDB(Model):
         database = DB
 
 
-class Time(Model):
+class TimetableDB(Model):
     stop_name = CharField()
     route = CharField()
     days = CharField()
@@ -250,3 +263,14 @@ class Time(Model):
 
     class Meta:
         database = DB
+
+
+class StopsDB(Model):
+    stop_name = CharField()
+    route = CharField()
+    bus = ForeignKeyField(BusesDB, related_name="bus")
+    stop_id = IntegerField(null=True)
+
+    class Meta:
+        database = DB
+
