@@ -3,6 +3,12 @@ import pprint
 from constants import *
 
 
+def is_today_workday():
+    d = datetime.date.today().isoweekday()
+    print(d)
+    return d not in [5, 6]
+
+
 def get_full_filename(filename, ext="json"):
     return PROJECT_PREFIX + FILENAMES_PREFIX + filename + "." + ext
 
@@ -56,7 +62,7 @@ def distance(a, b):
 
 
 def are_equals(a, b):
-    return distance(a, b) <= 3
+    return distance(a, b) <= 5
 
 
 def convert_time(value):

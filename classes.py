@@ -70,9 +70,7 @@ class GetStopInfoJsonFile(JsonFile):
         self.data_dict = self.__get_transport_schedules()
         # return self.data_dict
 
-    def print_bus_data(self, main_db):
-        self.execute()
-
+    def print_bus_data(self, main_db, _filter_route, _filter_day):
         print_dict(self.data_dict)
 
         stop_name = self.data_dict[Tags.STOP_NAME]
@@ -84,7 +82,8 @@ class GetStopInfoJsonFile(JsonFile):
             return
 
         estimated = (estimated_list + scheduled_list)[0]
-        times_from_db = main_db.get_filtered_rows_from_db(self.bus_name, stop_name)
+        times_from_db = main_db. \
+            get_filtered_rows_from_db(self.bus_name, stop_name, _filter_route, _filter_day)
 
         nearest_times = []
 
@@ -265,8 +264,11 @@ class Database:
         self.filter_routes = _filter_routes
         self.filter_days = _filter_days
 
-    def execute(self):
-        self.__fill_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
+    def create(self):
+        if not os.path.exists(PROJECT_PREFIX + MAIN_DB_FILENAME):
+            self.__fill_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
+        else:
+            print("=== database already exists! ===")
 
     @staticmethod
     def get_filtered_rows_from_db(bus, stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
@@ -314,13 +316,13 @@ class Database:
                 TimetableDB.bus,
                 TimetableDB.arrival_time,
                 TimetableDB.route,
-                TimetableDB.days]).execute()
+                TimetableDB.days]).create()
 
             StopsDB.insert_many(stop_data_source, fields=[
                 StopsDB.stop_name,
                 StopsDB.route,
                 StopsDB.bus
-            ]).execute()
+            ]).create()
 
 
 class BusesDB(Model):
