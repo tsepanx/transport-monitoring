@@ -13,7 +13,7 @@ proxy = YandexTransportProxy('127.0.0.1', 25555)
 
 class File:
 
-    def __init__(self, filename, extension, is_already_created=True):
+    def __init__(self, filename, extension, is_already_created=False):
         self.full_name = get_full_filename(filename, extension)
         self.__extension = extension
 
@@ -39,7 +39,7 @@ class JsonFile(File):
         self.stop_id = _stop_id
         self.request_type = Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
 
-        super().__init__(self.request_type.value + str(bus), "json", True)
+        super().__init__(self.request_type.value + str(bus), "json")
 
     def execute(self):
         if self.request_type == Request.GET_STOP_INFO:
@@ -163,6 +163,7 @@ class Bus:
     def get_timetable(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS, stop_filter="all"):
 
         url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
+        print(url_string)
 
         request = requests.get(url_string)
         soup = BeautifulSoup(''.join(request.text), features="html.parser")
@@ -223,7 +224,7 @@ class Database:
         self.filter_days = _filter_days
 
     def execute(self):
-        self.__init_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
+        self.__fill_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
 
     @staticmethod
     def get_filtered_rows_from_db(bus, stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
@@ -240,8 +241,8 @@ class Database:
 
         return res
 
-    def __init_database(self, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
-                        filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
+    def __fill_database(self, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+                        filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS), visual=False):
         self.db.create_tables([BusesDB, TimetableDB, StopsDB])
 
         for bus_name in self.buses_list:
@@ -252,6 +253,7 @@ class Database:
             bus.get_all_timetable(routes=filter_routes, days=filter_days)
 
             bus_row = BusesDB.create(name=bus.name)
+            print(bus.name)
 
             for route in bus.timetable:
                 for day in bus.timetable[route]:
@@ -262,9 +264,9 @@ class Database:
                              bus_row))
 
                         for arrival_time in bus.timetable[route][day][stop_name]:
-                            #  arrival_time = 0
-                            print(bus.name, route, day, stop_name, arrival_time)
                             time_data_source.append((stop_name, bus_row, arrival_time, route, day))
+                            # if visual:
+                            #     print(bus.name, route, day, stop_name, arrival_time)
             TimetableDB.insert_many(time_data_source, fields=[
                 TimetableDB.stop_name,
                 TimetableDB.bus,

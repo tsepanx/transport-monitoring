@@ -7,17 +7,23 @@ PROJECT_PREFIX = "/home/stepan/TransportMonitoring/"
 JSON_LINE_PREFIX = "line_"
 JSON_STOP_PREFIX = "stop_"
 
-MAIN_BUS_NAME = "732"
+# MAIN_BUS_NAME = "732"
 MAIN_DB_FILENAME = "buses.db"  # MAIN_BUS_NAME + ".db"
 
 DB = SqliteDatabase(MAIN_DB_FILENAME)
 
-MAIN_STOP_ID = 9644642  # Давыдковская улица, 10
-MAIN_LINE_ID = "213_732_bus_mosgortrans"
-MAIN_THREAD_ID = "213A_732_bus_mosgortrans"
+LINE_ID_732 = "213_732_bus_mosgortrans"
+THREAD_ID_732 = "213A_732_bus_mosgortrans"
 
+STOP_732_ID = 9644642  # Давыдковская улица, 10
 STOP_641_ID = 9644493
 STOP_434_ID = 10110344
+
+STOPS_ID = {
+    "732": STOP_732_ID,
+    "641": STOP_641_ID,
+    "434": STOP_434_ID,
+}
 
 
 class Request(enum.Enum):
