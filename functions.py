@@ -3,7 +3,6 @@ import pprint
 from constants import *
 
 
-
 def get_full_filename(filename, ext="json"):
     return PROJECT_PREFIX + FILENAMES_PREFIX + filename + "." + ext
 
