@@ -1,5 +1,4 @@
 from classes import *
-import os
 
 if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
     os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)
