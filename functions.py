@@ -6,7 +6,7 @@ from constants import *
 def is_today_workday():
     d = datetime.date.today().isoweekday()
     print(d)
-    return d not in [5, 6]
+    return d not in [6, 7]
 
 
 def get_full_filename(filename, ext="json"):
@@ -14,7 +14,15 @@ def get_full_filename(filename, ext="json"):
 
 
 def get_stop_url(id):
-    return "https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__" + str(id)
+    stop_url_prefix = "stop__"
+    prefix = "https://yandex.ru/maps/213/moscow/?masstransit[stopId]="
+    s = str(id)
+    if len(s) == SHORT_STOP_ID_LENGTH:
+        return prefix + stop_url_prefix + s
+    elif len(s) == LONG_STOP_ID_LENGTH:
+        return prefix + s
+    else:
+        raise Exception("Another stop id length found")
 
 
 def get_line_url(id, thread_id):
@@ -75,6 +83,8 @@ def print_dict(data):
 
 
 def get_delta(a, b):
-    x = datetime.datetime.combine(datetime.date.today(), a) - \
-        datetime.datetime.combine(datetime.date.today(), b)
-    return (datetime.datetime.min + x).time()
+    x = datetime.datetime.combine(datetime.date.today(), a)
+    y = datetime.datetime.combine(datetime.date.today(), b)
+    res = abs(x - y)
+    # print(x, y, res)
+    return (datetime.datetime.min + res).time()

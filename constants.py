@@ -8,9 +8,6 @@ PROJECT_PREFIX = os.getcwd() + "/"
 if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
     os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)
 
-JSON_LINE_PREFIX = "line_"
-JSON_STOP_PREFIX = "stop_"
-
 # MAIN_BUS_NAME = "732"
 MAIN_DB_FILENAME = "buses.db"  # MAIN_BUS_NAME + ".db"
 
@@ -21,15 +18,12 @@ THREAD_ID_732 = "213A_732_bus_mosgortrans"
 
 BUSES_LIST = ["27", "104", "732"]
 
+SHORT_STOP_ID_LENGTH = 7
+LONG_STOP_ID_LENGTH = 10
+
 STOP_732_ID = 9644642  # Давыдковская улица, 10
 STOP_641_ID = 9644493
 STOP_434_ID = 10110344
-
-STOPS_ID = {
-    "732": STOP_732_ID,
-    "641": STOP_641_ID,
-    "434": STOP_434_ID,
-}
 
 
 class Request(enum.Enum):
@@ -52,6 +46,9 @@ class Tags:
     ESSENTIAL_STOPS = "EssentialStops"
 
     FREQUENCY = "Frequency"
+
+    STOP_META_DATA = "StopMetaData"
+    PROPERTIES = "properties"
 
 
 class TimetableFilter:

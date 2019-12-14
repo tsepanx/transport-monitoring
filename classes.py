@@ -41,10 +41,6 @@ class JsonFile(File):
 
         super().__init__(self.request_type.value + _bus_name, "json")
 
-    # elif self.request_type == Request.GET_LINE:
-    #     self.write(proxy.get_line(get_line_url(None, None)))  # TODO make it works
-    #     self.__get_line_request()
-
     def write(self, data):
         d = json.dumps(data, indent=4, separators=(',', ': '))
         self.raw_write(d)
@@ -68,7 +64,7 @@ class GetStopInfoJsonFile(JsonFile):
         self.write(data)
 
         self.data_dict = self.__get_transport_schedules()
-        # return self.data_dict
+        return self
 
     def print_bus_data(self, main_db, _filter_route, _filter_day):
         print_dict(self.data_dict)
@@ -82,8 +78,7 @@ class GetStopInfoJsonFile(JsonFile):
             return
 
         estimated = (estimated_list + scheduled_list)[0]
-        times_from_db = main_db. \
-            get_filtered_rows_from_db(self.bus_name, stop_name, _filter_route, _filter_day)
+        times_from_db = main_db.get_filtered_rows_from_db(self.bus_name, stop_name, _filter_route, _filter_day)
 
         nearest_times = []
 
@@ -121,7 +116,6 @@ class GetStopInfoJsonFile(JsonFile):
             if bus["type"] != "bus":
                 continue
 
-            print(__name__)
             name = bus["name"]
             line_id = bus[Tags.LINE_ID]
 
@@ -163,6 +157,45 @@ class GetStopInfoJsonFile(JsonFile):
         return res_dict
 
 
+class GetLineJsonFile(JsonFile):
+    def __init__(self, _line_id, _thread_id, _bus_name):
+        self.line_id = _line_id
+        self.thread_id = _thread_id
+
+        super().__init__(_bus_name, Request.GET_LINE)
+
+    def execute(self):
+        data = proxy.get_line(get_line_url(self.line_id, self.thread_id))
+        self.write(data)
+
+        self.data_dict = self.__get_line_data()
+        return self
+
+    def __get_line_data(self):
+        data = self.read()
+
+        res_dict = {}
+
+        stops_list = data["data"]["features"][0]["features"]
+
+        for stop in stops_list:
+            if Tags.PROPERTIES not in stop:
+                continue
+
+            properties = stop[Tags.PROPERTIES][Tags.STOP_META_DATA]
+            name = properties["name"]
+            raw_id = properties["id"]
+
+            if "stop__" in raw_id:
+                raw_id = int(raw_id[6:])
+            else:
+                raw_id = int(raw_id)
+
+            res_dict[raw_id] = name
+
+        return res_dict
+
+
 class Bus:
     paths_list = []
     timetable = {
@@ -174,32 +207,6 @@ class Bus:
 
     def __init__(self, name="0"):
         self.name = name
-
-    @deprecated("Use __get_timetable instead")
-    def get_stops(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS):
-        url_string = f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={self.name}&date={days}&direction={route}'
-        print(url_string)
-
-        raw_stops_list = requests.get(url_string)
-        stops_list = []
-        for stop in raw_stops_list.text.split('\n'):
-            if stop != "":
-                stops_list.append(stop)
-
-        return stops_list
-
-    @deprecated("Use get_all_timetable instead")
-    def get_all_stops(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
-                      days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
-        try:
-            res = []
-            for day in days:
-                for route in routes:
-                    p = self.get_stops(route, day)
-                    res.append(p)
-            self.paths_list = res[:]
-        except Exception:
-            raise Exception("No internet connection")
 
     def get_timetable(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS, stop_filter="all"):
 
@@ -269,6 +276,7 @@ class Database:
             self.__fill_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
         else:
             print("=== database already exists! ===")
+        return self
 
     @staticmethod
     def get_filtered_rows_from_db(bus, stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
@@ -309,8 +317,8 @@ class Database:
 
                         for arrival_time in bus.timetable[route][day][stop_name]:
                             time_data_source.append((stop_name, bus_row, arrival_time, route, day))
-                            # if visual:
-                            #     print(bus.name, route, day, stop_name, arrival_time)
+                            if visual:
+                                print(bus.name, route, day, stop_name, arrival_time)
             TimetableDB.insert_many(time_data_source, fields=[
                 TimetableDB.stop_name,
                 TimetableDB.bus,
