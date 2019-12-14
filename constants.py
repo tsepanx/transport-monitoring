@@ -5,6 +5,9 @@ from peewee import *
 FILENAMES_PREFIX = "generated_files/"
 PROJECT_PREFIX = os.getcwd() + "/"
 
+if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
+    os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)
+
 JSON_LINE_PREFIX = "line_"
 JSON_STOP_PREFIX = "stop_"
 
@@ -15,6 +18,8 @@ DB = SqliteDatabase(MAIN_DB_FILENAME)
 
 LINE_ID_732 = "213_732_bus_mosgortrans"
 THREAD_ID_732 = "213A_732_bus_mosgortrans"
+
+BUSES_LIST = ["27", "104", "732"]
 
 STOP_732_ID = 9644642  # Давыдковская улица, 10
 STOP_641_ID = 9644493

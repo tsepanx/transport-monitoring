@@ -34,23 +34,16 @@ class File:
 
 class JsonFile(File):
 
-    def __init__(self, bus, _stop_id=None):
+    def __init__(self, _bus_name, _request_type):
         self.data_dict = None
-        self.stop_id = _stop_id
-        self.request_type = Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
+        self.request_type = _request_type  # Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
+        self.data_dict = dict()
 
-        super().__init__(self.request_type.value + str(bus), "json")
+        super().__init__(self.request_type.value + _bus_name, "json")
 
-    def execute(self):
-        if self.request_type == Request.GET_STOP_INFO:
-            data = proxy.get_stop_info(get_stop_url(self.stop_id))
-            self.write(data)
-            self.data_dict = self.__get_transport_schedules()
-            return self.data_dict
-
-        elif self.request_type == Request.GET_LINE:
-            self.write(proxy.get_line(get_line_url(None, None)))  # TODO make it works
-            self.__get_line_request()
+    # elif self.request_type == Request.GET_LINE:
+    #     self.write(proxy.get_line(get_line_url(None, None)))  # TODO make it works
+    #     self.__get_line_request()
 
     def write(self, data):
         d = json.dumps(data, indent=4, separators=(',', ': '))
@@ -58,6 +51,61 @@ class JsonFile(File):
 
     def read(self):
         return json.loads(self.raw_read())
+
+    def get_all_points_recursively(self):
+        return recursive_descent(self.raw_read())
+
+
+class GetStopInfoJsonFile(JsonFile):
+    def __init__(self, _bus, _stop_id):
+        super().__init__(_bus, Request.GET_STOP_INFO)
+
+        self.bus_name = _bus
+        self.stop_id = _stop_id
+
+    def execute(self):
+        data = proxy.get_stop_info(get_stop_url(self.stop_id))
+        self.write(data)
+
+        self.data_dict = self.__get_transport_schedules()
+        # return self.data_dict
+
+    def print_bus_data(self, main_db):
+        self.execute()
+
+        print_dict(self.data_dict)
+
+        stop_name = self.data_dict[Tags.STOP_NAME]
+
+        estimated_list = self.data_dict[self.bus_name][Tags.ESTIMATED]
+        scheduled_list = self.data_dict[self.bus_name][Tags.SCHEDULED]
+        if len(estimated_list + scheduled_list) == 0:
+            print("--- No buses on path now ---")
+            return
+
+        estimated = (estimated_list + scheduled_list)[0]
+        times_from_db = main_db.get_filtered_rows_from_db(self.bus_name, stop_name)
+
+        nearest_times = []
+
+        for i, t in enumerate(times_from_db):
+            if t >= estimated:
+                nearest_times = [times_from_db[i - 1], t]
+                break
+
+        print("================")
+        print("===  ", self.bus_name, "   ===")
+        print("---", stop_name, "---")
+        print()
+        print("real value: ", estimated)
+        print("db values: ", *nearest_times)
+        print()
+        print("Bus will come",
+              get_delta(nearest_times[1], estimated),
+              "earlier, \n or will be  ",
+              get_delta(estimated, nearest_times[0]),
+              "late")
+        print("================")
 
     def __get_transport_schedules(self):
         data = self.read()
@@ -114,12 +162,6 @@ class JsonFile(File):
                     res_dict[name][Tags.ESSENTIAL_STOPS] = [convert_time(first_arrival), convert_time(last_arrival)]
 
         return res_dict
-
-    def __get_line_request(self):
-        pass
-
-    def get_all_points_recursively(self):
-        return recursive_descent(self.raw_read())
 
 
 class Bus:

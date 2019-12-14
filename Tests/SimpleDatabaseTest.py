@@ -38,7 +38,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_yandex_api_crash(self):
         try:
-            x = proxy.get_stop_info("https://yandex.ru/maps/213/moscow/stops/stop__9644642/")
+            f = GetStopInfoJsonFile("732", STOP_732_ID).execute()
         except Exception:
             self.fail("Can't receive data from Yandex API")
 
