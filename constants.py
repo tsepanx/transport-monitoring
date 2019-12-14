@@ -3,7 +3,7 @@ import os
 from peewee import *
 
 FILENAMES_PREFIX = "generated_files/"
-PROJECT_PREFIX = os.getcwd()
+PROJECT_PREFIX = os.getcwd() + "/"
 
 JSON_LINE_PREFIX = "line_"
 JSON_STOP_PREFIX = "stop_"
