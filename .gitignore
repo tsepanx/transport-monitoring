@@ -10,6 +10,7 @@ __pycache__/
 generated_files/
 #!*generated_files/buses.db
 /ve
+/Tests
 
 # ___________________________ !!!
 

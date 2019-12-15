@@ -1,21 +1,19 @@
-from functions import *
-from deprecation import *
-from yandex_transport_webdriver_api import YandexTransportProxy
-from bs4 import BeautifulSoup
-
-import requests
 import json
 import time
-import datetime
 
-proxy = YandexTransportProxy('127.0.0.1', 25555)
+import requests
+from bs4 import BeautifulSoup
+from yandex_transport_webdriver_api import YandexTransportProxy
+
+from functions import *
 
 
 class File:
 
-    def __init__(self, filename, extension, is_already_created=False):
+    def __init__(self, filename, extension):
         self.full_name = get_full_filename(filename, extension)
         self.__extension = extension
+        is_already_created = os.path.exists(self.full_name)
 
         self.__open("r" if is_already_created else "w+")
         print(self.full_name, self.__extension)
@@ -59,7 +57,7 @@ class GetStopInfoJsonFile(JsonFile):
         self.bus_name = _bus
         self.stop_id = _stop_id
 
-    def execute(self):
+    def execute(self, proxy):
         data = proxy.get_stop_info(get_stop_url(self.stop_id))
         self.write(data)
 
@@ -164,7 +162,7 @@ class GetLineJsonFile(JsonFile):
 
         super().__init__(_bus_name, Request.GET_LINE)
 
-    def execute(self):
+    def execute(self, proxy):
         data = proxy.get_line(get_line_url(self.line_id, self.thread_id))
         self.write(data)
 
@@ -264,9 +262,10 @@ class Bus:
 
 class Database:
 
-    def __init__(self, db, _list, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+    def __init__(self, db=GLOBAL_DB, _list=(), _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
                  _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db = db
+
         self.buses_list = _list
         self.filter_routes = _filter_routes
         self.filter_days = _filter_days
@@ -324,13 +323,13 @@ class Database:
                 TimetableDB.bus,
                 TimetableDB.arrival_time,
                 TimetableDB.route,
-                TimetableDB.days]).create()
+                TimetableDB.days]).execute()
 
             StopsDB.insert_many(stop_data_source, fields=[
                 StopsDB.stop_name,
                 StopsDB.route,
                 StopsDB.bus
-            ]).create()
+            ]).execute()
 
 
 class BusesDB(Model):
@@ -338,7 +337,7 @@ class BusesDB(Model):
     bus_class = Bus(name)
 
     class Meta:
-        database = DB
+        database = GLOBAL_DB
 
 
 class TimetableDB(Model):
@@ -349,7 +348,7 @@ class TimetableDB(Model):
     arrival_time = TimeField()
 
     class Meta:
-        database = DB
+        database = GLOBAL_DB
 
 
 class StopsDB(Model):
@@ -359,4 +358,23 @@ class StopsDB(Model):
     stop_id = IntegerField(null=True)
 
     class Meta:
-        database = DB
+        database = GLOBAL_DB
+
+
+class MyYandexTransportProxy(YandexTransportProxy):
+
+    def __init__(self, host, port):
+        super().__init__(host, port)
+
+    def get_all_info(self, url, query_id=None, blocking=True, timeout=0, callback=None):
+        print("GetAllInfo")
+        # super()._execute_get_query("getLine", url, query_id, blocking, timeout, callback)
+        return super().get_all_info(url, query_id, blocking, timeout, callback)
+
+    def get_stop_info(self, url, query_id=None, blocking=True, timeout=0, callback=None):
+        print("GetStopInfo")
+        return super().get_stop_info(url, query_id, blocking, timeout, callback)
+
+    def get_line(self, url, query_id=None, blocking=True, timeout=0, callback=None):
+        print("GetLine")
+        return super().get_line(url, query_id, blocking, timeout, callback)

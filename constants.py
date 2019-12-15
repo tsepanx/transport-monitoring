@@ -11,7 +11,7 @@ if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
 # MAIN_BUS_NAME = "732"
 MAIN_DB_FILENAME = "buses.db"  # MAIN_BUS_NAME + ".db"
 
-DB = SqliteDatabase(MAIN_DB_FILENAME)
+GLOBAL_DB = SqliteDatabase(PROJECT_PREFIX + MAIN_DB_FILENAME)
 
 LINE_ID_732 = "213_732_bus_mosgortrans"
 THREAD_ID_732 = "213A_732_bus_mosgortrans"
