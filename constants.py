@@ -28,6 +28,39 @@ STOP_641_ID = 9644493
 STOP_434_ID = 10110344
 
 
+class BusesDB(Model):
+    name = CharField()
+
+    # bus_class = Bus(name)
+
+    class Meta:
+        database = GLOBAL_DB
+
+
+class TimetableDB(Model):
+    stop_name = CharField()
+    route = CharField()
+    days = CharField()
+    bus = ForeignKeyField(BusesDB, related_name="bus")
+    arrival_time = TimeField()
+
+    class Meta:
+        database = GLOBAL_DB
+
+
+class StopsDB(Model):
+    stop_name = CharField()
+    route = CharField()
+    bus = ForeignKeyField(BusesDB, related_name="bus")
+    stop_id = IntegerField(null=True)
+
+    class Meta:
+        database = GLOBAL_DB
+
+
+DATABASE_TIMETABLES_LIST = [BusesDB, TimetableDB, StopsDB]
+
+
 class Request(enum.Enum):
     GET_STOP_INFO = "stop_"
     GET_LINE = "line_"

@@ -14,7 +14,7 @@ class MyTestCase(unittest.TestCase):
         print(*l)
         self.assertNotEqual(l, [])
 
-        os.remove(path)
+        # os.remove(path)
 
 
 if __name__ == '__main__':

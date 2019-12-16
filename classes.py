@@ -312,7 +312,7 @@ class Database:
 
     def __fill_database(self, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
                         filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS), visual=False):
-        self.db.create_tables([BusesDB, TimetableDB, StopsDB])
+        self.db.create_tables(DATABASE_TIMETABLES_LIST)
 
         for bus_name in self.buses_list:
             time_data_source = []
@@ -348,35 +348,6 @@ class Database:
                 StopsDB.route,
                 StopsDB.bus
             ]).execute()
-
-
-class BusesDB(Model):
-    name = CharField()
-    bus_class = Bus(name)
-
-    class Meta:
-        database = GLOBAL_DB
-
-
-class TimetableDB(Model):
-    stop_name = CharField()
-    route = CharField()
-    days = CharField()
-    bus = ForeignKeyField(BusesDB, related_name="bus")
-    arrival_time = TimeField()
-
-    class Meta:
-        database = GLOBAL_DB
-
-
-class StopsDB(Model):
-    stop_name = CharField()
-    route = CharField()
-    bus = ForeignKeyField(BusesDB, related_name="bus")
-    stop_id = IntegerField(null=True)
-
-    class Meta:
-        database = GLOBAL_DB
 
 
 class MyYandexTransportProxy(YandexTransportProxy):
