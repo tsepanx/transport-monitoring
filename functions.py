@@ -4,6 +4,38 @@ import pprint
 from constants import *
 
 
+def print_near_times_data(bus_name, stop_name, estimated, nearest_times):
+    print("================")
+    print("===  ", bus_name, "   ===")
+    print("---", stop_name, "---")
+    print()
+    print("real value: ", estimated)
+    print("db values: ", *nearest_times)
+    print()
+    print("Bus will come",
+          get_delta(nearest_times[1], estimated),
+          "earlier, \n or will be  ",
+          get_delta(estimated, nearest_times[0]),
+          "late")
+    print("================")
+
+
+def calculate_time_values_difference(times_list, db_list):
+    estimated = times_list[0]
+
+    nearest_times = []
+
+    if db_list[-1] < estimated < db_list[0]:
+        raise Exception("Buses are not available now!")
+
+    for i, t in enumerate(db_list):
+        if t >= estimated:
+            nearest_times = [db_list[i - 1], t]
+            break
+
+    return nearest_times
+
+
 def remove_if_exists(path):
     if os.path.exists(path):
         os.remove(path)
@@ -11,7 +43,6 @@ def remove_if_exists(path):
 
 def is_today_workday():
     d = datetime.date.today().isoweekday()
-    print(d)
     return d not in [6, 7]
 
 

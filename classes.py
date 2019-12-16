@@ -1,5 +1,6 @@
 import json
 import time
+import threading
 
 import requests
 from bs4 import BeautifulSoup
@@ -51,11 +52,11 @@ class JsonFile(File):
 
 
 class GetStopInfoJsonFile(JsonFile):
-    def __init__(self, _bus, _stop_id):
-        super().__init__(_bus, Request.GET_STOP_INFO)
+    def __init__(self, bus_name, stop_id):
+        super().__init__(bus_name, Request.GET_STOP_INFO)
 
-        self.bus_name = _bus
-        self.stop_id = _stop_id
+        self.bus_name = bus_name
+        self.stop_id = stop_id
 
     def execute(self, proxy):
         data = proxy.get_stop_info(get_stop_url(self.stop_id))
@@ -63,41 +64,6 @@ class GetStopInfoJsonFile(JsonFile):
 
         self.data_dict = self.__get_transport_schedules()
         return self
-
-    def print_bus_data(self, _filter_route, _filter_day):
-        print_dict(self.data_dict)
-
-        stop_name = self.data_dict[Tags.STOP_NAME]
-
-        estimated_list = self.data_dict[self.bus_name][Tags.ESTIMATED]
-        scheduled_list = self.data_dict[self.bus_name][Tags.SCHEDULED]
-        if len(estimated_list + scheduled_list) == 0:
-            print("--- No buses on path now ---")
-            return
-
-        estimated = (estimated_list + scheduled_list)[0]
-        times_from_db = Database.get_filtered_rows_from_db(self.bus_name, stop_name, _filter_route, _filter_day)
-
-        nearest_times = []
-
-        for i, t in enumerate(times_from_db):
-            if t >= estimated:
-                nearest_times = [times_from_db[i - 1], t]
-                break
-
-        print("================")
-        print("===  ", self.bus_name, "   ===")
-        print("---", stop_name, "---")
-        print()
-        print("real value: ", estimated)
-        print("db values: ", *nearest_times)
-        print()
-        print("Bus will come",
-              get_delta(nearest_times[1], estimated),
-              "earlier, \n or will be  ",
-              get_delta(estimated, nearest_times[0]),
-              "late")
-        print("================")
 
     def __get_transport_schedules(self):
         data = self.read()
@@ -220,8 +186,6 @@ class Bus:
             stop_names[i] = stop_names[i].text
 
         res_dict = dict.fromkeys(stop_names, [])
-
-        # print(url_string)
 
         if not stop_names:
             raise Exception("NULL timetable got \n" + url_string)
@@ -348,6 +312,49 @@ class Database:
                 StopsDB.route,
                 StopsDB.bus
             ]).execute()
+
+
+class ServerManager:
+    def __init__(self, bus_name, stop_id, proxy, interval=30, iterations=2):
+        self.interval = interval
+        self.made_iterations = 0
+        # self.execute(iterations, bus_name, stop_id, proxy)
+
+        self.main_thread = threading.Thread(target=self.execute,
+                                            args=[iterations, bus_name, stop_id, proxy])
+        self.main_thread.start()
+
+    def execute(self, count, bus_name, stop_id, proxy):
+        while self.made_iterations < count:
+            thread = threading.Thread(target=self.main_func,
+                                      args=[bus_name, stop_id, proxy])
+            thread.start()
+            self.made_iterations += 1
+            time.sleep(self.interval)
+
+    @staticmethod
+    def main_func(bus_name, stop_id, proxy):
+        current_route = TimetableFilter.ROUTE_AB
+        current_day = TimetableFilter.WORKDAYS if is_today_workday() else TimetableFilter.WEEKENDS
+
+        stop_file = GetStopInfoJsonFile(bus_name, stop_id).execute(proxy)
+
+        stop_name = stop_file.data_dict[Tags.STOP_NAME]
+
+        estimated_list = stop_file.data_dict[bus_name][Tags.ESTIMATED]
+        scheduled_list = stop_file.data_dict[bus_name][Tags.SCHEDULED]
+
+        if len(estimated_list + scheduled_list) == 0:
+            print("--- No buses on path now ---")
+            return
+
+        api_times = (estimated_list + scheduled_list)
+        db_times = Database.get_filtered_rows_from_db(bus_name, stop_name, current_route, current_day)
+
+        nearest_times = calculate_time_values_difference(api_times, db_times)
+
+        print(api_times[0], *nearest_times, sep="\n")
+        print("=====")
 
 
 class MyYandexTransportProxy(YandexTransportProxy):
