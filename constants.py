@@ -2,8 +2,10 @@ import enum
 import os
 from peewee import *
 
+from pathlib import Path
+
 FILENAMES_PREFIX = "generated_files/"
-PROJECT_PREFIX = os.getcwd() + "/"
+PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"  # os.getcwd() + "/"
 
 if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
     os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)

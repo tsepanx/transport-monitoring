@@ -64,7 +64,7 @@ class GetStopInfoJsonFile(JsonFile):
         self.data_dict = self.__get_transport_schedules()
         return self
 
-    def print_bus_data(self, main_db, _filter_route, _filter_day):
+    def print_bus_data(self, _filter_route, _filter_day):
         print_dict(self.data_dict)
 
         stop_name = self.data_dict[Tags.STOP_NAME]
@@ -76,7 +76,7 @@ class GetStopInfoJsonFile(JsonFile):
             return
 
         estimated = (estimated_list + scheduled_list)[0]
-        times_from_db = main_db.get_filtered_rows_from_db(self.bus_name, stop_name, _filter_route, _filter_day)
+        times_from_db = Database.get_filtered_rows_from_db(self.bus_name, stop_name, _filter_route, _filter_day)
 
         nearest_times = []
 

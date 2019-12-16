@@ -1,6 +1,12 @@
 import datetime
 import pprint
+
 from constants import *
+
+
+def remove_if_exists(path):
+    if os.path.exists(path):
+        os.remove(path)
 
 
 def is_today_workday():

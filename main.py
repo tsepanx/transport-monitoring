@@ -10,7 +10,7 @@ def main_func(bus, stop):
     db = Database(BUSES_LIST).create()
 
     stop_file = GetStopInfoJsonFile(curr_bus, stop).execute(proxy)
-    stop_file.print_bus_data(db, current_route, current_day)
+    stop_file.print_bus_data(current_route, current_day)
 
     line_id = stop_file.data_dict[bus][Tags.LINE_ID]
     thread_id = stop_file.data_dict[bus][Tags.THREAD_ID][0]
