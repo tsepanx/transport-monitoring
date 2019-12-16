@@ -2,6 +2,11 @@ from classes import *
 
 
 def main_func(bus, stop):
+    current_route = TimetableFilter.ROUTE_AB
+    current_day = TimetableFilter.WORKDAYS if is_today_workday() else TimetableFilter.WEEKENDS
+
+    print(current_route, current_day)
+
     db = Database(BUSES_LIST).create()
 
     stop_file = GetStopInfoJsonFile(curr_bus, stop).execute(proxy)
@@ -18,11 +23,6 @@ def main_func(bus, stop):
 
 start_time = time.time()
 proxy = MyYandexTransportProxy('127.0.0.1', 25555)
-
-current_route = TimetableFilter.ROUTE_AB
-current_day = TimetableFilter.WORKDAYS if is_today_workday() else TimetableFilter.WEEKENDS
-
-print(current_route, current_day)
 
 curr_bus = "732"
 curr_stop = STOP_732_ID
