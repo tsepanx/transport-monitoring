@@ -259,6 +259,24 @@ class Bus:
             for day in days:
                 self.get_timetable(route=route, days=day)
 
+    @staticmethod
+    def get_buses_list():
+        r = requests.get('http://www.mosgortrans.org/pass3/request.ajax.php?list=ways&type=avto')
+        directions = ['AB', 'BA']
+        for i in r.text.split():
+            days = requests.get(f'http://www.mosgortrans.org/pass3/request.ajax.php?list=days&type=avto&way={i}')
+            for day in days.text.split():
+                for direction in directions:
+                    stops = requests.get(
+                        f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={i}&date={day}&direction={direction}')
+                    stops_list = []
+                    for stop in stops.text.split('\n'):
+                        if stop == '':
+                            break
+                        else:
+                            stops_list.append(stop)
+            return stops_list
+
 
 class Database:
 

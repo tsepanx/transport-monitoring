@@ -20,7 +20,6 @@ def main_func(bus, stop):
     line_file = GetLineJsonFile(line_id, thread_id, bus).execute(proxy)
     print_dict(line_file.data_dict)
 
-
 start_time = time.time()
 proxy = MyYandexTransportProxy('127.0.0.1', 25555)
 
