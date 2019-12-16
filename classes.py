@@ -262,7 +262,7 @@ class Bus:
 
 class Database:
 
-    def __init__(self, db=GLOBAL_DB, _list=(), _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
+    def __init__(self, _list, db=GLOBAL_DB, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
                  _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
         self.db = db
 
