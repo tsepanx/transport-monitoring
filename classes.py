@@ -227,15 +227,17 @@ class TimetableParser:
     @staticmethod
     @deprecation.deprecated("Dont use it")
     def get_buses_list():
+        stops_list = []
         r = requests.get('http://www.mosgortrans.org/pass3/request.ajax.php?list=ways&type=avto')
-        directions = ['AB', 'BA']
         for i in r.text.split():
             days = requests.get(f'http://www.mosgortrans.org/pass3/request.ajax.php?list=days&type=avto&way={i}')
             for day in days.text.split():
-                for direction in directions:
+                for way in TimetableFilter.WAYS:
                     stops = requests.get(
-                        f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&way={i}&date={day}&direction={direction}')
-                    stops_list = []
+                        f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&'
+                        f'way={i}&'
+                        f'date={day}&'
+                        f'direction={way}')
                     for stop in stops.text.split('\n'):
                         if stop == '':
                             break
@@ -261,21 +263,6 @@ class Database:
         else:
             print("=== database already exists! ===")
         return self
-
-    @staticmethod
-    def get_filtered_rows_from_db(route_name, stop_name, way=TimetableFilter.WAYS[0], days=TimetableFilter.DAYS[0]):
-        res = []
-        query = ArrivalTime.select().where(
-            ArrivalTime.way == way,
-            ArrivalTime.days == days,
-        ).order_by(ArrivalTime.stop_name)
-
-        for row in query:
-            if are_equals(row.stop_name, stop_name):
-                if row.route_name.name == route_name:
-                    res.append(row.arrival_time)
-
-        return res
 
     def __fill_database(self,
                         filter_ways=TimetableFilter.WAYS,
@@ -316,12 +303,26 @@ class Database:
                 StopData.route_name
             ]).execute()
 
+    @staticmethod
+    def get_filtered_rows_from_db(route_name, stop_name, way=TimetableFilter.WAYS[0], days=TimetableFilter.DAYS[0]):
+        res = []
+        query = ArrivalTime.select().where(
+            ArrivalTime.way == way,
+            ArrivalTime.days == days,
+        ).order_by(ArrivalTime.stop_name)
+
+        for row in query:
+            if are_equals(row.stop_name, stop_name):
+                if row.route_name.name == route_name:
+                    res.append(row.arrival_time)
+
+        return res
+
 
 class ServerManager:
-    def __init__(self, route_name, stop_id, proxy, interval=30, iterations=2):
+    def __init__(self, route_name, stop_id, proxy, interval=20, iterations=2):
         self.interval = interval
         self.made_iterations = 0
-        # self.execute(iterations, route_name, stop_id, proxy)
 
         self.main_thread = threading.Thread(target=self.execute,
                                             args=[iterations, route_name, stop_id, proxy])
@@ -329,14 +330,17 @@ class ServerManager:
 
     def execute(self, count, route_name, stop_id, proxy):
         while self.made_iterations < count:
-            thread = threading.Thread(target=self.main_func,
+            thread = threading.Thread(target=self.write_to_db,
                                       args=[route_name, stop_id, proxy])
             thread.start()
             self.made_iterations += 1
             time.sleep(self.interval)
 
-    @staticmethod
-    def main_func(route_name, stop_id, proxy):
+    def write_to_db(self, route_name, stop_id, proxy):
+        value = self.main_func(route_name, stop_id, proxy)
+        ServerTimeFix.create(request_time=time.time(), estimated_time=value)
+
+    def main_func(self, route_name, stop_id, proxy):
         current_route = TimetableFilter.WAYS[0]
         current_day = TimetableFilter.DAYS[is_today_workday()]
 
@@ -358,7 +362,10 @@ class ServerManager:
         res_time = api_times[0]
 
         print(res_time, *nearest_times, sep="\n")
+        print(self.made_iterations)
         print("=====")
+
+        return res_time
 
 
 class MyYandexTransportProxy(YandexTransportProxy):
