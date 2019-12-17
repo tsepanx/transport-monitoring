@@ -28,37 +28,43 @@ STOP_641_ID = 9644493
 STOP_434_ID = 10110344
 
 
-class BusesDB(Model):
+class RouteData(Model):
     name = CharField()
-
-    # bus_class = Bus(name)
 
     class Meta:
         database = GLOBAL_DB
 
 
-class TimetableDB(Model):
+class ArrivalTime(Model):
     stop_name = CharField()
-    route = CharField()
+    way = CharField()
     days = CharField()
-    bus = ForeignKeyField(BusesDB, related_name="bus")
+    route_name = ForeignKeyField(RouteData, related_name="bus")
     arrival_time = TimeField()
 
     class Meta:
         database = GLOBAL_DB
 
 
-class StopsDB(Model):
+class StopData(Model):
     stop_name = CharField()
-    route = CharField()
-    bus = ForeignKeyField(BusesDB, related_name="bus")
+    way = CharField()
+    route_name = ForeignKeyField(RouteData, related_name="bus")
     stop_id = IntegerField(null=True)
 
     class Meta:
         database = GLOBAL_DB
 
 
-DATABASE_TIMETABLES_LIST = [BusesDB, TimetableDB, StopsDB]
+class ServerTimeFix(Model):
+    request_time = TimeField()
+    estimated_time = TimeField()
+
+    class Meta:
+        database = GLOBAL_DB
+
+
+DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
 
 
 class Request(enum.Enum):
@@ -87,10 +93,5 @@ class Tags:
 
 
 class TimetableFilter:
-    WORKDAYS = "1111100"
-    WEEKENDS = "0000011"
-    ROUTE_AB = "AB"
-    ROUTE_BA = "BA"
-
-    ROUTES = (ROUTE_AB, ROUTE_BA)
-    DAYS = (WORKDAYS, WEEKENDS)
+    WAYS = ("AB", "BA")
+    DAYS = ("1111100", "0000011")

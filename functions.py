@@ -4,9 +4,13 @@ import pprint
 from constants import *
 
 
-def print_near_times_data(bus_name, stop_name, estimated, nearest_times):
+def print_near_times_data(route_name, stop_name, estimated, nearest_times):
+
+    # stop_name = data_dict[Tags.STOP_NAME]
+    # estimated = data_dict[route_name][Tags.ESTIMATED]
+
     print("================")
-    print("===  ", bus_name, "   ===")
+    print("===  ", route_name, "   ===")
     print("---", stop_name, "---")
     print()
     print("real value: ", estimated)
@@ -43,7 +47,7 @@ def remove_if_exists(path):
 
 def is_today_workday():
     d = datetime.date.today().isoweekday()
-    return d not in [6, 7]
+    return 1 if d not in [6, 7] else 0
 
 
 def get_full_filename(filename, ext="json"):

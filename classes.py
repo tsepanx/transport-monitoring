@@ -1,6 +1,7 @@
 import json
 import time
 import threading
+import deprecation
 
 import requests
 from bs4 import BeautifulSoup
@@ -33,12 +34,12 @@ class File:
 
 class JsonFile(File):
 
-    def __init__(self, _bus_name, _request_type):
+    def __init__(self, route_name, _request_type):
         self.data_dict = None
         self.request_type = _request_type  # Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
         self.data_dict = dict()
 
-        super().__init__(self.request_type.value + _bus_name, "json")
+        super().__init__(self.request_type.value + route_name, "json")
 
     def write(self, data):
         d = json.dumps(data, indent=4, separators=(',', ': '))
@@ -52,10 +53,10 @@ class JsonFile(File):
 
 
 class GetStopInfoJsonFile(JsonFile):
-    def __init__(self, bus_name, stop_id):
-        super().__init__(bus_name, Request.GET_STOP_INFO)
+    def __init__(self, route_name, stop_id):
+        super().__init__(route_name, Request.GET_STOP_INFO)
 
-        self.bus_name = bus_name
+        self.route_name = route_name
         self.stop_id = stop_id
 
     def execute(self, proxy):
@@ -76,12 +77,12 @@ class GetStopInfoJsonFile(JsonFile):
 
         res_dict[Tags.STOP_NAME] = stop_russian_fullname
 
-        for bus in transport_data:
-            if bus["type"] != "bus":
+        for route in transport_data:
+            if route["type"] != "bus":
                 continue
 
-            name = bus["name"]
-            line_id = bus[Tags.LINE_ID]
+            name = route["name"]
+            line_id = route[Tags.LINE_ID]
 
             res_dict[name] = {
                 Tags.LINE_ID: line_id,
@@ -94,7 +95,7 @@ class GetStopInfoJsonFile(JsonFile):
                 Tags.ESSENTIAL_STOPS: []
             }
 
-            threads = bus["threads"]
+            threads = route["threads"]
 
             for thread in threads:
                 thread_id = thread[Tags.THREAD_ID]
@@ -122,11 +123,11 @@ class GetStopInfoJsonFile(JsonFile):
 
 
 class GetLineJsonFile(JsonFile):
-    def __init__(self, _line_id, _thread_id, _bus_name):
+    def __init__(self, _line_id, _thread_id, route_name):
         self.line_id = _line_id
         self.thread_id = _thread_id
 
-        super().__init__(_bus_name, Request.GET_LINE)
+        super().__init__(route_name, Request.GET_LINE)
 
     def execute(self, proxy):
         data = proxy.get_line(get_line_url(self.line_id, self.thread_id))
@@ -160,21 +161,21 @@ class GetLineJsonFile(JsonFile):
         return res_dict
 
 
-class Bus:
+class TimetableParser:
     paths_list = []
     timetable = {
-        TimetableFilter.ROUTE_AB:
-            {TimetableFilter.WORKDAYS: {}, TimetableFilter.WEEKENDS: {}},
-        TimetableFilter.ROUTE_BA:
-            {TimetableFilter.WORKDAYS: {}, TimetableFilter.WEEKENDS: {}}
+        TimetableFilter.WAYS[0]:
+            {TimetableFilter.DAYS[0]: {}, TimetableFilter.DAYS[1]: {}},
+        TimetableFilter.WAYS[1]:
+            {TimetableFilter.DAYS[0]: {}, TimetableFilter.DAYS[1]: {}}
     }
 
-    def __init__(self, name="0"):
-        self.name = name
+    def __init__(self, route_name):
+        self.route_name = route_name
 
-    def get_timetable(self, route=TimetableFilter.ROUTE_AB, days=TimetableFilter.WORKDAYS, stop_filter="all"):
+    def __get_timetable(self, way=TimetableFilter.WAYS[0], days=TimetableFilter.DAYS[0], stop_filter="all"):
 
-        url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.name}&date={days}&direction={route}&waypoint={stop_filter}"
+        url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.route_name}&date={days}&direction={way}&waypoint={stop_filter}"
         print(url_string)
 
         request = requests.get(url_string)
@@ -214,16 +215,17 @@ class Bus:
 
             res_dict[stop_names[i - 1]] = output
 
-        self.timetable[route][days] = res_dict
-        return self.timetable[route][days]
+        self.timetable[way][days] = res_dict
+        return self.timetable[way][days]
 
-    def get_all_timetable(self, routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
-                          days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
-        for route in routes:
+    def get_all_timetable(self, ways=TimetableFilter.WAYS,
+                          days=TimetableFilter.DAYS):
+        for way in ways:
             for day in days:
-                self.get_timetable(route=route, days=day)
+                self.__get_timetable(way=way, days=day)
 
     @staticmethod
+    @deprecation.deprecated("Dont use it")
     def get_buses_list():
         r = requests.get('http://www.mosgortrans.org/pass3/request.ajax.php?list=ways&type=avto')
         directions = ['AB', 'BA']
@@ -244,116 +246,118 @@ class Bus:
 
 class Database:
 
-    def __init__(self, _list, db=GLOBAL_DB, _filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
-                 _filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS)):
+    def __init__(self, routes_list, db=GLOBAL_DB,
+                 filter_ways=TimetableFilter.WAYS,
+                 filter_days=TimetableFilter.DAYS):
         self.db = db
 
-        self.buses_list = _list
-        self.filter_routes = _filter_routes
-        self.filter_days = _filter_days
+        self.routes_list = routes_list
+        self.filter_ways = filter_ways
+        self.filter_days = filter_days
 
     def create(self):
         if not os.path.exists(PROJECT_PREFIX + MAIN_DB_FILENAME):
-            self.__fill_database(filter_routes=self.filter_routes, filter_days=self.filter_days)
+            self.__fill_database(filter_ways=self.filter_ways, filter_days=self.filter_days)
         else:
             print("=== database already exists! ===")
         return self
 
     @staticmethod
-    def get_filtered_rows_from_db(bus, stop_name, _route=TimetableFilter.ROUTE_AB, _days=TimetableFilter.WORKDAYS):
+    def get_filtered_rows_from_db(route_name, stop_name, way=TimetableFilter.WAYS[0], days=TimetableFilter.DAYS[0]):
         res = []
-        query = TimetableDB.select().where(
-            TimetableDB.route == _route,
-            TimetableDB.days == _days,
-        ).order_by(TimetableDB.stop_name)
+        query = ArrivalTime.select().where(
+            ArrivalTime.way == way,
+            ArrivalTime.days == days,
+        ).order_by(ArrivalTime.stop_name)
 
         for row in query:
             if are_equals(row.stop_name, stop_name):
-                if row.bus.name == bus:
+                if row.route_name.name == route_name:
                     res.append(row.arrival_time)
 
         return res
 
-    def __fill_database(self, filter_routes=(TimetableFilter.ROUTE_AB, TimetableFilter.ROUTE_BA),
-                        filter_days=(TimetableFilter.WORKDAYS, TimetableFilter.WEEKENDS), visual=False):
+    def __fill_database(self,
+                        filter_ways=TimetableFilter.WAYS,
+                        filter_days=TimetableFilter.WAYS):
         self.db.create_tables(DATABASE_TIMETABLES_LIST)
 
-        for bus_name in self.buses_list:
+        for route_name in self.routes_list:
             time_data_source = []
             stop_data_source = []
 
-            bus = Bus(bus_name)
-            bus.get_all_timetable(routes=filter_routes, days=filter_days)
+            parser = TimetableParser(route_name)
+            parser.get_all_timetable(filter_ways, filter_days)
 
-            bus_row = BusesDB.create(name=bus.name)
-            print(bus.name)
+            route_row = RouteData.create(name=parser.route_name)
+            print(parser.route_name)
 
-            for route in bus.timetable:
-                for day in bus.timetable[route]:
-                    for stop_name in bus.timetable[route][day]:
+            for route in parser.timetable:
+                for day in parser.timetable[route]:
+                    for stop_name in parser.timetable[route][day]:
                         stop_data_source.append(
                             (stop_name,
                              route,
-                             bus_row))
+                             route_row))
 
-                        for arrival_time in bus.timetable[route][day][stop_name]:
-                            time_data_source.append((stop_name, bus_row, arrival_time, route, day))
-                            if visual:
-                                print(bus.name, route, day, stop_name, arrival_time)
-            TimetableDB.insert_many(time_data_source, fields=[
-                TimetableDB.stop_name,
-                TimetableDB.bus,
-                TimetableDB.arrival_time,
-                TimetableDB.route,
-                TimetableDB.days]).execute()
+                        for arrival_time in parser.timetable[route][day][stop_name]:
+                            time_data_source.append((stop_name, route_row, arrival_time, route, day))
+                            # print(parser.route_name, route, day, stop_name, arrival_time)
+            ArrivalTime.insert_many(time_data_source, fields=[
+                ArrivalTime.stop_name,
+                ArrivalTime.route_name,
+                ArrivalTime.arrival_time,
+                ArrivalTime.way,
+                ArrivalTime.days]).execute()
 
-            StopsDB.insert_many(stop_data_source, fields=[
-                StopsDB.stop_name,
-                StopsDB.route,
-                StopsDB.bus
+            StopData.insert_many(stop_data_source, fields=[
+                StopData.stop_name,
+                StopData.way,
+                StopData.route_name
             ]).execute()
 
 
 class ServerManager:
-    def __init__(self, bus_name, stop_id, proxy, interval=30, iterations=2):
+    def __init__(self, route_name, stop_id, proxy, interval=30, iterations=2):
         self.interval = interval
         self.made_iterations = 0
-        # self.execute(iterations, bus_name, stop_id, proxy)
+        # self.execute(iterations, route_name, stop_id, proxy)
 
         self.main_thread = threading.Thread(target=self.execute,
-                                            args=[iterations, bus_name, stop_id, proxy])
+                                            args=[iterations, route_name, stop_id, proxy])
         self.main_thread.start()
 
-    def execute(self, count, bus_name, stop_id, proxy):
+    def execute(self, count, route_name, stop_id, proxy):
         while self.made_iterations < count:
             thread = threading.Thread(target=self.main_func,
-                                      args=[bus_name, stop_id, proxy])
+                                      args=[route_name, stop_id, proxy])
             thread.start()
             self.made_iterations += 1
             time.sleep(self.interval)
 
     @staticmethod
-    def main_func(bus_name, stop_id, proxy):
-        current_route = TimetableFilter.ROUTE_AB
-        current_day = TimetableFilter.WORKDAYS if is_today_workday() else TimetableFilter.WEEKENDS
+    def main_func(route_name, stop_id, proxy):
+        current_route = TimetableFilter.WAYS[0]
+        current_day = TimetableFilter.DAYS[is_today_workday()]
 
-        stop_file = GetStopInfoJsonFile(bus_name, stop_id).execute(proxy)
+        stop_file = GetStopInfoJsonFile(route_name, stop_id).execute(proxy)
 
         stop_name = stop_file.data_dict[Tags.STOP_NAME]
 
-        estimated_list = stop_file.data_dict[bus_name][Tags.ESTIMATED]
-        scheduled_list = stop_file.data_dict[bus_name][Tags.SCHEDULED]
+        estimated_list = stop_file.data_dict[route_name][Tags.ESTIMATED]
+        scheduled_list = stop_file.data_dict[route_name][Tags.SCHEDULED]
 
         if len(estimated_list + scheduled_list) == 0:
             print("--- No buses on path now ---")
             return
 
         api_times = (estimated_list + scheduled_list)
-        db_times = Database.get_filtered_rows_from_db(bus_name, stop_name, current_route, current_day)
+        db_times = Database.get_filtered_rows_from_db(route_name, stop_name, current_route, current_day)
 
         nearest_times = calculate_time_values_difference(api_times, db_times)
+        res_time = api_times[0]
 
-        print(api_times[0], *nearest_times, sep="\n")
+        print(res_time, *nearest_times, sep="\n")
         print("=====")
 
 
