@@ -320,9 +320,17 @@ class Database:
 
 
 class ServerManager:
-    def __init__(self, route_name, stop_id, proxy, interval=20, iterations=2):
+    def __init__(self, route_name, stop_id, proxy,
+                 interval,
+                 iterations=None,
+                 delta_time=datetime.timedelta(seconds=60)):
+
+        if not iterations:
+            iterations = round(delta_time.seconds / interval)
+
         self.interval = interval
         self.made_iterations = 0
+        print(iterations)
 
         self.main_thread = threading.Thread(target=self.execute,
                                             args=[iterations, route_name, stop_id, proxy])
@@ -338,7 +346,8 @@ class ServerManager:
 
     def write_to_db(self, route_name, stop_id, proxy):
         value = self.main_func(route_name, stop_id, proxy)
-        ServerTimeFix.create(request_time=time.time(), estimated_time=value)
+
+        ServerTimeFix.create(request_time=datetime.datetime.now(), estimated_time=value)
 
     def main_func(self, route_name, stop_id, proxy):
         current_route = TimetableFilter.WAYS[0]
@@ -353,17 +362,20 @@ class ServerManager:
 
         if len(estimated_list + scheduled_list) == 0:
             print("--- No buses on path now ---")
-            return
+            return None
 
         api_times = (estimated_list + scheduled_list)
         db_times = Database.get_filtered_rows_from_db(route_name, stop_name, current_route, current_day)
 
-        nearest_times = calculate_time_values_difference(api_times, db_times)
+        try:
+            nearest_times = calculate_time_values_difference(api_times, db_times)
+        except Exception as e:
+            return None
         res_time = api_times[0]
 
-        print(res_time, *nearest_times, sep="\n")
-        print(self.made_iterations)
-        print("=====")
+        print("real time:", res_time, "times from db:", *nearest_times, sep="\n")
+        print(self.made_iterations, "request finished")
+        print("=====\n")
 
         return res_time
 
