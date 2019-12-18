@@ -95,6 +95,10 @@ class Tags:
     STOP_META_DATA = "StopMetaData"
     PROPERTIES = "properties"
 
+    UPDATE_ID = "update_id"
+    MESSAGE = "message"
+    CHAT = "chat"
+
 
 class TimetableFilter:
     WAYS = ("AB", "BA")
