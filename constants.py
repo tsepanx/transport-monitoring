@@ -4,13 +4,17 @@ from peewee import *
 
 from pathlib import Path
 
+BOT_TOKEN = '939806235:AAH_CZRZKvhAzPJLcLUfqsAYSil8cqhX9xE'
+BOT_GET_METHOD = 'getUpdates'
+BOT_SEND_METHOD = 'sendMessage'
+
+
 FILENAMES_PREFIX = "generated_files/"
 PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"  # os.getcwd() + "/"
 
 if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
     os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)
 
-# MAIN_BUS_NAME = "732"
 MAIN_DB_FILENAME = "buses.db"  # MAIN_BUS_NAME + ".db"
 
 GLOBAL_DB = SqliteDatabase(PROJECT_PREFIX + MAIN_DB_FILENAME)

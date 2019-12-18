@@ -34,12 +34,15 @@ class File:
 
 class JsonFile(File):
 
-    def __init__(self, route_name, _request_type):
-        self.data_dict = None
-        self.request_type = _request_type  # Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
+    def __init__(self, route_name, request_type):
+        self.request_type = request_type  # Request.GET_STOP_INFO if _stop_id else Request.GET_LINE
         self.data_dict = dict()
 
         super().__init__(self.request_type.value + route_name, "json")
+
+    def __init__(self, filename):
+        self.data_dict = {}
+        super().__init__(filename, "json")
 
     def write(self, data):
         d = json.dumps(data, indent=4, separators=(',', ': '))
