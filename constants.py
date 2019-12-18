@@ -13,7 +13,8 @@ FILENAMES_PREFIX = "generated_files/"
 PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"  # os.getcwd() + "/"
 
 if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
-    os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)
+    print(PROJECT_PREFIX)
+    # os.mkdir(PROJECT_PREFIX + FILENAMES_PREFIX)
 
 MAIN_DB_FILENAME = "buses.db"  # MAIN_BUS_NAME + ".db"
 
