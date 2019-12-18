@@ -22,8 +22,7 @@ class BotHandler:
         response = requests.get(self.api_url + BOT_GET_METHOD, params).json()
 
         result_json = response['result']
-
-        JsonFile("bot_updates").write(result_json)
+        # JsonFile("bot_updates").write(result_json)
 
         return result_json
 

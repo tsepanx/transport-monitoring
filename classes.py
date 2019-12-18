@@ -21,6 +21,7 @@ class File:
         print(self.full_name, self.__extension)
 
     def __open(self, _type):
+        print(self.full_name)
         self.__file_object = open(self.full_name, _type)
 
     def raw_write(self, data):
