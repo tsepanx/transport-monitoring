@@ -369,7 +369,7 @@ class ServerManager:
 
         try:
             nearest_times = calculate_time_values_difference(api_times, db_times)
-        except Exception as e:
+        except Exception:
             return None
         res_time = api_times[0]
 
