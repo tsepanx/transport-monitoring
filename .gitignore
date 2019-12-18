@@ -7,7 +7,10 @@ __pycache__/
 
 .idea/
 .vscode/
-generated_files/
+#generated_files/*.json
+generated_files/*
+!generated_files/bot_updates.json
+
 #!*generated_files/buses.db
 /ve
 #/Tests
