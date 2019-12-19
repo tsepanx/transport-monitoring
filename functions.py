@@ -6,7 +6,7 @@ import json
 from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
 
 
-def conver_dict_to_string(data: dict) -> str:
+def convert_dict_to_string(data: dict) -> str:
     return json.dumps(data, indent=4, separators=(',', ': '))
 
 
@@ -124,7 +124,7 @@ def convert_time(value):
 
 
 def print_dict(data):
-    pp = pprint.PrettyPrinter(indent=2)
+    pp = pprint.PrettyPrinter(indent=4, sort_dicts=False, width=50)
     pp.pprint(data)
 
 

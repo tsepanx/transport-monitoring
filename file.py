@@ -1,6 +1,7 @@
 import time
 
 from functions import *
+from constants import Tags, Request
 
 
 class File:
@@ -44,14 +45,14 @@ class JsonFile(File):
         super().__init__(filename, "json")
 
     def write(self, data):
-        d = conver_dict_to_string(data)
+        d = convert_dict_to_string(data)
         self.raw_write(d)
 
     def read(self):
         return json.loads(self.raw_read())
 
     def update(self, new_data: dict):
-        self.raw_update(conver_dict_to_string(new_data))
+        self.raw_update(convert_dict_to_string(new_data))
 
     def get_all_points_recursively(self):
         return recursive_descent(self.raw_read())

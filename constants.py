@@ -4,13 +4,8 @@ from peewee import *
 
 from pathlib import Path
 
-BOT_TOKEN = '939806235:AAH_CZRZKvhAzPJLcLUfqsAYSil8cqhX9xE'
 BOT_GET_METHOD = 'getUpdates'
 BOT_SEND_METHOD = 'sendMessage'
-
-CHANNELS = {
-    "ikakprosto": "UCQWeDEwQruA_CcyR08bIE9g"
-}
 
 
 FILENAMES_PREFIX = "generated_files/"

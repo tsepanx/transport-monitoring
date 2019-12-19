@@ -2,9 +2,10 @@ import datetime
 
 import requests
 
-from Update import Update
-from constants import BOT_TOKEN, BOT_SEND_METHOD, BOT_GET_METHOD, Tags
-from functions import print_dict, conver_dict_to_string
+from bot.Update import Update
+from private_keys import MY_TELEGRAM_BOT_TOKEN
+from constants import BOT_SEND_METHOD, BOT_GET_METHOD
+from functions import print_dict, convert_dict_to_string
 
 
 class BotHandler:
@@ -44,7 +45,7 @@ class BotHandler:
         pass
 
 
-greet_bot = BotHandler(BOT_TOKEN)
+greet_bot = BotHandler(MY_TELEGRAM_BOT_TOKEN)
 greetings = ('здравствуй', 'привет', 'ку', 'здорово', 'hi', 'hello')
 now = datetime.datetime.now()
 
@@ -59,19 +60,17 @@ def handle_message_request(last: Update, bot: BotHandler):
 
         bot.send_text_reply(
             last.chat_id,
-            reply
-        )
+            reply)
     elif last.sticker_id:
         reply_text = last.sticker_set_name + "\n" + last.sticker_id
 
         bot.send_text_reply(
             last.chat_id,
-            reply_text
-        )
+            reply_text)
     else:
         bot.send_text_reply(
             last.chat_id,
-            conver_dict_to_string(last.get_mess_json()))
+            convert_dict_to_string(last.get_mess_json()))
 
 
 def get_reply_on_text(last: Update):
@@ -88,7 +87,7 @@ def get_reply_on_text(last: Update):
         elif today == now.day and 17 <= hour < 23:
             return f'Good evening, {last.author_name[0]}'
     else:
-        return conver_dict_to_string(last.get_mess_json()) + "\n@" + last.author_username
+        return convert_dict_to_string(last.get_mess_json()) + "\n@" + last.author_username
         # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 

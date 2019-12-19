@@ -11,6 +11,9 @@ __pycache__/
 generated_files/*
 !generated_files/bot_updates.json
 
+#youtube.py
+private_keys.py
+
 #!*generated_files/buses.db
 /ve
 #/Tests
