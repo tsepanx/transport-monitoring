@@ -7,7 +7,7 @@ from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LO
 
 
 def convert_dict_to_string(data: dict) -> str:
-    return json.dumps(data, indent=4, separators=(',', ': '))
+    return json.dumps(data, indent=4, separators=(',', ': '), default=str, ensure_ascii=False)
 
 
 def print_near_times_data(route_name, stop_name, estimated, nearest_times):

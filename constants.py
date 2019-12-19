@@ -4,9 +4,6 @@ from peewee import *
 
 from pathlib import Path
 
-BOT_GET_METHOD = 'getUpdates'
-BOT_SEND_METHOD = 'sendMessage'
-
 
 FILENAMES_PREFIX = "generated_files/"
 PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"
