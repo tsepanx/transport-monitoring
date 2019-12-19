@@ -92,14 +92,17 @@ def main():
 
         if "text" in message:
             sent_mess = message['text']
+            reply = get_reply_on_text(last_chat_name, sent_mess)
+
+            print(sent_mess, reply)
 
             greet_bot.send_text_reply(
                 last_chat_id,
-                get_reply_on_text(last_chat_name, sent_mess)
+                reply
             )
 
         elif "sticker" in message:
-            sticker = message["text"]
+            sticker = message["sticker"]
 
             sticker_name = sticker["set_name"]
             sticker_id = sticker["file_id"]
