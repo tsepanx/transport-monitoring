@@ -36,7 +36,7 @@ class BotHandler:
 
         return last_update
 
-    def send_message(self, chat_id, text):
+    def on_text_message_received(self, chat_id, text):
         params = {'chat_id': chat_id, 'text': text}
         return requests.post(self.api_url + BOT_SEND_METHOD, params)
 
@@ -89,7 +89,7 @@ def main():
         # print(last_update_id, last_chat_text, last_chat_id, last_chat_name)
         # print(reply)
 
-        greet_bot.send_message(
+        greet_bot.on_text_message_received(
             last_chat_id,
             json.dumps(last_update, indent=4, separators=(',', ': '))
         )

@@ -16,4 +16,4 @@ class ReplyHandler:
         elif message_text == 'я тебя люблю':
             self.bot.send_sticker(message.chat.id)
         else:
-            self.bot.send_message(message.chat.id, "Example")
+            self.bot.on_text_message_recieved(message.chat.id, "Example")
