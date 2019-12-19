@@ -2,8 +2,9 @@ import datetime
 
 import requests
 
-from bot.Update import Update
-from private_keys import MY_TELEGRAM_BOT_TOKEN
+from bot.update import Update
+from youtube import YoutubeHandler
+from private_keys import MY_TELEGRAM_BOT_TOKEN, MY_YOUTUBE_API_KEY
 from constants import BOT_SEND_METHOD, BOT_GET_METHOD
 from functions import print_dict, convert_dict_to_string
 
@@ -91,8 +92,19 @@ def get_reply_on_text(last: Update):
         # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 
+yt_request_timeout = 10
+yt_handler = YoutubeHandler(
+    MY_YOUTUBE_API_KEY,
+    datetime.timedelta(yt_request_timeout))
+
+prev_updated = datetime.datetime.now()
+
+first_time_received_video = None
+
+
 def main():
     new_offset = None
+    now = datetime.datetime.now()
 
     while True:
         greet_bot.get_updates(new_offset)
@@ -105,6 +117,11 @@ def main():
         print_dict(last_update.get_mess_json())
 
         handle_message_request(last_update, greet_bot)
+
+        if now - datetime.timedelta(seconds=yt_request_timeout) > prev_updated:
+            text = convert_dict_to_string(
+                yt_handler.get_latest_video_from_channel(yt_handler.CHANNELS[0]))
+            greet_bot.send_text_reply(last_update.chat_id, text)
 
         # last_update_id = last_update[Tags.UPDATE_ID]
         new_offset = last_update.id + 1

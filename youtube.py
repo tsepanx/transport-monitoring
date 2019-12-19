@@ -12,12 +12,13 @@ CHANNELS = {
 
 class YoutubeHandler:
 
-    def __init__(self, key):
+    def __init__(self, key: str, request_timeout: datetime.timedelta):
         self.CHANNELS = {
             "ikakprosto": "UCQWeDEwQruA_CcyR08bIE9g"
         }
 
         self.API_KEY = key
+        self.request_timeout = request_timeout
         self.__yt_object = youtube_api.YouTubeDataAPI(self.API_KEY)
 
     def get_channel_data(self, channel_id):
@@ -52,7 +53,7 @@ class YoutubeHandler:
         channel_data = self.get_channel_data(channel_id)
         uploads_playlist_id = channel_data['playlist_id_uploads']
 
-        timedelta = datetime.datetime.now() - datetime.timedelta(days=1)
+        timedelta = datetime.datetime.now() - self.request_timeout
 
         playlist_data = self.get_playlist_data(
             uploads_playlist_id,
@@ -64,7 +65,10 @@ class YoutubeHandler:
         return self.get_video_data(latest_video_id)
 
 
-yt_handler = YoutubeHandler(private_keys.MY_YOUTUBE_API_KEY)
+if __name__ == '__main__':
+    now = datetime.datetime.now()
+    yt_handler = YoutubeHandler(private_keys.MY_YOUTUBE_API_KEY)
 
-print_dict(yt_handler.get_latest_video_from_channel(CHANNELS["ikakprosto"]))
-# print_dict(yt_handler.get_video_comments())
+    print_dict(yt_handler.get_latest_video_from_channel(CHANNELS["ikakprosto"],
+                                                        now - datetime.timedelta(days=1)))
+    # print_dict(yt_handler.get_video_comments())
