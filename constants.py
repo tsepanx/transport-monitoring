@@ -8,9 +8,13 @@ BOT_TOKEN = '939806235:AAH_CZRZKvhAzPJLcLUfqsAYSil8cqhX9xE'
 BOT_GET_METHOD = 'getUpdates'
 BOT_SEND_METHOD = 'sendMessage'
 
+CHANNELS = {
+    "ikakprosto": "UCQWeDEwQruA_CcyR08bIE9g"
+}
+
 
 FILENAMES_PREFIX = "generated_files/"
-PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"  # os.getcwd() + "/"
+PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"
 
 if not os.path.exists(PROJECT_PREFIX + FILENAMES_PREFIX):
     print(PROJECT_PREFIX)

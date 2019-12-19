@@ -1,8 +1,9 @@
 import datetime
+import os
 import pprint
 import json
 
-from constants import *
+from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
 
 
 def conver_dict_to_string(data: dict) -> str:
