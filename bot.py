@@ -65,8 +65,8 @@ def get_reply_on_text(chat_name, message):
 
         elif today == now.day and 17 <= hour < 23:
             return f'Good evening, {chat_name}'
-        else:
-            return f"Sorry, I don't understand you, {chat_name}"
+    else:
+        return f"Sorry, I don't understand you, {chat_name}"
 
 
 def main():
