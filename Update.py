@@ -4,7 +4,7 @@ from functions import print_dict
 
 class Update:
     def __init__(self, update_json: dict):
-        self.is_empty = True if not update_json else False
+        self.is_empty = True if not update_json or "edited_message" in update_json else False
         if self.is_empty:
             return
 
@@ -12,9 +12,6 @@ class Update:
         self.__json = update_json
 
         self.id = update_json["update_id"]
-
-        if "edited_message" in update_json:
-            return
 
         message = update_json[Tags.MESSAGE]
         chat = message[Tags.CHAT]
