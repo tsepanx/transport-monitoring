@@ -36,9 +36,15 @@ class BotHandler:
 
         return last_update
 
-    def on_text_message_received(self, chat_id, text):
+    def send_text_reply(self, chat_id, text):
         params = {'chat_id': chat_id, 'text': text}
-        return requests.post(self.api_url + BOT_SEND_METHOD, params)
+        send_url = self.api_url + BOT_SEND_METHOD
+        print(send_url, "POST")
+
+        return requests.post(send_url, params)
+
+    def send_sticker_reply(self, chat_id, sticker_id):
+        pass
 
 
 greet_bot = BotHandler(BOT_TOKEN)
@@ -46,7 +52,7 @@ greetings = ('здравствуй', 'привет', 'ку', 'здорово')
 now = datetime.datetime.now()
 
 
-def get_reply_message(chat_name, message):
+def get_reply_on_text(chat_name, message):
     today = now.day
     hour = now.hour
 
@@ -80,19 +86,33 @@ def main():
 
         message = last_update[Tags.MESSAGE]
         chat = message[Tags.CHAT]
-        #
-        # last_chat_text = message['text']
+
         last_chat_id = chat['id']
-        # last_chat_name = chat['first_name']
+        last_chat_name = chat['first_name']
 
-        # reply = get_reply_message(last_chat_name, last_chat_text)
-        # print(last_update_id, last_chat_text, last_chat_id, last_chat_name)
-        # print(reply)
+        if "text" in message:
+            sent_mess = message['text']
 
-        greet_bot.on_text_message_received(
-            last_chat_id,
-            json.dumps(last_update, indent=4, separators=(',', ': '))
-        )
+            greet_bot.send_text_reply(
+                last_chat_id,
+                get_reply_on_text(last_chat_name, sent_mess)
+            )
+
+        elif "sticker" in message:
+            sticker = message["text"]
+
+            sticker_name = sticker["set_name"]
+            sticker_id = sticker["file_id"]
+
+            reply_text = sticker_name + "\n" + sticker_id
+
+            greet_bot.send_text_reply(
+                last_chat_id,
+                reply_text
+            )
+
+        else:
+            greet_bot.send_text_reply(last_chat_id, "Unknown file type.")
 
         new_offset = last_update_id + 1
 

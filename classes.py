@@ -32,6 +32,11 @@ class File:
         self.__open("r")
         return self.__file_object.read()
 
+    def raw_update(self, new_data: str):
+        self.__open("+")
+        prev_data = self.raw_read()
+        self.raw_write(prev_data + "\n" + new_data)
+
 
 class JsonFile(File):
 
@@ -51,6 +56,9 @@ class JsonFile(File):
 
     def read(self):
         return json.loads(self.raw_read())
+
+    def update(self, new_data: dict):
+        self.raw_update(json.dumps(new_data, indent=4, separators=(',', ': ')))
 
     def get_all_points_recursively(self):
         return recursive_descent(self.raw_read())
