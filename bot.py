@@ -2,6 +2,7 @@ import datetime
 
 import requests
 
+from Update import Update
 from constants import BOT_TOKEN, BOT_SEND_METHOD, BOT_GET_METHOD, Tags
 from functions import print_dict, conver_dict_to_string
 
@@ -11,8 +12,6 @@ class BotHandler:
     def __init__(self, token):
         self.token = token
         self.api_url = f"https://api.telegram.org/bot{token}/"
-        # self.api_url = f"http://my-telegram-proxy.server/bot{token}/"
-        # self.api_url = f'{proxy_url}bot{token}'
         print(self.api_url)
 
     def get_updates(self, offset=None, timeout=5):
@@ -32,7 +31,7 @@ class BotHandler:
         else:
             last_update = None
 
-        return last_update
+        return Update(last_update)
 
     def send_text_reply(self, chat_id, text):
         params = {'chat_id': chat_id, 'text': text}
@@ -50,60 +49,44 @@ greetings = ('здравствуй', 'привет', 'ку', 'здорово', '
 now = datetime.datetime.now()
 
 
-def handle_message_request(request_json: dict, bot: BotHandler):
-    message = request_json[Tags.MESSAGE]
-    chat = message[Tags.CHAT]
-
-    last_chat_id = chat['id']
-    last_chat_name = chat['first_name']
-
-    if Tags.TEXT in message:
-        sent_mess = message[Tags.TEXT]
-        reply = get_reply_on_text(last_chat_name, sent_mess)
-
-        print(sent_mess, reply)
+def handle_message_request(last: Update, bot: BotHandler):
+    if last.message_text:
+        reply = get_reply_on_text(last)
+        print(last.message_text, reply)
 
         bot.send_text_reply(
-            last_chat_id,
+            last.chat_id,
             reply
         )
-
-    elif "sticker" in message:
-        sticker = message["sticker"]
-
-        sticker_set_name = sticker["set_name"]
-        sticker_id = sticker["file_id"]
-
-        reply_text = sticker_set_name + "\n" + sticker_id
+    elif last.sticker_id:
+        reply_text = last.sticker_set_name + "\n" + last.sticker_id
 
         bot.send_text_reply(
-            last_chat_id,
+            last.chat_id,
             reply_text
         )
-
-        return
-
     else:
         bot.send_text_reply(
-            last_chat_id,
-            conver_dict_to_string(request_json))
+            last.chat_id,
+            conver_dict_to_string(last.get_mess_json()))
 
 
-def get_reply_on_text(chat_name, message):
+def get_reply_on_text(last: Update):
     today = now.day
     hour = now.hour
 
-    if message.lower() in greetings:
+    if last.message_text.lower() in greetings:
         if today == now.day and 6 <= hour < 12:
-            return f'Good morning, {chat_name}'
+            return f'Good morning, {last.author_name[0]}'
 
         elif today == now.day and 12 <= hour < 17:
-            return f'Добрый день, {chat_name}'
+            return f'Добрый день, {last.author_name[0]}'
 
         elif today == now.day and 17 <= hour < 23:
-            return f'Good evening, {chat_name}'
+            return f'Good evening, {last.author_name[0]}'
     else:
-        return f"Sorry, I don't understand you, {chat_name}"
+        return conver_dict_to_string(last.get_mess_json()) + "\n@" + last.author_username
+        # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 
 def main():
@@ -114,15 +97,15 @@ def main():
 
         last_update = greet_bot.get_last_update()
 
-        print_dict(last_update)
-
-        if not last_update:
+        if last_update.is_empty:
             continue
+
+        print_dict(last_update.get_mess_json())
 
         handle_message_request(last_update, greet_bot)
 
-        last_update_id = last_update[Tags.UPDATE_ID]
-        new_offset = last_update_id + 1
+        # last_update_id = last_update[Tags.UPDATE_ID]
+        new_offset = last_update.id + 1
 
 
 if __name__ == '__main__':

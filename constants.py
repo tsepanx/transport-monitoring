@@ -103,8 +103,10 @@ class Tags:
     UPDATE_ID = "update_id"
     MESSAGE = "message"
     CHAT = "chat"
+    FIRST_NAME = "first_name"
 
     TEXT = "text"
+    STICKER = "sticker"
 
 
 class TimetableFilter:
