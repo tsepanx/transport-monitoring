@@ -1,11 +1,9 @@
 import datetime
-import json
 
 import requests
 
-from classes import JsonFile
 from constants import BOT_TOKEN, BOT_SEND_METHOD, BOT_GET_METHOD, Tags
-from functions import print_dict
+from functions import print_dict, conver_dict_to_string
 
 
 class BotHandler:
@@ -48,8 +46,47 @@ class BotHandler:
 
 
 greet_bot = BotHandler(BOT_TOKEN)
-greetings = ('здравствуй', 'привет', 'ку', 'здорово')
+greetings = ('здравствуй', 'привет', 'ку', 'здорово', 'hi', 'hello')
 now = datetime.datetime.now()
+
+
+def handle_message_request(request_json: dict, bot: BotHandler):
+    message = request_json[Tags.MESSAGE]
+    chat = message[Tags.CHAT]
+
+    last_chat_id = chat['id']
+    last_chat_name = chat['first_name']
+
+    if Tags.TEXT in message:
+        sent_mess = message[Tags.TEXT]
+        reply = get_reply_on_text(last_chat_name, sent_mess)
+
+        print(sent_mess, reply)
+
+        bot.send_text_reply(
+            last_chat_id,
+            reply
+        )
+
+    elif "sticker" in message:
+        sticker = message["sticker"]
+
+        sticker_set_name = sticker["set_name"]
+        sticker_id = sticker["file_id"]
+
+        reply_text = sticker_set_name + "\n" + sticker_id
+
+        bot.send_text_reply(
+            last_chat_id,
+            reply_text
+        )
+
+        return
+
+    else:
+        bot.send_text_reply(
+            last_chat_id,
+            conver_dict_to_string(request_json))
 
 
 def get_reply_on_text(chat_name, message):
@@ -82,41 +119,9 @@ def main():
         if not last_update:
             continue
 
+        handle_message_request(last_update, greet_bot)
+
         last_update_id = last_update[Tags.UPDATE_ID]
-
-        message = last_update[Tags.MESSAGE]
-        chat = message[Tags.CHAT]
-
-        last_chat_id = chat['id']
-        last_chat_name = chat['first_name']
-
-        if "text" in message:
-            sent_mess = message['text']
-            reply = get_reply_on_text(last_chat_name, sent_mess)
-
-            print(sent_mess, reply)
-
-            greet_bot.send_text_reply(
-                last_chat_id,
-                reply
-            )
-
-        elif "sticker" in message:
-            sticker = message["sticker"]
-
-            sticker_name = sticker["set_name"]
-            sticker_id = sticker["file_id"]
-
-            reply_text = sticker_name + "\n" + sticker_id
-
-            greet_bot.send_text_reply(
-                last_chat_id,
-                reply_text
-            )
-
-        else:
-            greet_bot.send_text_reply(last_chat_id, "Unknown file type.")
-
         new_offset = last_update_id + 1
 
 

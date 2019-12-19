@@ -1,11 +1,15 @@
 import datetime
 import pprint
+import json
 
 from constants import *
 
 
-def print_near_times_data(route_name, stop_name, estimated, nearest_times):
+def conver_dict_to_string(data: dict) -> str:
+    return json.dumps(data, indent=4, separators=(',', ': '))
 
+
+def print_near_times_data(route_name, stop_name, estimated, nearest_times):
     # stop_name = data_dict[Tags.STOP_NAME]
     # estimated = data_dict[route_name][Tags.ESTIMATED]
 

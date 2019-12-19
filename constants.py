@@ -100,6 +100,8 @@ class Tags:
     MESSAGE = "message"
     CHAT = "chat"
 
+    TEXT = "text"
+
 
 class TimetableFilter:
     WAYS = ("AB", "BA")

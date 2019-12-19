@@ -51,14 +51,14 @@ class JsonFile(File):
         super().__init__(filename, "json")
 
     def write(self, data):
-        d = json.dumps(data, indent=4, separators=(',', ': '))
+        d = conver_dict_to_string(data)
         self.raw_write(d)
 
     def read(self):
         return json.loads(self.raw_read())
 
     def update(self, new_data: dict):
-        self.raw_update(json.dumps(new_data, indent=4, separators=(',', ': ')))
+        self.raw_update(conver_dict_to_string(new_data))
 
     def get_all_points_recursively(self):
         return recursive_descent(self.raw_read())
