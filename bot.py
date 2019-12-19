@@ -52,7 +52,7 @@ now = datetime.datetime.now()
 def handle_message_request(last: Update, bot: BotHandler):
     if last.chat_type == "group" and "@" not in last.message_text:
         return
-    
+
     if last.message_text:
         reply = get_reply_on_text(last)
         print(last.message_text, reply)

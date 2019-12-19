@@ -13,6 +13,9 @@ class Update:
 
         self.id = update_json["update_id"]
 
+        if "edited_message" in update_json:
+            return
+
         message = update_json[Tags.MESSAGE]
         chat = message[Tags.CHAT]
         author = message["from"]
