@@ -2,7 +2,7 @@ import datetime
 
 import requests
 
-from bot.update import Update
+from update import Update
 from youtube import YoutubeHandler
 from private_keys import MY_TELEGRAM_BOT_TOKEN, MY_YOUTUBE_API_KEY
 from constants import BOT_SEND_METHOD, BOT_GET_METHOD
