@@ -5,12 +5,14 @@ import requests
 from update import Update
 from youtube import YoutubeHandler
 from private_keys import MY_TELEGRAM_BOT_TOKEN, MY_YOUTUBE_API_KEY
-from functions import print_dict, convert_dict_to_string, get_pretty_str_video_data, get_reply_on_text
+from functions import print_dict, convert_dict_to_string, get_pretty_str_video_data
 
 BOT_GET_METHOD = 'getUpdates'
 BOT_SEND_MESSAGE_METHOD = 'sendMessage'
 BOT_SEND_IMAGE_METHOD = 'sendPhoto'
 BOT_GET_ME_METHOD = 'getMe'
+
+BOT_YOUTUBE_COMMAND = 'ping_youtube'
 
 
 class BotHandler:
@@ -61,7 +63,7 @@ class BotHandler:
         params = {'chat_id': chat_id, 'photo': photo_identifier, 'disable_web_page_preview': disable_preview}
         return self.__post_request(BOT_SEND_IMAGE_METHOD, params)
 
-    def send_sticker_reply(self, chat_id, sticker_id):
+    def send_sticker(self, chat_id, sticker_id):
         pass
 
 
@@ -75,19 +77,15 @@ def handle_message_request(last: Update, bot: BotHandler):
     if last.chat_type == "group" and "@" not in last.message_text:
         return
 
-    if last.message_text:
-        reply = get_reply_on_text(last)
-        # print(last.message_text, reply)
+    # if last.message_text[0] == "/":
+    #     command = last.message_text[1:]
+    #     if command == BOT_YOUTUBE_COMMAND:
+    #         send_yt_data(bot, last.chat_id, web_handler, )
 
+    if last.message_text or last.sticker_id:
         bot.send_message(
             last.chat_id,
-            reply)
-    elif last.sticker_id:
-        reply_text = last.sticker_set_name + "\n" + last.sticker_id
-
-        bot.send_message(
-            last.chat_id,
-            reply_text)
+            last.get_reply())
     else:
         bot.send_message(
             last.chat_id,
@@ -124,7 +122,7 @@ def send_yt_data(bot: BotHandler, chat_id, web_handler: YoutubeHandler, channels
 
 
 def main():
-    yt_request_timeout = 5
+    yt_request_timeout = 60
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=3))
@@ -138,23 +136,25 @@ def main():
     new_offset = None
 
     while True:
-        from_last_update = datetime.now() - timedelta(seconds=yt_request_timeout)
-        if from_last_update >= prev_updated:
-            print_dict(channels_last_data)
-            send_yt_data(super_bot, ME_CHAT_ID, yt_handler, channels_last_data)
-            prev_updated = datetime.now()
-
         super_bot.get_updates(new_offset)
         last_update = super_bot.get_last_update()
 
-        if last_update.is_empty:
-            continue
+        ping_flag = False
 
-        print_dict(last_update.message_text)
+        if not last_update.is_empty:
+            print_dict(last_update.get_filtered_json())
 
-        handle_message_request(last_update, super_bot)
+            ping_flag = last_update.message_text == '/' + BOT_YOUTUBE_COMMAND
 
-        new_offset = last_update.id + 1
+            handle_message_request(last_update, super_bot) if not ping_flag else None
+
+            new_offset = last_update.id + 1
+
+        from_last_update = datetime.now() - timedelta(seconds=yt_request_timeout)
+        if from_last_update >= prev_updated or ping_flag:
+            print_dict(channels_last_data)
+            send_yt_data(super_bot, ME_CHAT_ID, yt_handler, channels_last_data)
+            prev_updated = datetime.now()
 
 
 if __name__ == '__main__':

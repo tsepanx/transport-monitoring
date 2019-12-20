@@ -1,34 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 import pprint
 import json
 
 from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
-from update import Update
-
-
-def get_reply_on_text(last: Update):
-    now = datetime.now()
-    today = now.day
-    hour = now.hour
-
-    greetings = ('здравствуй', 'привет', 'ку', 'здорово', 'hi', 'hello')
-
-    # if last.message_text == "/get_me":
-    #     return
-
-    if last.message_text.lower() in greetings:
-        if today == now.day and 6 <= hour < 12:
-            return f'Good morning, {last.author_name[0]}'
-
-        elif today == now.day and 12 <= hour < 17:
-            return f'Добрый день, {last.author_name[0]}'
-
-        elif today == now.day and 17 <= hour < 23:
-            return f'Good evening, {last.author_name[0]}'
-    else:
-        return convert_dict_to_string(last.get_filtered_json()) + "\n@" + last.author_username
-        # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 
 def get_pretty_str_video_data(video_data):
