@@ -116,25 +116,8 @@ def get_reply_on_text(last: Update):
         # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 
-def get_yt_latest_video(yt: YoutubeHandler, channel_id, prev_video_id):
-    video = yt.get_latest_video_from_channel(channel_id)
-    if not video:
-        return
-
-    print(video)
-    video_id = video["video_id"]
-
-    if video_id == prev_video_id:
-        return
-
-    # raw = convert_dict_to_string(video)
-    preview_url = video["video_thumbnail"]
-
-    return get_pretty_str_video_data(video), video_id, preview_url
-
-
 def main():
-    yt_request_timeout = 300
+    yt_request_timeout = 3600
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=3))
@@ -156,20 +139,34 @@ def main():
 
                 print("Getting data from youtube...")
 
-                collected_data = get_yt_latest_video(yt_handler, channel_id, current_data[1])
-                if not collected_data:
+                # collected_data = get_yt_latest_video(yt_handler, channel_id, current_data[1])
+
+                video = yt_handler.get_latest_video_from_channel(channel_id)
+
+                if not video:
+                    continue
+
+                video_id = video["video_id"]
+                print(video)
+                print("received", video_id)
+
+                if video_id == current_data[1]:
+                    return
+
+                if not video:
                     print(channel_id)
                     continue
 
-                yt_text, video_id, preview_url = collected_data
-
-                print("received", video_id)
+                preview_url = video["video_thumbnail"]
+                text_to_send = get_pretty_str_video_data(video)
 
                 greet_bot.send_image(ME_CHAT_ID, preview_url)
-                greet_bot.send_message(ME_CHAT_ID, yt_text, disable_preview=True)
+                greet_bot.send_message(ME_CHAT_ID, text_to_send, disable_preview=True)
 
                 # updating values in channels dict
                 channels_last_data[channel_id] = [datetime.now(), video_id]
+
+                prev_updated = datetime.now()
 
         greet_bot.get_updates(new_offset)
 
