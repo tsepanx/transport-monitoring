@@ -5,10 +5,11 @@ import requests
 from update import Update
 from youtube import YoutubeHandler
 from private_keys import MY_TELEGRAM_BOT_TOKEN, MY_YOUTUBE_API_KEY
-from functions import print_dict, convert_dict_to_string
+from functions import print_dict, convert_dict_to_string, get_pretty_str_video_data
 
 BOT_GET_METHOD = 'getUpdates'
-BOT_SEND_METHOD = 'sendMessage'
+BOT_SEND_MESSAGE_METHOD = 'sendMessage'
+BOT_SEND_IMAGE_METHOD = 'sendPhoto'
 BOT_GET_ME_METHOD = 'getMe'
 
 
@@ -52,12 +53,13 @@ class BotHandler:
 
         return Update(last_update)
 
-    def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text}
-        return self.__post_request(BOT_SEND_METHOD, params)
+    def send_message(self, chat_id, text, disable_preview=False):
+        params = {'chat_id': chat_id, 'text': text, 'disable_web_page_preview': disable_preview}
+        return self.__post_request(BOT_SEND_MESSAGE_METHOD, params)
 
-    def send_image(self, file_id):
-        pass
+    def send_image(self, chat_id, photo_identifier, disable_preview=False):
+        params = {'chat_id': chat_id, 'photo': photo_identifier, 'disable_web_page_preview': disable_preview}
+        return self.__post_request(BOT_SEND_IMAGE_METHOD, params)
 
     def send_sticker_reply(self, chat_id, sticker_id):
         pass
@@ -114,8 +116,8 @@ def get_reply_on_text(last: Update):
         # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 
-def get_yt_latest_video(yt: YoutubeHandler, prev_video_id):
-    video = yt.get_latest_video_from_channel(yt.CHANNELS["ikakprosto"])
+def get_yt_latest_video(yt: YoutubeHandler, channel_id, prev_video_id):
+    video = yt.get_latest_video_from_channel(channel_id)
     if not video:
         return
 
@@ -125,41 +127,49 @@ def get_yt_latest_video(yt: YoutubeHandler, prev_video_id):
     if video_id == prev_video_id:
         return
 
-    return convert_dict_to_string(video), video_id
+    # raw = convert_dict_to_string(video)
+    preview_url = video["video_thumbnail"]
+
+    return get_pretty_str_video_data(video), video_id, preview_url
 
 
 def main():
-    yt_request_timeout = 10
+    yt_request_timeout = 300
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=3))
 
-    prev_updated = datetime.now()
+    channels_last_data = {}  # [datetime.now()], video_id
+    for chan in yt_handler.CHANNELS.values():
+        channels_last_data[chan] = [None, None]
 
-    prev_received_video_id = None
+    prev_updated = datetime.now()
 
     new_offset = None
 
     while True:
-
         from_last_update = datetime.now() - timedelta(seconds=yt_request_timeout)
-
         if from_last_update >= prev_updated:
+            print_dict(channels_last_data)
+            for channel_id in channels_last_data:
+                current_data = channels_last_data[channel_id]
 
-            print("Getting data from youtube...")
+                print("Getting data from youtube...")
 
-            collected_data = get_yt_latest_video(yt_handler, prev_received_video_id)
-            if not collected_data:
-                continue
+                collected_data = get_yt_latest_video(yt_handler, channel_id, current_data[1])
+                if not collected_data:
+                    print(channel_id)
+                    continue
 
-            yt_text, video_id = collected_data
+                yt_text, video_id, preview_url = collected_data
 
-            print("received", video_id)
+                print("received", video_id)
 
-            prev_received_video_id = video_id
-            greet_bot.send_message(ME_CHAT_ID, yt_text)
+                greet_bot.send_image(ME_CHAT_ID, preview_url)
+                greet_bot.send_message(ME_CHAT_ID, yt_text, disable_preview=True)
 
-            prev_updated = datetime.now()
+                # updating values in channels dict
+                channels_last_data[channel_id] = [datetime.now(), video_id]
 
         greet_bot.get_updates(new_offset)
 

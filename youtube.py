@@ -1,21 +1,18 @@
 import datetime
 
 import youtube_api
-import private_keys
-
-from functions import print_dict
 
 CHANNELS = {
-    "ikakprosto": "UCQWeDEwQruA_CcyR08bIE9g"
+    "nemchinsky": 'UCVbz7l0COUdLupcY4YtYH0w',
+    "ikakprosto": "UCQWeDEwQruA_CcyR08bIE9g",
+    "haudi": 'UC7f5bVxWsm3jlZIPDzOMcAg'
 }
 
 
 class YoutubeHandler:
 
     def __init__(self, key: str, last_time: datetime.timedelta):
-        self.CHANNELS = {
-            "ikakprosto": "UCQWeDEwQruA_CcyR08bIE9g"
-        }
+        self.CHANNELS = CHANNELS
 
         self.API_KEY = key
         self.last_time = last_time

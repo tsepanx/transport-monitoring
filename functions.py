@@ -6,6 +6,22 @@ import json
 from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
 
 
+def get_pretty_str_video_data(video_data):
+    rows = []
+    video_url = "https://www.youtube.com/watch?v=" + video_data["video_id"]
+
+    rows.append(video_data["channel_title"])
+    rows.append(video_data["video_title"])
+    rows.append(video_data["video_comment_count"] + " comments")
+    rows.append(video_data["video_like_count"] + " likes")
+    rows.append(video_data["video_dislike_count"] + " dislikes")
+
+    rows.append(str(video_data["video_publish_date"]))
+    rows.append(video_url)
+
+    return "\n".join(list(map(str, rows)))
+
+
 def convert_dict_to_string(data: dict) -> str:
     return json.dumps(data, indent=4, separators=(',', ': '), default=str, ensure_ascii=False)
 

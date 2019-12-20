@@ -7,16 +7,11 @@ __pycache__/
 
 .idea/
 .vscode/
-#generated_files/*.json
 generated_files/*
-!generated_files/bot_updates.json
 
-#youtube.py
 private_keys.py
 
-#!*generated_files/buses.db
 /ve
-#/Tests
 
 # ___________________________ !!!
 
