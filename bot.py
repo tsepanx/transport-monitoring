@@ -122,7 +122,7 @@ def send_yt_data(bot: BotHandler, chat_id, web_handler: YoutubeHandler, channels
 
 
 def main():
-    yt_request_timeout = 60
+    yt_request_timeout = 180
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=3))
