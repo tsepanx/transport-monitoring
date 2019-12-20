@@ -140,7 +140,7 @@ def convert_time(value):
 
 
 def print_dict(data):
-    pp = pprint.PrettyPrinter(indent=4, sort_dicts=False, width=50)
+    pp = pprint.PrettyPrinter(indent=4, width=50)
     pp.pprint(data)
 
 
