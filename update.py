@@ -3,12 +3,13 @@ from functions import print_dict
 
 
 class Update:
-    def __init__(self, update_json: dict):
+    def __init__(self, update_json: dict, debug=False):
         self.is_empty = True if not update_json or "edited_message" in update_json else False
         if self.is_empty:
             return
 
-        print_dict(update_json)
+        if debug:
+            print_dict(update_json)
         self.__json = update_json
 
         self.id = update_json["update_id"]
@@ -36,8 +37,10 @@ class Update:
             sticker = message[Tags.STICKER]
             self.sticker_set_name = sticker["set_name"]
             self.sticker_id = sticker["file_id"]
+        else:
+            self.sticker_id, self.sticker_set_name = None, None
 
-    def get_mess_json(self):
+    def get_filtered_json(self):
         res = {}
 
         for tag in self.__json:

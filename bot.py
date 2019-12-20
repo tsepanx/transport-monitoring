@@ -76,7 +76,7 @@ def handle_message_request(last: Update, bot: BotHandler):
 
     if last.message_text:
         reply = get_reply_on_text(last)
-        print(last.message_text, reply)
+        # print(last.message_text, reply)
 
         bot.send_message(
             last.chat_id,
@@ -90,7 +90,7 @@ def handle_message_request(last: Update, bot: BotHandler):
     else:
         bot.send_message(
             last.chat_id,
-            convert_dict_to_string(last.get_mess_json()))
+            convert_dict_to_string(last.get_filtered_json()))
 
 
 def get_reply_on_text(last: Update):
@@ -110,15 +110,29 @@ def get_reply_on_text(last: Update):
         elif today == now.day and 17 <= hour < 23:
             return f'Good evening, {last.author_name[0]}'
     else:
-        return convert_dict_to_string(last.get_mess_json()) + "\n@" + last.author_username
+        return convert_dict_to_string(last.get_filtered_json()) + "\n@" + last.author_username
         # return f"Sorry, I don't understand you, {last.author_name[0]}"
 
 
+def get_yt_latest_video(yt: YoutubeHandler, prev_video_id):
+    video = yt.get_latest_video_from_channel(yt.CHANNELS["ikakprosto"])
+    if not video:
+        return
+
+    print(video)
+    video_id = video["video_id"]
+
+    if video_id == prev_video_id:
+        return
+
+    return convert_dict_to_string(video), video_id
+
+
 def main():
-    yt_request_timeout = 60
+    yt_request_timeout = 10
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
-        timedelta(days=1))
+        timedelta(days=3))
 
     prev_updated = datetime.now()
 
@@ -131,16 +145,19 @@ def main():
         from_last_update = datetime.now() - timedelta(seconds=yt_request_timeout)
 
         if from_last_update >= prev_updated:
-            video = yt_handler.get_latest_video_from_channel(yt_handler.CHANNELS["ikakprosto"])
-            video_id = video["video_id"]
 
-            if video_id == prev_received_video_id:
+            print("Getting data from youtube...")
+
+            collected_data = get_yt_latest_video(yt_handler, prev_received_video_id)
+            if not collected_data:
                 continue
-            else:
-                prev_received_video_id = video_id
 
-            text = convert_dict_to_string(video)
-            greet_bot.send_message(ME_CHAT_ID, text)
+            yt_text, video_id = collected_data
+
+            print("received", video_id)
+
+            prev_received_video_id = video_id
+            greet_bot.send_message(ME_CHAT_ID, yt_text)
 
             prev_updated = datetime.now()
 
@@ -151,11 +168,10 @@ def main():
         if last_update.is_empty:
             continue
 
-        print_dict(last_update.get_mess_json())
+        print_dict(last_update.message_text)
 
         handle_message_request(last_update, greet_bot)
 
-        # last_update_id = last_update[Tags.UPDATE_ID]
         new_offset = last_update.id + 1
 
 

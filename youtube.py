@@ -60,6 +60,9 @@ class YoutubeHandler:
             timedelta
         )
 
+        if len(playlist_data) == 0:
+            return None
+
         latest_video_id = playlist_data[0]['video_id']
 
         return self.get_video_data(latest_video_id)
