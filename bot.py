@@ -115,7 +115,7 @@ def get_reply_on_text(last: Update):
 
 
 def main():
-    yt_request_timeout = 10
+    yt_request_timeout = 60
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=1))
