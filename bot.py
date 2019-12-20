@@ -5,7 +5,7 @@ import requests
 from update import Update
 from youtube import YoutubeHandler
 from private_keys import MY_TELEGRAM_BOT_TOKEN, MY_YOUTUBE_API_KEY
-from functions import print_dict, convert_dict_to_string, get_pretty_str_video_data
+from functions import print_dict, convert_dict_to_string, get_pretty_str_video_data, get_reply_on_text
 
 BOT_GET_METHOD = 'getUpdates'
 BOT_SEND_MESSAGE_METHOD = 'sendMessage'
@@ -67,8 +67,7 @@ class BotHandler:
 
 ME_CHAT_ID = 325805942
 
-greet_bot = BotHandler(MY_TELEGRAM_BOT_TOKEN)
-greetings = ('здравствуй', 'привет', 'ку', 'здорово', 'hi', 'hello')
+super_bot = BotHandler(MY_TELEGRAM_BOT_TOKEN)
 now = datetime.now()
 
 
@@ -95,29 +94,37 @@ def handle_message_request(last: Update, bot: BotHandler):
             convert_dict_to_string(last.get_filtered_json()))
 
 
-def get_reply_on_text(last: Update):
-    today = now.day
-    hour = now.hour
+def send_yt_data(bot: BotHandler, chat_id, web_handler: YoutubeHandler, channels_update_metadata):
+    for channel_id in channels_update_metadata:
+        current_data = channels_update_metadata[channel_id]
 
-    # if last.message_text == "/get_me":
-    #     return
+        video = web_handler.get_latest_video_from_channel(channel_id)
 
-    if last.message_text.lower() in greetings:
-        if today == now.day and 6 <= hour < 12:
-            return f'Good morning, {last.author_name[0]}'
+        if not video:
+            continue
 
-        elif today == now.day and 12 <= hour < 17:
-            return f'Добрый день, {last.author_name[0]}'
+        video_id = video["video_id"]
+        print(video)
 
-        elif today == now.day and 17 <= hour < 23:
-            return f'Good evening, {last.author_name[0]}'
-    else:
-        return convert_dict_to_string(last.get_filtered_json()) + "\n@" + last.author_username
-        # return f"Sorry, I don't understand you, {last.author_name[0]}"
+        if video_id == current_data[1]:
+            return
+
+        if not video:
+            print(channel_id)
+            continue
+
+        preview_url = video["video_thumbnail"]
+        text_to_send = get_pretty_str_video_data(video)
+
+        bot.send_image(chat_id, preview_url)
+        bot.send_message(chat_id, text_to_send, disable_preview=True)
+
+        # updating values in channels dict
+        channels_update_metadata[channel_id] = [datetime.now(), video_id]
 
 
 def main():
-    yt_request_timeout = 3600
+    yt_request_timeout = 5
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=3))
@@ -134,50 +141,18 @@ def main():
         from_last_update = datetime.now() - timedelta(seconds=yt_request_timeout)
         if from_last_update >= prev_updated:
             print_dict(channels_last_data)
-            for channel_id in channels_last_data:
-                current_data = channels_last_data[channel_id]
+            send_yt_data(super_bot, ME_CHAT_ID, yt_handler, channels_last_data)
+            prev_updated = datetime.now()
 
-                print("Getting data from youtube...")
-
-                # collected_data = get_yt_latest_video(yt_handler, channel_id, current_data[1])
-
-                video = yt_handler.get_latest_video_from_channel(channel_id)
-
-                if not video:
-                    continue
-
-                video_id = video["video_id"]
-                print(video)
-                print("received", video_id)
-
-                if video_id == current_data[1]:
-                    return
-
-                if not video:
-                    print(channel_id)
-                    continue
-
-                preview_url = video["video_thumbnail"]
-                text_to_send = get_pretty_str_video_data(video)
-
-                greet_bot.send_image(ME_CHAT_ID, preview_url)
-                greet_bot.send_message(ME_CHAT_ID, text_to_send, disable_preview=True)
-
-                # updating values in channels dict
-                channels_last_data[channel_id] = [datetime.now(), video_id]
-
-                prev_updated = datetime.now()
-
-        greet_bot.get_updates(new_offset)
-
-        last_update = greet_bot.get_last_update()
+        super_bot.get_updates(new_offset)
+        last_update = super_bot.get_last_update()
 
         if last_update.is_empty:
             continue
 
         print_dict(last_update.message_text)
 
-        handle_message_request(last_update, greet_bot)
+        handle_message_request(last_update, super_bot)
 
         new_offset = last_update.id + 1
 

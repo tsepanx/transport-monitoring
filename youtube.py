@@ -19,8 +19,8 @@ class YoutubeHandler:
         self.__yt_object = youtube_api.YouTubeDataAPI(self.API_KEY)
 
     def get_channel_data(self, channel_id):
+        print("Getting data about playlist from youtube...", channel_id)
         channel_data = self.__yt_object.get_channel_metadata(channel_id)
-        # channel_data = self.__yt_object.search("ikakprosto2", order_by="date")
 
         return channel_data
 
@@ -37,6 +37,7 @@ class YoutubeHandler:
         return comments[:elements] if elements else comments
 
     def get_playlist_data(self, playlist_id, published_after):
+        print("Getting data about playlist from youtube...", playlist_id)
         videos = self.__yt_object.get_videos_from_playlist_id(
             playlist_id,
             published_after=published_after
