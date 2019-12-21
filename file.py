@@ -54,9 +54,6 @@ class JsonFile(File):
     def update(self, new_data: dict):
         self.raw_update(convert_dict_to_string(new_data))
 
-    def get_all_points_recursively(self):
-        return recursive_descent(self.raw_read())
-
 
 class GetStopInfoJsonFile(JsonFile):
     def __init__(self, route_name, stop_id):

@@ -1,13 +1,13 @@
 import threading
 import time
+from datetime import time, timedelta
 
-import deprecation
 import requests
 from bs4 import BeautifulSoup
 from yandex_transport_webdriver_api import YandexTransportProxy
-from File import GetStopInfoJsonFile
 
 from constants import *
+from file import GetStopInfoJsonFile
 from functions import *
 
 
@@ -61,7 +61,7 @@ class TimetableParser:
                     hours = int(hours_list[g - gray_cnt].text)
                     minutes = int(j.text)
 
-                    output.append(datetime.time(hours, minutes))
+                    output.append(time(hours, minutes))
 
             res_dict[stop_names[i - 1]] = output
 
@@ -73,27 +73,6 @@ class TimetableParser:
         for way in ways:
             for day in days:
                 self.__get_timetable(way=way, days=day)
-
-    @staticmethod
-    @deprecation.deprecated("Dont use it")
-    def get_buses_list():
-        stops_list = []
-        r = requests.get('http://www.mosgortrans.org/pass3/request.ajax.php?list=ways&type=avto')
-        for i in r.text.split():
-            days = requests.get(f'http://www.mosgortrans.org/pass3/request.ajax.php?list=days&type=avto&way={i}')
-            for day in days.text.split():
-                for way in TimetableFilter.WAYS:
-                    stops = requests.get(
-                        f'http://www.mosgortrans.org/pass3/request.ajax.php?list=waypoints&type=avto&'
-                        f'way={i}&'
-                        f'date={day}&'
-                        f'direction={way}')
-                    for stop in stops.text.split('\n'):
-                        if stop == '':
-                            break
-                        else:
-                            stops_list.append(stop)
-            return stops_list
 
 
 class Database:
@@ -162,7 +141,7 @@ class Database:
         ).order_by(ArrivalTime.stop_name)
 
         for row in query:
-            if are_equals(row.stop_name, stop_name):
+            if lewen_length(row.stop_name, stop_name) <= 5:
                 if row.route_name.name == route_name:
                     res.append(row.arrival_time)
 
@@ -173,7 +152,7 @@ class ServerManager:
     def __init__(self, route_name, stop_id, proxy,
                  interval,
                  iterations=None,
-                 delta_time=datetime.timedelta(seconds=60)):
+                 delta_time=timedelta(seconds=60)):
 
         if not iterations:
             iterations = round(delta_time.seconds / interval)
@@ -197,7 +176,7 @@ class ServerManager:
     def write_to_db(self, route_name, stop_id, proxy):
         value = self.main_func(route_name, stop_id, proxy)
 
-        ServerTimeFix.create(request_time=datetime.datetime.now(), estimated_time=value)
+        ServerTimeFix.create(request_time=datetime.now(), estimated_time=value)
 
     def main_func(self, route_name, stop_id, proxy):
         current_route = TimetableFilter.WAYS[0]
@@ -214,16 +193,13 @@ class ServerManager:
             print("--- No buses on path now ---")
             return None
 
-        api_times = (estimated_list + scheduled_list)
+        real_values = estimated_list + scheduled_list
         db_times = Database.get_filtered_rows_from_db(route_name, stop_name, current_route, current_day)
 
-        try:
-            nearest_times = calculate_time_values_difference(api_times, db_times)
-        except Exception:
-            return None
-        res_time = api_times[0]
+        res_time = real_values[0]
+        close_values = get_closest_values(res_time, db_times)
 
-        print("real time:", res_time, "times from db:", *nearest_times, sep="\n")
+        print("real time:", res_time, "times from db:", *close_values, sep="\n")
         print(self.made_iterations, "request finished")
         print("=====\n")
 
