@@ -22,14 +22,6 @@ class Update:
         chat = message[Tags.CHAT]
         author = message["from"]
 
-        if 'entities' in message:
-            entities = message['entities']
-            print_dict(entities)
-
-            self.is_command = entities[0]['type'] == 'bot_command'
-        else:
-            self.is_command = False
-
         self.chat_id = chat['id']
 
         self.chat_type = chat["type"]
@@ -44,6 +36,17 @@ class Update:
         self.sent_time = message["date"]
 
         self.message_text = message[Tags.TEXT] if Tags.TEXT in message else None
+
+        if 'entities' in message:
+            entities = message['entities']
+
+            self.is_command = entities[0]['type'] == 'bot_command'
+            if self.is_command and self.message_text:
+                self.command = self.message_text[1:]
+            else:
+                self.command = None
+        else:
+            self.is_command = False
 
         if Tags.STICKER in message:
             sticker = message[Tags.STICKER]

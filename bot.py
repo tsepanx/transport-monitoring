@@ -13,6 +13,13 @@ BOT_SEND_IMAGE_METHOD = 'sendPhoto'
 BOT_GET_ME_METHOD = 'getMe'
 
 BOT_YOUTUBE_COMMAND = 'ping_youtube'
+# BOT_CHANNELS_TIMES = 'get_last_updated'
+# BOT_COMMANDS = [
+#     'get_last_updated',
+#     'ping_youtube',
+#     'help',
+#     'start'
+# ]
 
 
 class BotHandler:
@@ -70,7 +77,6 @@ class BotHandler:
 ME_CHAT_ID = 325805942
 
 super_bot = BotHandler(MY_TELEGRAM_BOT_TOKEN)
-now = datetime.now()
 
 
 def handle_message_request(last: Update, bot: BotHandler):
@@ -121,8 +127,16 @@ def send_yt_data(bot: BotHandler, chat_id, web_handler: YoutubeHandler, channels
         channels_update_metadata[channel_id] = [datetime.now(), video_id]
 
 
+def is_ping_needed():
+    now = datetime.now()
+    h = now.hour
+    hours = [*range(1, 9)]
+
+    return h not in hours
+
+
 def main():
-    yt_request_timeout = 180
+    yt_request_timeout = 600
     yt_handler = YoutubeHandler(
         MY_YOUTUBE_API_KEY,
         timedelta(days=3))
@@ -139,22 +153,30 @@ def main():
         super_bot.get_updates(new_offset)
         last_update = super_bot.get_last_update()
 
-        ping_flag = False
+        ping_command_flag = False
 
         if not last_update.is_empty:
             print_dict(last_update.get_filtered_json())
+            if last_update.is_command:
+                current_command = last_update.command if last_update.is_command else None
 
-            ping_flag = last_update.message_text == '/' + BOT_YOUTUBE_COMMAND
+            ping_command_flag = last_update.message_text == '/' + BOT_YOUTUBE_COMMAND
 
-            handle_message_request(last_update, super_bot) if not ping_flag else None
+            handle_message_request(last_update, super_bot) if not ping_command_flag else None
 
             new_offset = last_update.id + 1
 
         from_last_update = datetime.now() - timedelta(seconds=yt_request_timeout)
-        if from_last_update >= prev_updated or ping_flag:
+        if (is_ping_needed() and from_last_update >= prev_updated) or ping_command_flag:
             print_dict(channels_last_data)
-            send_yt_data(super_bot, ME_CHAT_ID, yt_handler, channels_last_data)
-            prev_updated = datetime.now()
+            try:
+                send_yt_data(super_bot, ME_CHAT_ID, yt_handler, channels_last_data)
+                prev_updated = datetime.now()
+            except requests.HTTPError as e:
+                arr = (e.strerror, e.response, e.request)
+
+                print(*arr, sep='\n')
+                super_bot.send_message(ME_CHAT_ID, '\n'.join(arr))
 
 
 if __name__ == '__main__':
