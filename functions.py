@@ -5,21 +5,6 @@ from datetime import datetime, date, time
 from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
 
 
-def get_message_with_video_data(video_data):
-    rows = []
-    video_url = "https://www.youtube.com/watch?v=" + video_data["video_id"]
-
-    rows.extend(video_data["channel_title"] +
-                video_data["video_title"] +
-                (video_data["video_comment_count"] + " comments") +
-                (video_data["video_like_count"] + " likes") +
-                (video_data["video_dislike_count"] + " dislikes") +
-                str(video_data["video_publish_date"]) +
-                video_url)
-
-    return "\n".join(list(map(str, rows)))
-
-
 def convert_dict_to_string(data: dict) -> str:
     return json.dumps(data, indent=2, separators=(',', ': '), default=str, ensure_ascii=False)
 
