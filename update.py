@@ -1,6 +1,7 @@
-from constants import Tags
-from functions import print_dict, convert_dict_to_string
 from datetime import datetime
+
+from constants import Tags
+from functions import convert_dict_to_string
 
 
 class Update:
@@ -13,7 +14,7 @@ class Update:
             return
 
         if debug:
-            print_dict(update_json)
+            print(convert_dict_to_string(update_json))
         self.__json = update_json
 
         self.id = update_json["update_id"]
@@ -88,8 +89,6 @@ class Update:
             return
 
     def get_reply(self):
-        # if self.is_command:
-        #     return self.__get_reply_on_command()
         if self.message_text:
             return self.__get_reply_on_text()
         elif self.sticker_id:

@@ -1,12 +1,11 @@
-from datetime import datetime
-import os
-import pprint
 import json
+import os
+from datetime import datetime, date
 
 from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
 
 
-def get_pretty_str_video_data(video_data):
+def get_message_with_video_data(video_data):
     rows = []
     video_url = "https://www.youtube.com/watch?v=" + video_data["video_id"]
 
@@ -23,7 +22,7 @@ def get_pretty_str_video_data(video_data):
 
 
 def convert_dict_to_string(data: dict) -> str:
-    return json.dumps(data, indent=4, separators=(',', ': '), default=str, ensure_ascii=False)
+    return json.dumps(data, indent=2, separators=(',', ': '), default=str, ensure_ascii=False)
 
 
 def print_near_times_data(route_name, stop_name, estimated, nearest_times):
@@ -67,7 +66,7 @@ def remove_if_exists(path):
 
 
 def is_today_workday():
-    d = datetime.date.today().isoweekday()
+    d = date.today().isoweekday()
     return 1 if d not in [6, 7] else 0
 
 
@@ -139,14 +138,13 @@ def convert_time(value):
     return datetime.time(value.tm_hour, value.tm_min, value.tm_sec)
 
 
-def print_dict(data):
-    pp = pprint.PrettyPrinter(indent=4, width=50)
-    pp.pprint(data)
+# def print_dict(data):
+#     pp = pprint.PrettyPrinter(indent=4, width=50)
+#     pp.pprint(data)
 
 
 def get_delta(a, b):
-    x = datetime.datetime.combine(datetime.date.today(), a)
-    y = datetime.datetime.combine(datetime.date.today(), b)
+    x = datetime.combine(date.today(), a)
+    y = datetime.combine(date.today(), b)
     res = abs(x - y)
-    # print(x, y, res)
-    return (datetime.datetime.min + res).time()
+    return (datetime.min + res).time()
