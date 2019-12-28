@@ -1,31 +1,25 @@
-import threading
 import time
-from datetime import time, timedelta
+from datetime import time
 
 import requests
 from bs4 import BeautifulSoup
-from yandex_transport_webdriver_api import YandexTransportProxy
 
 from constants import *
-from file import GetStopInfoJsonFile
-from functions import *
+from functions import lewen_length
 
 
 class TimetableParser:
     paths_list = []
-    timetable = {
-        TimetableFilter.WAYS[0]:
-            {TimetableFilter.DAYS[0]: {}, TimetableFilter.DAYS[1]: {}},
-        TimetableFilter.WAYS[1]:
-            {TimetableFilter.DAYS[0]: {}, TimetableFilter.DAYS[1]: {}}
-    }
 
     def __init__(self, route_name):
         self.route_name = route_name
+        self.obtained_timetable = {}
 
-    def __get_timetable(self, way=TimetableFilter.WAYS[0], days=TimetableFilter.DAYS[0], stop_filter="all"):
+    def __obtain_parsed_timetable(self, _filter: Filters):
+        days = _filter.week_filter
+        way = _filter.way_filter
 
-        url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.route_name}&date={days}&direction={way}&waypoint={stop_filter}"
+        url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.route_name}&date={days}&direction={way}&waypoint=all"
         print(url_string)
 
         request = requests.get(url_string)
@@ -65,161 +59,88 @@ class TimetableParser:
 
             res_dict[stop_names[i - 1]] = output
 
-        self.timetable[way][days] = res_dict
-        return self.timetable[way][days]
+        self.obtained_timetable[_filter] = res_dict
 
-    def get_all_timetable(self, ways=TimetableFilter.WAYS,
-                          days=TimetableFilter.DAYS):
-        for way in ways:
-            for day in days:
-                self.__get_timetable(way=way, days=day)
+    def obtain_all_timetables(self):
+        _filter = Filters()
 
-
-class Database:
-
-    def __init__(self, routes_list, db=GLOBAL_DB,
-                 filter_ways=TimetableFilter.WAYS,
-                 filter_days=TimetableFilter.DAYS):
-        self.db = db
-
-        self.routes_list = routes_list
-        self.filter_ways = filter_ways
-        self.filter_days = filter_days
-
-    def create(self):
-        if not os.path.exists(PROJECT_PREFIX + MAIN_DB_FILENAME):
-            self.__fill_database(filter_ways=self.filter_ways, filter_days=self.filter_days)
-        else:
-            print("=== database already exists! ===")
-        return self
-
-    def __fill_database(self,
-                        filter_ways=TimetableFilter.WAYS,
-                        filter_days=TimetableFilter.WAYS):
-        self.db.create_tables(DATABASE_TIMETABLES_LIST)
-
-        for route_name in self.routes_list:
-            time_data_source = []
-            stop_data_source = []
-
-            parser = TimetableParser(route_name)
-            parser.get_all_timetable(filter_ways, filter_days)
-
-            route_row = RouteData.create(name=parser.route_name)
-            print(parser.route_name)
-
-            for route in parser.timetable:
-                for day in parser.timetable[route]:
-                    for stop_name in parser.timetable[route][day]:
-                        stop_data_source.append(
-                            (stop_name,
-                             route,
-                             route_row))
-
-                        for arrival_time in parser.timetable[route][day][stop_name]:
-                            time_data_source.append((stop_name, route_row, arrival_time, route, day))
-                            # print(parser.route_name, route, day, stop_name, arrival_time)
-            ArrivalTime.insert_many(time_data_source, fields=[
-                ArrivalTime.stop_name,
-                ArrivalTime.route_name,
-                ArrivalTime.arrival_time,
-                ArrivalTime.way,
-                ArrivalTime.days]).execute()
-
-            StopData.insert_many(stop_data_source, fields=[
-                StopData.stop_name,
-                StopData.way,
-                StopData.route_name
-            ]).execute()
-
-    @staticmethod
-    def get_filtered_rows_from_db(route_name, stop_name, way=TimetableFilter.WAYS[0], days=TimetableFilter.DAYS[0]):
-        res = []
-        query = ArrivalTime.select().where(
-            ArrivalTime.way == way,
-            ArrivalTime.days == days,
-        ).order_by(ArrivalTime.stop_name)
-
-        for row in query:
-            if lewen_length(row.stop_name, stop_name) <= 5:
-                if row.route_name.name == route_name:
-                    res.append(row.arrival_time)
-
-        return res
+        for way in _filter.way_filter:
+            for day in _filter.week_filter:
+                self.__obtain_parsed_timetable(Filters(way_filter=way, week_filter=day))
 
 
-class ServerManager:
-    def __init__(self, route_name, stop_id, proxy,
-                 interval,
-                 iterations=None,
-                 delta_time=timedelta(seconds=60)):
+def obtain_routes_sources(routes_list):
+    res = {}
 
-        if not iterations:
-            iterations = round(delta_time.seconds / interval)
+    for route_name in routes_list:
+        arrival_times_source = []
+        stop_data_source = []
 
-        self.interval = interval
-        self.made_iterations = 0
-        print(iterations)
+        parser = TimetableParser(route_name)
+        parser.obtain_all_timetables()
 
-        self.main_thread = threading.Thread(target=self.execute,
-                                            args=[iterations, route_name, stop_id, proxy])
-        self.main_thread.start()
+        route_row = RouteData.create(name=parser.route_name)
+        print(parser.route_name)
 
-    def execute(self, count, route_name, stop_id, proxy):
-        while self.made_iterations < count:
-            thread = threading.Thread(target=self.write_to_db,
-                                      args=[route_name, stop_id, proxy])
-            thread.start()
-            self.made_iterations += 1
-            time.sleep(self.interval)
+        for routes_filter in parser.obtained_timetable:
+            for stop_name in parser.obtained_timetable[routes_filter]:
+                stop_data_source.append(
+                    (stop_name,
+                     routes_filter.way_filter,
+                     route_row))
+                for arrival_time in parser.obtained_timetable[stop_name]:
+                    new_source_row = (stop_name,
+                                      route_row,
+                                      arrival_time,
+                                      routes_filter.way_filter,
+                                      routes_filter.week_filter)
 
-    def write_to_db(self, route_name, stop_id, proxy):
-        value = self.main_func(route_name, stop_id, proxy)
+                    arrival_times_source.append(new_source_row)
+                    print(parser.route_name, *new_source_row)
+        res[route_name][ArrivalTime] = arrival_times_source
+        res[route_name][StopData] = stop_data_source
 
-        ServerTimeFix.create(request_time=datetime.now(), estimated_time=value)
-
-    def main_func(self, route_name, stop_id, proxy):
-        current_route = TimetableFilter.WAYS[0]
-        current_day = TimetableFilter.DAYS[is_today_workday()]
-
-        stop_file = GetStopInfoJsonFile(route_name, stop_id).execute(proxy)
-
-        stop_name = stop_file.data_dict[Tags.STOP_NAME]
-
-        estimated_list = stop_file.data_dict[route_name][Tags.ESTIMATED]
-        scheduled_list = stop_file.data_dict[route_name][Tags.SCHEDULED]
-
-        if len(estimated_list + scheduled_list) == 0:
-            print("--- No buses on path now ---")
-            return None
-
-        real_values = estimated_list + scheduled_list
-        db_times = Database.get_filtered_rows_from_db(route_name, stop_name, current_route, current_day)
-
-        res_time = real_values[0]
-        close_values = get_closest_values(res_time, db_times)
-
-        print("real time:", res_time, "times from db:", *close_values, sep="\n")
-        print(self.made_iterations, "request finished")
-        print("=====\n")
-
-        return res_time
+    return res
 
 
-class MyYandexTransportProxy(YandexTransportProxy):
+def insert_many(sources):
+    for route_name in sources:
+        ArrivalTime.insert_many(sources[route_name][ArrivalTime], fields=[
+            ArrivalTime.stop_name,
+            ArrivalTime.route_name,
+            ArrivalTime.arrival_time,
+            ArrivalTime.way,
+            ArrivalTime.days]).execute()
 
-    def __init__(self, host, port):
-        super().__init__(host, port)
+        StopData.insert_many(sources[route_name][StopData], fields=[
+            StopData.stop_name,
+            StopData.way,
+            StopData.route_name
+        ]).execute()
 
-    def get_all_info(self, url, query_id=None, blocking=True, timeout=0, callback=None):
-        print("GetAllInfo")
-        # super()._execute_get_query("getLine", url, query_id, blocking, timeout, callback)
-        return super().get_all_info(url, query_id, blocking, timeout, callback)
 
-    def get_stop_info(self, url, query_id=None, blocking=True, timeout=0, callback=None):
-        print("GetStopInfo")
-        return super().get_stop_info(url, query_id, blocking, timeout, callback)
+def get_filtered_rows_from_db(route_name, stop_name, _filter: Filters):
+    way = _filter.way_filter
+    days = _filter.week_filter
 
-    def get_line(self, url, query_id=None, blocking=True, timeout=0, callback=None):
-        print("GetLine")
-        return super().get_line(url, query_id, blocking, timeout, callback)
+    res = []
+    query = ArrivalTime.select().where(
+        ArrivalTime.way == way,
+        ArrivalTime.days == days,
+    ).order_by(ArrivalTime.stop_name)
+
+    for row in query:
+        if lewen_length(row.stop_name, stop_name) <= 5:
+            if row.route_name.name == route_name:
+                res.append(row.arrival_time)
+
+    return res
+
+
+def create_database(routes_list, db=GLOBAL_DB):
+    if not os.path.exists(MAIN_DB_PATH):
+        db.create_tables(DATABASE_TIMETABLES_LIST)
+        sources = obtain_routes_sources(routes_list)
+        insert_many(sources)
+    else:
+        print("=== database already exists! ===")

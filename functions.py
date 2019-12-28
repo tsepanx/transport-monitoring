@@ -5,7 +5,17 @@ from datetime import datetime, date, time
 from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
 
 
-def convert_dict_to_string(data: dict) -> str:
+class JsonSerializable(dict):
+
+    def __init__(self, s: str):
+        super().__init__()
+        self.__class__ = json.loads(s)
+
+    def __str__(self):
+        return convert(self)
+
+
+def convert(data: dict) -> str:
     return json.dumps(data, indent=2, separators=(',', ': '), default=str, ensure_ascii=False)
 
 

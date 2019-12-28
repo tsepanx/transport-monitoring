@@ -12,6 +12,7 @@ generated_files/*
 private_keys.py
 
 /ve
+.ven*
 
 # ___________________________ !!!
 

@@ -1,16 +1,15 @@
-from classes import *
+from constants import routes_fields, proxy
+from file import GetStopInfoJsonFile
+from functions import convert
 
-proxy = MyYandexTransportProxy('127.0.0.1', 25555)
 
-current_route_name = "732"
-current_stop_id = STOP_732_ID
-
-if __name__ == '__main__':
-    Database(BUSES_LIST).create()
+def main():
+    current_route_name = "732"
+    current_stop_id = routes_fields[current_route_name]['main_stop_id']
 
     file = GetStopInfoJsonFile(current_route_name, current_stop_id).execute(proxy)
-    print_dict(file.data_dict)
-    # print_near_times_data(curr_bus,
-    #                       file.data_dict[Tags.STOP_NAME],
-    #                       file.data_dict[curr_bus][Tags.ESTIMATED],
-    #                       )
+    print(convert(file.data_dict))
+
+
+if __name__ == '__main__':
+    main()
