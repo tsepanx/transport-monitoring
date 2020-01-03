@@ -1,5 +1,4 @@
-from constants import proxy, Request
-# from file import GetStopInfoJsonFile, GetLineJsonFile
+from constants import Request
 from file import YandexApiRequestFile
 from functions import convert
 

@@ -1,5 +1,4 @@
 import json
-import os
 from datetime import datetime, date, time
 
 from constants import PROJECT_PREFIX, GENERATED_DIR, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH, Request
@@ -29,9 +28,11 @@ def get_full_filename(filename, ext="json"):
 
 
 def build_url(request_type, **kwargs):
+    base_url = 'https://yandex.ru/maps/213/moscow/'
+
     if request_type == Request.GET_STOP_INFO:
         stop_url_prefix = "stop__"
-        prefix = "https://yandex.ru/maps/213/moscow/?masstransit[stopId]="
+        prefix = base_url + "?masstransit[stopId]="
 
         s = str(kwargs['stop_id'])
 
@@ -44,7 +45,7 @@ def build_url(request_type, **kwargs):
     elif request_type == Request.GET_LINE:
         id = kwargs['line_id']
         thread_id = kwargs['thread_id']
-        return f"https://yandex.ru/maps/213/moscow/?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
+        return base_url + f"?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
 
 
 def lewen_length(a, b):
