@@ -15,7 +15,7 @@ class TimetableParser:
         self.route_name = route_name
         self.obtained_timetable = {}
 
-    def __obtain_parsed_timetable(self, _filter: Filters):
+    def __obtain_parsed_timetable(self, _filter: Filter):
         days = _filter.week_filter
         way = _filter.way_filter
 
@@ -62,11 +62,11 @@ class TimetableParser:
         self.obtained_timetable[_filter] = res_dict
 
     def obtain_all_timetables(self):
-        _filter = Filters()
+        _filter = Filter()
 
         for way in _filter.way_filter:
             for day in _filter.week_filter:
-                self.__obtain_parsed_timetable(Filters(way_filter=way, week_filter=day))
+                self.__obtain_parsed_timetable(Filter(way_filter=way, week_filter=day))
 
 
 def obtain_routes_sources(routes_list):
@@ -119,7 +119,7 @@ def insert_many(sources):
         ]).execute()
 
 
-def get_filtered_rows_from_db(route_name, stop_name, _filter: Filters):
+def get_filtered_rows_from_db(route_name, stop_name, _filter: Filter):
     way = _filter.way_filter
     days = _filter.week_filter
 
@@ -137,8 +137,8 @@ def get_filtered_rows_from_db(route_name, stop_name, _filter: Filters):
     return res
 
 
-def create_database(routes_list, db=GLOBAL_DB):
-    if not os.path.exists(MAIN_DB_PATH):
+def create_database(routes_list, db=MY_DATABASE):
+    if not os.path.exists(DATABASE_PATH):
         db.create_tables(DATABASE_TIMETABLES_LIST)
         sources = obtain_routes_sources(routes_list)
         insert_many(sources)

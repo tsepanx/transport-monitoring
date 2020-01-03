@@ -1,21 +1,21 @@
 import unittest
-from classes import *
+
+from constants import Request
+from file import YandexApiRequestFile
 
 
 class MyTestCase(unittest.TestCase):
-    pass
-    # def test_db_fill(self):
-    #     self.maxDiff = None
-    #
-    #     path = PROJECT_PREFIX + MAIN_DB_FILENAME
-    #     remove_if_exists(path)
-    #
-    #     Database(BUSES_LIST).create()
-    #     l = Database.get_filtered_rows_from_db("732", "Давыдковская улица, 10")
-    #     print(*l)
-    #     self.assertNotEqual(l, [])
-    #
-    #     os.remove(path)
+    def test_yandex_get_stop_info(self):
+        try:
+            YandexApiRequestFile(Request.GET_STOP_INFO, '732').write_obtained_data()
+        except Exception as e:
+            self.fail(str(e))
+
+    def test_yandex_get_line(self):
+        try:
+            YandexApiRequestFile(Request.GET_LINE, '732').write_obtained_data()
+        except Exception as e:
+            self.fail(str(e))
 
 
 if __name__ == '__main__':

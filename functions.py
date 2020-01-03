@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime, date, time
 
-from constants import PROJECT_PREFIX, FILENAMES_PREFIX, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH
+from constants import PROJECT_PREFIX, GENERATED_DIR, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH, Request
 
 
 class JsonSerializable(dict):
@@ -19,40 +19,32 @@ def convert(data: dict) -> str:
     return json.dumps(data, indent=2, separators=(',', ': '), default=str, ensure_ascii=False)
 
 
-def get_closest_values(x, arr):
-    for i, t in enumerate(arr):
-        if t >= x:
-            return [arr[i - 1], t]
-
-
-def remove_if_exists(path):
-    if os.path.exists(path):
-        os.remove(path)
-
-
 def is_today_workday():
     d = date.today().isoweekday()
     return 1 if d not in [6, 7] else 0
 
 
 def get_full_filename(filename, ext="json"):
-    return PROJECT_PREFIX + FILENAMES_PREFIX + filename + "." + ext
+    return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext
 
 
-def get_stop_url(id):
-    stop_url_prefix = "stop__"
-    prefix = "https://yandex.ru/maps/213/moscow/?masstransit[stopId]="
-    s = str(id)
-    if len(s) == SHORT_STOP_ID_LENGTH:
-        return prefix + stop_url_prefix + s
-    elif len(s) == LONG_STOP_ID_LENGTH:
-        return prefix + s
-    else:
-        raise Exception("Another stop id length found")
+def build_url(request_type, **kwargs):
+    if request_type == Request.GET_STOP_INFO:
+        stop_url_prefix = "stop__"
+        prefix = "https://yandex.ru/maps/213/moscow/?masstransit[stopId]="
 
+        s = str(kwargs['stop_id'])
 
-def get_line_url(id, thread_id):
-    return f"https://yandex.ru/maps/213/moscow/?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
+        if len(s) == SHORT_STOP_ID_LENGTH:
+            return prefix + stop_url_prefix + s
+        elif len(s) == LONG_STOP_ID_LENGTH:
+            return prefix + s
+        else:
+            raise Exception("Another stop_id length found")
+    elif request_type == Request.GET_LINE:
+        id = kwargs['line_id']
+        thread_id = kwargs['thread_id']
+        return f"https://yandex.ru/maps/213/moscow/?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
 
 
 def lewen_length(a, b):

@@ -5,7 +5,7 @@ from datetime import timedelta, datetime
 from classes import get_filtered_rows_from_db
 from constants import *
 from file import GetStopInfoJsonFile
-from functions import get_closest_values
+from parsers import parse_get_stop_info_json
 
 
 class ServerManager:
@@ -21,44 +21,51 @@ class ServerManager:
         self.made_iterations = 0
 
         self.main_thread = threading.Thread(target=self.run_async,
-                                            args=[iterations, route_name, stop_id, proxy, Filters(0, 0)])
+                                            args=[iterations], kwargs={'route_name': route_name,
+                                                                       'stop_id': stop_id,
+                                                                       'proxy': proxy,
+                                                                       'filter': Filter(0, 0)
+                                                                       })
         self.main_thread.start()
 
-    def run_async(self, count, route_name, stop_id, proxy, _filter):
+    def run_async(self, count, **kwargs):
         while self.made_iterations < count:
-            value = self.main(route_name, stop_id, proxy, _filter)
+            value = self.main(kwargs)
             ServerTimeFix.create(request_time=datetime.now(), estimated_time=value)
 
             self.made_iterations += 1
             time.sleep(self.interval)
 
-    def main(self, route_name, stop_id, proxy, _filter):
-        stop_file = GetStopInfoJsonFile(route_name, stop_id).execute(proxy)
-        stop_name = stop_file.data_dict[Tags.STOP_NAME]
+    def main(self, route_name=None, stop_id=None, proxy=None, filter=None):
+        stop_file = GetStopInfoJsonFile(route_name, proxy, stop_id).write_obtained_data()
+        data = parse_get_stop_info_json(stop_file.data_dict)
+        stop_name = data[Tags.STOP_NAME]
 
-        estimated_list = stop_file.data_dict[route_name][Tags.ESTIMATED]
-        scheduled_list = stop_file.data_dict[route_name][Tags.SCHEDULED]
+        estimated_list = data[route_name][Tags.ESTIMATED]
+        db_times = get_filtered_rows_from_db(route_name, stop_name, filter)
 
-        if len(estimated_list + scheduled_list) == 0:
+        if len(estimated_list) == 0:
             print("--- No buses on path now ---")
             return None
 
-        real_values = estimated_list + scheduled_list
-        db_times = get_filtered_rows_from_db(route_name, stop_name, _filter)
+        nearest_income = estimated_list[0]
 
-        res_time = real_values[0]
-        close_values = get_closest_values(res_time, db_times)
+        close_values = {}
+        for i, t in enumerate(db_times):
+            if t >= nearest_income:
+                close_values = [db_times[i - 1], t]
+                break
 
-        print("real time:", res_time, "times from db:", *close_values, sep="\n")
+        print("real time:", nearest_income, "times from db:", *close_values, sep="\n")
         print(self.made_iterations, "request finished")
         print("=====\n")
 
-        return res_time
+        return nearest_income
 
 
 def main():
     current_route_name = "732"
-    current_stop_id = routes_fields[current_route_name]['main_stop_id']
+    current_stop_id = ROUTES_FIELDS[current_route_name]['stop_id']
 
     duration = int(input("duration: "))
     interval = int(input("interval: "))

@@ -1,13 +1,12 @@
-from constants import routes_fields, proxy
-from file import GetStopInfoJsonFile
+from constants import proxy, Request
+# from file import GetStopInfoJsonFile, GetLineJsonFile
+from file import YandexApiRequestFile
 from functions import convert
 
 
 def main():
-    current_route_name = "732"
-    current_stop_id = routes_fields[current_route_name]['main_stop_id']
-
-    file = GetStopInfoJsonFile(current_route_name, current_stop_id).execute(proxy)
+    file = YandexApiRequestFile(Request.GET_STOP_INFO, '732').write_obtained_data()
+    # file = YandexApiRequestFile(Request.GET_LINE, '732').write_obtained_data()
     print(convert(file.data_dict))
 
 
