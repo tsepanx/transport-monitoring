@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, date, time
 
-from constants import PROJECT_PREFIX, GENERATED_DIR, SHORT_STOP_ID_LENGTH, LONG_STOP_ID_LENGTH, Request
+from constants import PROJECT_PREFIX, GENERATED_DIR, Request
 
 
 class JsonSerializable(dict):
@@ -30,22 +30,21 @@ def get_full_filename(filename, ext="json"):
 def build_url(request_type, **kwargs):
     base_url = 'https://yandex.ru/maps/213/moscow/'
 
+    res_url = base_url + ''
+
     if request_type == Request.GET_STOP_INFO:
-        stop_url_prefix = "stop__"
-        prefix = base_url + "?masstransit[stopId]="
+        stop_id = str(kwargs['stop_id'])
+        prefix = "?masstransit[stopId]="
+        stop_url_prefix = "stop__" if len(stop_id) == 7 else ''
 
-        s = str(kwargs['stop_id'])
-
-        if len(s) == SHORT_STOP_ID_LENGTH:
-            return prefix + stop_url_prefix + s
-        elif len(s) == LONG_STOP_ID_LENGTH:
-            return prefix + s
-        else:
-            raise Exception("Another stop_id length found")
+        res_url += prefix + stop_url_prefix + stop_id
     elif request_type == Request.GET_LINE:
         id = kwargs['line_id']
         thread_id = kwargs['thread_id']
-        return base_url + f"?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
+        res_url += f"?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
+
+    print(res_url)
+    return res_url
 
 
 def lewen_length(a, b):

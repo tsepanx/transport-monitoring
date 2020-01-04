@@ -30,9 +30,6 @@ MY_DATABASE = SqliteDatabase(DATABASE_PATH)
 
 PROXY_CONNECT_TIMEOUT = 5
 
-SHORT_STOP_ID_LENGTH = 7
-LONG_STOP_ID_LENGTH = 10
-
 ROUTES_FIELDS = {
     '732': {
         'line_id': "213_732_bus_mosgortrans",
