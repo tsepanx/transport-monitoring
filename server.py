@@ -37,7 +37,7 @@ class ServerManager:
             time.sleep(self.interval)
 
     def main(self, route_name=None, stop_id=None, proxy=None, filter=None):
-        stop_file = GetStopInfoJsonFile(route_name, proxy, stop_id).write_obtained_data()
+        stop_file = GetStopInfoJsonFile(route_name, proxy, stop_id).write_to_file()
         data = parse_get_stop_info_json(stop_file.data_dict)
         stop_name = data[Tags.STOP_NAME]
 
