@@ -1,7 +1,6 @@
 import unittest
 
-from constants import Request
-from main import YandexApiRequest
+from request import YandexApiRequest, Request
 
 
 class MyTestCase(unittest.TestCase):

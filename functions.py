@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, date, time
 
-from constants import PROJECT_PREFIX, GENERATED_DIR, Request
+from constants import PROJECT_PREFIX, GENERATED_DIR
 
 
 class JsonSerializable(dict):
@@ -25,26 +25,6 @@ def is_today_workday():
 
 def get_full_filename(filename, ext="json"):
     return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext
-
-
-def build_url(request_type, **kwargs):
-    base_url = 'https://yandex.ru/maps/213/moscow/'
-
-    res_url = base_url + ''
-
-    if request_type == Request.GET_STOP_INFO:
-        stop_id = str(kwargs['stop_id'])
-        prefix = "?masstransit[stopId]="
-        stop_url_prefix = "stop__" if len(stop_id) == 7 else ''
-
-        res_url += prefix + stop_url_prefix + stop_id
-    elif request_type == Request.GET_LINE:
-        id = kwargs['line_id']
-        thread_id = kwargs['thread_id']
-        res_url += f"?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
-
-    print(res_url)
-    return res_url
 
 
 def lewen_length(a, b):

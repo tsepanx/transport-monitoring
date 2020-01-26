@@ -73,6 +73,7 @@ def obtain_routes_sources(routes_list):
     res = {}
 
     for route_name in routes_list:
+        res[route_name] = {}
         arrival_times_source = []
         stop_data_source = []
 
@@ -88,7 +89,7 @@ def obtain_routes_sources(routes_list):
                     (stop_name,
                      routes_filter.way_filter,
                      route_row))
-                for arrival_time in parser.obtained_timetable[stop_name]:
+                for arrival_time in parser.obtained_timetable[routes_filter][stop_name]:
                     new_source_row = (stop_name,
                                       route_row,
                                       arrival_time,
@@ -96,7 +97,7 @@ def obtain_routes_sources(routes_list):
                                       routes_filter.week_filter)
 
                     arrival_times_source.append(new_source_row)
-                    print(parser.route_name, *new_source_row)
+                    # print(parser.route_name, *new_source_row)
         res[route_name][ArrivalTime] = arrival_times_source
         res[route_name][StopData] = stop_data_source
 
@@ -125,9 +126,12 @@ def get_filtered_rows_from_db(route_name, stop_name, _filter: Filter):
 
     res = []
     query = ArrivalTime.select().where(
-        ArrivalTime.way == way,
-        ArrivalTime.days == days,
+        ArrivalTime.way in way,
+        ArrivalTime.days in days,
     ).order_by(ArrivalTime.stop_name)
+
+    # if len(query) == 0:
+    #     return None
 
     for row in query:
         if lewen_length(row.stop_name, stop_name) <= 5:

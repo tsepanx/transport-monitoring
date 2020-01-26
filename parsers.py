@@ -1,15 +1,15 @@
 import time
 
 from constants import Tags
-from functions import convert_time
+from functions import convert_time, convert
 
 
 def parse_get_stop_info_json(sources):
     res_dict = dict()
 
-    props = sources["data"]["properties"]
-    stop_russian_fullname = props["name"]
-    transport_data = props["StopMetaData"]["Transport"]
+    props = sources["data"]  # ["properties"]
+    stop_russian_fullname = props["properties"]["name"]
+    transport_data = props["properties"]["StopMetaData"]["Transport"]
 
     res_dict[Tags.STOP_NAME] = stop_russian_fullname
 

@@ -1,4 +1,3 @@
-import enum
 import os
 from pathlib import Path
 
@@ -77,11 +76,6 @@ class ServerTimeFix(Model):
 DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
 
 
-class Request(enum.Enum):
-    GET_STOP_INFO = {'func': proxy.get_stop_info, 'prefix': 'stop_'}
-    GET_LINE = {'func': proxy.get_line, 'prefix': 'line_'}
-
-
 class Tags:
     STOP_NAME = "stopName"
 
@@ -103,9 +97,13 @@ class Tags:
 
 
 class Filter:
-    def __init__(self, way_filter: int = None, week_filter: int = None):
+    def __init__(self, way_filter=None, week_filter=None):
         ways = ("AB", "BA")
         days = ("1111100", "0000011")
 
-        self.way_filter = ways if not way_filter else ways[way_filter]
-        self.week_filter = days if not week_filter else days[week_filter]
+        if isinstance(way_filter, str):
+            self.way_filter = way_filter
+            self.week_filter = week_filter
+        else:
+            self.way_filter = ways if not way_filter else ways[way_filter]
+            self.week_filter = days if not week_filter else days[week_filter]
