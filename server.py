@@ -2,7 +2,7 @@ import threading
 import time
 from datetime import timedelta, datetime
 
-from classes import get_filtered_rows_from_db
+from database import get_filtered_rows_from_db
 from constants import *
 from request import YandexApiRequest, Request
 
@@ -18,8 +18,7 @@ class ServerManager:
         iterations = round(duration.seconds / interval)
         self.main_thread = threading.Thread(target=self.run_async,
                                             args=[iterations], kwargs={'route_name': route_name,
-                                                                       'filter': Filter(0, 0)
-                                                                       })
+                                                                       'filter': Filter(0, 0)})
         self.main_thread.start()
 
     def run_async(self, count, **kwargs):
