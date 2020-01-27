@@ -39,7 +39,7 @@ class ServerManager:
         stop_name = data[Tags.STOP_NAME]
 
         estimated_list = data[route_name][Tags.ESTIMATED]
-        db_times = get_filtered_rows_from_db(route_name, stop_name, filter)
+        db_times = list(map(lambda x: x.arrival_time, get_filtered_rows_from_db(route_name, stop_name, filter)))
 
         if len(estimated_list) == 0:
             print("--- No buses on path now ---")
@@ -58,19 +58,3 @@ class ServerManager:
         print("=====\n")
 
         return nearest_income
-
-
-def main():
-    route_name = "732"
-
-    duration = int(input("duration: "))
-    interval = int(input("interval: "))
-
-    manager = ServerManager(duration=timedelta(seconds=duration), interval=interval, route_name=route_name)
-
-    while manager.main_thread.is_alive():
-        pass
-
-
-if __name__ == '__main__':
-    main()

@@ -4,6 +4,8 @@ from pathlib import Path
 from peewee import *
 from yandex_transport_webdriver_api import YandexTransportProxy
 
+from functions import convert
+
 
 def create_if_not_exists(path):
     if not os.path.exists(path):
@@ -14,6 +16,10 @@ def create_if_not_exists(path):
 def remove_if_exists(path):
     if os.path.exists(path):
         os.remove(path)
+
+
+def get_full_filename(filename, ext="json"):
+    return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext
 
 
 GENERATED_DIR = "generated_files/"
@@ -53,6 +59,9 @@ class ArrivalTime(Model):
 
     class Meta:
         database = MY_DATABASE
+
+    def __str__(self):
+        return convert(vars(self)['__data__'])
 
 
 class StopData(Model):

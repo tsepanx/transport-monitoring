@@ -120,7 +120,7 @@ def insert_many(sources):
         ]).execute()
 
 
-def get_filtered_rows_from_db(route_name, stop_name, _filter: Filter):
+def get_filtered_rows_from_db(route_name, stop_name, _filter: Filter = Filter()):
     way = _filter.way_filter
     days = _filter.week_filter
 
@@ -130,13 +130,10 @@ def get_filtered_rows_from_db(route_name, stop_name, _filter: Filter):
         ArrivalTime.days in days,
     ).order_by(ArrivalTime.stop_name)
 
-    # if len(query) == 0:
-    #     return None
-
     for row in query:
         if lewen_length(row.stop_name, stop_name) <= 5:
             if row.route_name.name == route_name:
-                res.append(row.arrival_time)
+                res.append(row)
 
     return res
 
