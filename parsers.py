@@ -1,7 +1,7 @@
 import time
 
 from constants import Tags
-from functions import convert_time, convert
+from functions import convert_time
 
 
 def parse_get_stop_info_json(sources):

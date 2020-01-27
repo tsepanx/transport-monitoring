@@ -43,20 +43,7 @@ ROUTES_FIELDS = {
 }
 
 
-class RouteData(Model):
-    name = CharField()
-
-    class Meta:
-        database = MY_DATABASE
-
-
-class ArrivalTime(Model):
-    stop_name = CharField()
-    way = CharField()
-    days = CharField()
-    route_name = ForeignKeyField(RouteData, related_name="bus")
-    arrival_time = TimeField()
-
+class BaseModel(Model):
     class Meta:
         database = MY_DATABASE
 
@@ -64,22 +51,28 @@ class ArrivalTime(Model):
         return convert(vars(self)['__data__'])
 
 
-class StopData(Model):
+class RouteData(BaseModel):
+    name = CharField()
+
+
+class ArrivalTime(BaseModel):
+    stop_name = CharField()
+    way = CharField()
+    days = CharField()
+    route_name = ForeignKeyField(RouteData, related_name="bus")
+    arrival_time = TimeField()
+
+
+class StopData(BaseModel):
     stop_name = CharField()
     way = CharField()
     route_name = ForeignKeyField(RouteData, related_name="bus")
     stop_id = IntegerField(null=True)
 
-    class Meta:
-        database = MY_DATABASE
 
-
-class ServerTimeFix(Model):
+class ServerTimeFix(BaseModel):
     request_time = TimeField()
     estimated_time = TimeField()
-
-    class Meta:
-        database = MY_DATABASE
 
 
 DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
