@@ -5,7 +5,68 @@ import requests
 from bs4 import BeautifulSoup
 
 from constants import *
-from functions import lewen_length
+from functions import lewen_length, convert
+
+
+class BaseModel(Model):
+    class Meta:
+        database = MY_DATABASE
+
+    def __str__(self):
+        return convert(vars(self)['__data__'])
+
+
+class RouteData(BaseModel):
+    name = CharField()
+
+
+class ArrivalTime(BaseModel):
+    stop_name = CharField()
+    way = CharField()
+    days = CharField()
+    route_name = ForeignKeyField(RouteData, related_name="bus")
+    arrival_time = TimeField()
+
+    @staticmethod
+    def by_stop_name(route_name, stop_name, _filter: Filter = Filter()):
+        way = _filter.way_filter
+        days = _filter.week_filter
+
+        res = []
+        query = ArrivalTime.select().where(
+            (ArrivalTime.way << way) &
+            (ArrivalTime.days << days)
+        ).order_by(ArrivalTime.stop_name)
+
+        for row in query:
+            if lewen_length(row.stop_name, stop_name) <= 5:
+                if row.route_name.name == route_name:
+                    res.append(row)
+
+        return res
+
+    @staticmethod
+    def by_stop_id(route_name, stop_id, _filter=Filter()):
+        pass  # TODO implement it
+
+
+class StopData(BaseModel):
+    stop_name = CharField()
+    way = CharField()
+    route_name = ForeignKeyField(RouteData, related_name="bus")
+    stop_id = IntegerField(null=True)
+
+    @staticmethod
+    def get_stop_name_by_id():
+        pass  # TODO implement it
+
+
+class ServerTimeFix(BaseModel):
+    request_time = TimeField()
+    estimated_time = TimeField()
+
+
+DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
 
 
 class TimetableParser:
@@ -15,10 +76,7 @@ class TimetableParser:
         self.route_name = route_name
         self.obtained_timetable = {}
 
-    def __obtain_parsed_timetable(self, _filter: Filter):
-        days = _filter.week_filter
-        way = _filter.way_filter
-
+    def __obtain_parsed_timetable(self, days, way):
         url_string = f"http://www.mosgortrans.org/pass3/shedule.php?type=avto&way={self.route_name}&date={days}&direction={way}&waypoint=all"
         print(url_string)
 
@@ -59,14 +117,14 @@ class TimetableParser:
 
             res_dict[stop_names[i - 1]] = output
 
-        self.obtained_timetable[_filter] = res_dict
+        self.obtained_timetable[Filter(way_filter=way, week_filter=days)] = res_dict
 
     def obtain_all_timetables(self):
         _filter = Filter()
 
         for way in _filter.way_filter:
             for day in _filter.week_filter:
-                self.__obtain_parsed_timetable(Filter(way_filter=way, week_filter=day))
+                self.__obtain_parsed_timetable(days=day, way=way)
 
 
 def obtain_routes_sources(routes_list):
@@ -97,7 +155,6 @@ def obtain_routes_sources(routes_list):
                                       routes_filter.week_filter)
 
                     arrival_times_source.append(new_source_row)
-                    # print(parser.route_name, *new_source_row)
         res[route_name][ArrivalTime] = arrival_times_source
         res[route_name][StopData] = stop_data_source
 
@@ -118,24 +175,6 @@ def insert_many(sources):
             StopData.way,
             StopData.route_name
         ]).execute()
-
-
-def get_filtered_rows_from_db(route_name, stop_name, _filter: Filter = Filter()):
-    way = _filter.way_filter
-    days = _filter.week_filter
-
-    res = []
-    query = ArrivalTime.select().where(
-        ArrivalTime.way in way,
-        ArrivalTime.days in days,
-    ).order_by(ArrivalTime.stop_name)
-
-    for row in query:
-        if lewen_length(row.stop_name, stop_name) <= 5:
-            if row.route_name.name == route_name:
-                res.append(row)
-
-    return res
 
 
 def create_database(routes_list, db=MY_DATABASE):

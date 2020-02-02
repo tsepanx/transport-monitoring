@@ -2,8 +2,8 @@ import threading
 import time
 from datetime import timedelta, datetime
 
-from database import get_filtered_rows_from_db
 from constants import *
+from database import ArrivalTime, ServerTimeFix
 from request import YandexApiRequest, Request
 
 
@@ -39,7 +39,7 @@ class ServerManager:
         stop_name = data[Tags.STOP_NAME]
 
         estimated_list = data[route_name][Tags.ESTIMATED]
-        db_times = list(map(lambda x: x.arrival_time, get_filtered_rows_from_db(route_name, stop_name, filter)))
+        db_times = list(map(lambda x: x.arrival_time, ArrivalTime.by_stop_name(route_name, stop_name, filter)))
 
         if len(estimated_list) == 0:
             print("--- No buses on path now ---")
