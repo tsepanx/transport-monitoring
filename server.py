@@ -2,8 +2,8 @@ import threading
 import time
 from datetime import timedelta, datetime
 
-from classes import get_filtered_rows_from_db
 from constants import *
+from database import ArrivalTime, ServerTimeFix
 from request import YandexApiRequest, Request
 from bottle import route, run, template
 
@@ -19,8 +19,7 @@ class ServerManager:
         iterations = round(duration.seconds / interval)
         self.main_thread = threading.Thread(target=self.run_async,
                                             args=[iterations], kwargs={'route_name': route_name,
-                                                                       'filter': Filter(0, 0)
-                                                                       })
+                                                                       'filter': Filter(0, 0)})
         self.main_thread.start()
 
     def run_async(self, count, **kwargs):
@@ -41,7 +40,7 @@ class ServerManager:
         stop_name = data[Tags.STOP_NAME]
 
         estimated_list = data[route_name][Tags.ESTIMATED]
-        db_times = get_filtered_rows_from_db(route_name, stop_name, filter)
+        db_times = list(map(lambda x: x.arrival_time, ArrivalTime.by_stop_name(route_name, stop_name, filter)))
 
         if len(estimated_list) == 0:
             print("--- No buses on path now ---")
@@ -68,6 +67,7 @@ class ServerManager:
         #print(self.made_iterations, "request finished")
         print("=====\n")
 
+        # TODO check it resolved completely
         web_info = []
 
         for i in range (len(estimated_list)):
@@ -76,7 +76,7 @@ class ServerManager:
             d['expected'] = close_values[i]
             web_info.append(d)
 
-        #return nearest_income
+        #return nearest_income  ###
 
         @route('/<routeNumber>/<stopId>')
         def show_bus_timetable(routeNumber, stopId):

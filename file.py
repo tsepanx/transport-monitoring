@@ -1,6 +1,8 @@
+import json
 import os
 
-from functions import *
+from constants import get_full_filename
+from functions import convert
 
 
 class File:
@@ -35,5 +37,3 @@ class File:
 
     def read_json(self):
         return json.loads(self.__read())
-
-

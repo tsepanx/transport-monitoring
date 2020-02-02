@@ -1,8 +1,6 @@
 import json
 from datetime import datetime, date, time
 
-from constants import PROJECT_PREFIX, GENERATED_DIR
-
 
 class JsonSerializable(dict):
 
@@ -21,10 +19,6 @@ def convert(data: dict) -> str:
 def is_today_workday():
     d = date.today().isoweekday()
     return 1 if d not in [6, 7] else 0
-
-
-def get_full_filename(filename, ext="json"):
-    return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext
 
 
 def lewen_length(a, b):

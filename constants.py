@@ -16,6 +16,10 @@ def remove_if_exists(path):
         os.remove(path)
 
 
+def get_full_filename(filename, ext="json"):
+    return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext
+
+
 GENERATED_DIR = "generated_files/"
 PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"
 
@@ -35,45 +39,6 @@ ROUTES_FIELDS = {
         'thread_id': "213A_732_bus_mosgortrans",
         'stop_id': '9644642'}
 }
-
-
-class RouteData(Model):
-    name = CharField()
-
-    class Meta:
-        database = MY_DATABASE
-
-
-class ArrivalTime(Model):
-    stop_name = CharField()
-    way = CharField()
-    days = CharField()
-    route_name = ForeignKeyField(RouteData, related_name="bus")
-    arrival_time = TimeField()
-
-    class Meta:
-        database = MY_DATABASE
-
-
-class StopData(Model):
-    stop_name = CharField()
-    way = CharField()
-    route_name = ForeignKeyField(RouteData, related_name="bus")
-    stop_id = IntegerField(null=True)
-
-    class Meta:
-        database = MY_DATABASE
-
-
-class ServerTimeFix(Model):
-    request_time = TimeField()
-    estimated_time = TimeField()
-
-    class Meta:
-        database = MY_DATABASE
-
-
-DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
 
 
 class Tags:
@@ -98,12 +63,15 @@ class Tags:
 
 class Filter:
     def __init__(self, way_filter=None, week_filter=None):
-        ways = ("AB", "BA")
-        days = ("1111100", "0000011")
+        self.ways = ("AB", "BA")
+        self.days = ("1111100", "0000011")
 
         if isinstance(way_filter, str):
-            self.way_filter = way_filter
-            self.week_filter = week_filter
+            self.way_filter = [way_filter]
         else:
-            self.way_filter = ways if not way_filter else ways[way_filter]
-            self.week_filter = days if not week_filter else days[week_filter]
+            self.way_filter = self.ways if way_filter is None else [self.ways[way_filter]]
+
+        if isinstance(week_filter, str):
+            self.week_filter = [week_filter]
+        else:
+            self.week_filter = self.days if week_filter is None else [self.days[week_filter]]
