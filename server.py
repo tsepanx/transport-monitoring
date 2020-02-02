@@ -5,6 +5,7 @@ from datetime import timedelta, datetime
 from classes import get_filtered_rows_from_db
 from constants import *
 from request import YandexApiRequest, Request
+from bottle import route, run, template
 
 
 class ServerManager:
@@ -45,20 +46,43 @@ class ServerManager:
         if len(estimated_list) == 0:
             print("--- No buses on path now ---")
             return None
-
-        nearest_income = estimated_list[0]
+        #nearest_income = estimated_list[0]
+        nearest_income_left = estimated_list[0]
+        nearest_income_right = estimated_list[len(estimated_list)-1]
 
         close_values = {}
+        #for i, t in enumerate(db_times):
+         #   if t >= nearest_income:
+           #     close_values = [db_times[i - 1], t]
+            #    break
+
         for i, t in enumerate(db_times):
-            if t >= nearest_income:
-                close_values = [db_times[i - 1], t]
+            if t >= nearest_income_left and db_times[i-1] < nearest_income_left:
+                left_border = i
+            if t >= nearest_income_right and db_times[i-1] < nearest_income_right:
+                right_border = i
+                close_values = db_times[left_border-1 : right_border+1]
                 break
 
-        print("real time:", nearest_income, "times from db:", *close_values, sep="\n")
-        print(self.made_iterations, "request finished")
+        print("real time:", *estimated_list, "times from db:", *close_values, sep="\n")
+        #print(self.made_iterations, "request finished")
         print("=====\n")
 
-        return nearest_income
+        web_info = []
+
+        for i in range (len(estimated_list)):
+            d = {}
+            d['actual'] = estimated_list[i]
+            d['expected'] = close_values[i]
+            web_info.append(d)
+
+        #return nearest_income
+
+        @route('/<routeNumber>/<stopId>')
+        def show_bus_timetable(routeNumber, stopId):
+            return template('web.tpl', routeNumber=routeNumber, stopId=stopId, web_info = web_info)
+
+        run(host='localhost', port=8080)
 
 
 def main():
