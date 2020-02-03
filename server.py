@@ -45,42 +45,42 @@ class ServerManager:
         if len(estimated_list) == 0:
             print("--- No buses on path now ---")
             return None
-        #nearest_income = estimated_list[0]
+        # nearest_income = estimated_list[0]
         nearest_income_left = estimated_list[0]
-        nearest_income_right = estimated_list[len(estimated_list)-1]
+        nearest_income_right = estimated_list[len(estimated_list) - 1]
 
         close_values = {}
-        #for i, t in enumerate(db_times):
-         #   if t >= nearest_income:
-           #     close_values = [db_times[i - 1], t]
-            #    break
+        # for i, t in enumerate(db_times):
+        #   if t >= nearest_income:
+        #     close_values = [db_times[i - 1], t]
+        #    break
+
+        left_border = None  # TODO
 
         for i, t in enumerate(db_times):
-            if t >= nearest_income_left and db_times[i-1] < nearest_income_left:
+            if t >= nearest_income_left > db_times[i - 1]:
                 left_border = i
-            if t >= nearest_income_right and db_times[i-1] < nearest_income_right:
+            if t >= nearest_income_right > db_times[i - 1]:
                 right_border = i
-                close_values = db_times[left_border-1 : right_border+1]
+                close_values = db_times[left_border - 1: right_border + 1]
                 break
 
         print("real time:", *estimated_list, "times from db:", *close_values, sep="\n")
-        #print(self.made_iterations, "request finished")
+        # print(self.made_iterations, "request finished")
         print("=====\n")
 
-        # TODO check it resolved completely
         web_info = []
 
-        for i in range (len(estimated_list)):
-            d = {}
-            d['actual'] = estimated_list[i]
-            d['expected'] = close_values[i]
+        for i in range(len(estimated_list)):
+            d = {'actual': estimated_list[i],
+                 'expected': close_values[i]}
             web_info.append(d)
 
-        #return nearest_income  ###
+        # return nearest_income
 
-        @route('/<routeNumber>/<stopId>')
-        def show_bus_timetable(routeNumber, stopId):
-            return template('web.tpl', routeNumber=routeNumber, stopId=stopId, web_info = web_info)
+        @route('/<route_number>/<stop_id>')
+        def show_bus_timetable(route_number, stop_id):
+            return template('web.tpl', routeNumber=route_number, stopId=stop_id, web_info=web_info)
 
         run(host='localhost', port=8080)
 
