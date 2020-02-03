@@ -66,6 +66,11 @@ class ServerTimeFix(BaseModel):
     estimated_time = TimeField()
 
 
+class YandexStops(BaseModel):
+    name_ya = TextField()
+    id_ya = IntegerField()
+
+
 DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
 
 

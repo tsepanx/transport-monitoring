@@ -34,7 +34,7 @@ def test():
     create_database(['104', '732'])
 
     route_name = '732'
-    test_database_filter(route_name)
+    # test_database_filter(route_name)
     # test_requests(route_name, request_type=Request.GET_STOP_INFO)
 
 
