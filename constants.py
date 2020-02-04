@@ -6,6 +6,7 @@ from yandex_transport_webdriver_api import YandexTransportProxy
 
 
 def create_if_not_exists(path):
+    print(path)
     if not os.path.exists(path):
         print('Creating ', path)
         os.mkdir(path)
@@ -20,11 +21,10 @@ def get_full_filename(filename, ext="json"):
     return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext
 
 
-GENERATED_DIR = "generated_files/"
-PROJECT_PREFIX = str(Path.home()) + "/TransportMonitoring/"
-
 proxy = YandexTransportProxy('127.0.0.1', 25555)
 
+GENERATED_DIR = "generated_files/"
+PROJECT_PREFIX = os.path.dirname(__file__) + "/"
 create_if_not_exists(PROJECT_PREFIX + GENERATED_DIR)
 
 DATABASE_PATH = PROJECT_PREFIX + "buses.db"
