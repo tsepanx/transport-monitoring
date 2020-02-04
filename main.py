@@ -16,27 +16,27 @@ def run_server(route_name):
         pass
 
 
-def test_requests(route_name, request_type=Request.GET_LINE):
+def do_request(route_name, request_type=Request.GET_LINE):
     request = YandexApiRequest(request_type, route_name)
 
     request.run()
     print(convert(request.obtained_data))
 
 
-def test_database_filter(route_name):
+def filter_database(route_name):
     # stop_id = ROUTES_FIELDS[route_name]['stop_id']
     stop_name = 'Давыдковская улица, 12'
 
     print(ArrivalTime.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
 
 
-def test():
+def main():
     create_database(['104', '732'])
 
     route_name = '732'
-    test_database_filter(route_name)
-    # test_requests(route_name, request_type=Request.GET_STOP_INFO)
+    filter_database(route_name)
+    do_request(route_name, request_type=Request.GET_STOP_INFO)
 
 
 if __name__ == '__main__':
-    test()
+    main()

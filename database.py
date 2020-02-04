@@ -145,14 +145,14 @@ def obtain_routes_sources(routes_list):
             for stop_name in parser.obtained_timetable[routes_filter]:
                 stop_data_source.append(
                     (stop_name,
-                     routes_filter.way_filter,
+                     routes_filter.way_filter[0],
                      route_row))
                 for arrival_time in parser.obtained_timetable[routes_filter][stop_name]:
                     new_source_row = (stop_name,
                                       route_row,
                                       arrival_time,
-                                      routes_filter.way_filter,
-                                      routes_filter.week_filter)
+                                      routes_filter.way_filter[0],
+                                      routes_filter.week_filter[0])
 
                     arrival_times_source.append(new_source_row)
         res[route_name][ArrivalTime] = arrival_times_source
