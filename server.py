@@ -80,7 +80,7 @@ class ServerManager:
 
         @route('/<route_number>/<stop_id>')
         def show_bus_timetable(route_number, stop_id):
-            return template('web.tpl', routeNumber=route_number, stopId=stop_id, web_info=web_info)
+            return template('web.tpl', route_number=route_number, stop_id=stop_id, web_info=web_info)
 
         run(host='localhost', port=8080)
 

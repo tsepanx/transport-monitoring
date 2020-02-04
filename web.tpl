@@ -1,12 +1,6 @@
 import time
 
-%#d = [
-% #   {'expected': '123', 'actual': '234'},
-% #   {'expected': '456', 'actual': '789'}
-%#]
-
-
-<h1>Bus number is {{routeNumber}} and stop id is {{stopId}} </h1>
+<h1>Bus number is {{route_number}} and stop id is {{stop_id}} </h1>
 <table border = "100" bgcolor = "#F0F0F0" bordercolor = "green">
     <tr>
         <td> <h4>db time</h4> </td>
