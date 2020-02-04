@@ -1,7 +1,5 @@
-import time
-
 <h1>Bus number is {{route_number}} and stop id is {{stop_id}} </h1>
-<table border = "100" bgcolor = "#F0F0F0" bordercolor = "green">
+<table border=5px bgcolor = "#F0F0F0" bordercolor = "green">
     <tr>
         <td> <h4>db time</h4> </td>
         <td> <h4> estimated time </h4> </td>

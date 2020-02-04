@@ -5,7 +5,6 @@ from datetime import timedelta, datetime
 from constants import *
 from database import ArrivalTime, ServerTimeFix
 from request import YandexApiRequest, Request
-from bottle import route, run, template
 
 
 class ServerManager:
@@ -65,9 +64,7 @@ class ServerManager:
                 close_values = db_times[left_border - 1: right_border + 1]
                 break
 
-        print("real time:", *estimated_list, "times from db:", *close_values, sep="\n")
-        # print(self.made_iterations, "request finished")
-        print("=====\n")
+        print(estimated_list, close_values)
 
         web_info = []
 
@@ -77,12 +74,7 @@ class ServerManager:
             web_info.append(d)
 
         # return nearest_income
-
-        @route('/<route_number>/<stop_id>')
-        def show_bus_timetable(route_number, stop_id):
-            return template('web.tpl', route_number=route_number, stop_id=stop_id, web_info=web_info)
-
-        run(host='localhost', port=8080)
+        print(web_info)
 
 
 def main():
