@@ -1,13 +1,10 @@
-import time
-from datetime import time
-
-import os
+import datetime
 
 import requests
 from bs4 import BeautifulSoup
 from peewee import *
 
-from constants import MY_DATABASE, DATABASE_PATH
+from constants import MY_DATABASE, DATABASE_PATH, does_exist
 from functions import lewen_length, convert
 
 
@@ -46,10 +43,10 @@ class YandexStop(BaseModel):
 
 class StopData(BaseModel):
     name_mgt = CharField()
-    route = ForeignKeyField(RouteData, related_name='bus')
+    route = ForeignKeyField(RouteData, related_name='bus', backref='stop')
     direction = CharField()
 
-    ya_stop = ForeignKeyField(YandexStop, null=True, related_name='ya_stop')
+    ya_stop = ForeignKeyField(YandexStop, null=True, related_name='ya_stop', backref='stop')
 
     @staticmethod
     def by_id(stop_id):
@@ -57,7 +54,7 @@ class StopData(BaseModel):
 
 
 class Schedule(BaseModel):
-    stop = ForeignKeyField(StopData, related_name='stop')
+    stop = ForeignKeyField(StopData, related_name='stop', backref='schedule')
     weekdays = CharField()
     time = TimeField()
 
@@ -68,14 +65,14 @@ class Schedule(BaseModel):
 
         res = []
         query = Schedule.select().where(
-            (Schedule.way << way) &
-            (Schedule.days << days)
-        ).order_by(Schedule.stop_name)
+            (Schedule.stop.direction << way) &  # TODO
+            (Schedule.weekdays << days))  # .order_by(Schedule.stop.name_mgt)
 
         for row in query:
-            if lewen_length(row.stop_name, stop_name) <= 5:
-                if row.route_name.name == route_name:
-                    res.append(row)
+            if row.stop.direction in way:
+                if lewen_length(row.stop.name_mgt, stop_name) <= 5:
+                    if row.stop.route.name == route_name:
+                        res.append(row)
 
         return res
 
@@ -136,7 +133,7 @@ class TimetableParser:
                     hours = int(hours_list[g - gray_cnt].text)
                     minutes = int(j.text)
 
-                    output.append(time(hours, minutes))
+                    output.append(datetime.time(hours, minutes))
 
             res_dict[stop_names[i - 1]] = output
 
@@ -148,11 +145,10 @@ class TimetableParser:
                 self.__obtain_parsed_timetable(days=day, way=way)
 
 
-def obtain_routes_sources(routes_list, _filter=Filter()):
+def gather_schedule_sources(routes_list, _filter=Filter()):
     res = {}
 
     for route_name in routes_list:
-        res[route_name] = {}
         schedule_source = []
 
         parser = TimetableParser(route_name)
@@ -172,14 +168,14 @@ def obtain_routes_sources(routes_list, _filter=Filter()):
                     new_source_row = (stop_row, routes_filter.week_filter[0], arrival_time)
 
                     schedule_source.append(new_source_row)
-        res[route_name][Schedule] = schedule_source
+        res[route_name] = schedule_source
 
     return res
 
 
 def fill_schedule(sources):
     for route_name in sources:
-        Schedule.insert_many(sources[route_name][Schedule], fields=[
+        Schedule.insert_many(sources[route_name], fields=[
             Schedule.stop,
             Schedule.weekdays,
             Schedule.time
@@ -187,12 +183,16 @@ def fill_schedule(sources):
 
 
 def create_database(routes_list, fill_schedule_flag=False, db=MY_DATABASE, _filter=Filter()):
-    if not os.path.exists(DATABASE_PATH):
+    if not does_exist(DATABASE_PATH):
         db.create_tables(DATABASE_TIMETABLES_LIST)
     else:
         print("=== database already exists! ===")
         return
 
     if fill_schedule_flag:
-        sources = obtain_routes_sources(routes_list, _filter)
+        sources = gather_schedule_sources(routes_list, _filter)
         fill_schedule(sources)
+
+
+def get_full_table(table: BaseModel):
+    yield table.select()

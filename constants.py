@@ -4,9 +4,13 @@ from peewee import *
 from yandex_transport_webdriver_api import YandexTransportProxy
 
 
+def does_exist(path):
+    return os.path.exists(path)
+
+
 def create_if_not_exists(path):
     print(path)
-    if not os.path.exists(path):
+    if not does_exist(path):
         print('Creating ', path)
         os.mkdir(path)
 

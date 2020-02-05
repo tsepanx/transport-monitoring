@@ -33,10 +33,11 @@ def filter_database(route_name):
 
 def main():
     route_name = '732'
-    create_database([route_name], fill_schedule_flag=True, _filter=Filter(0, 0))
-    # filter_database(route_name)
 
-    do_request(route_name, request_type=Request.GET_STOP_INFO)
+    create_database([route_name], fill_schedule_flag=True, _filter=Filter(0, 0))
+    filter_database(route_name)
+
+    # do_request(route_name, request_type=Request.GET_STOP_INFO)
 
 
 if __name__ == '__main__':
