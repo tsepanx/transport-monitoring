@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from peewee import *
 from yandex_transport_webdriver_api import YandexTransportProxy

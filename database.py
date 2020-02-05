@@ -1,10 +1,13 @@
 import time
 from datetime import time
 
+import os
+
 import requests
 from bs4 import BeautifulSoup
+from peewee import *
 
-from constants import *
+from constants import MY_DATABASE, DATABASE_PATH, Filter
 from functions import lewen_length, convert
 
 
@@ -28,7 +31,7 @@ class ArrivalTime(BaseModel):
     arrival_time = TimeField()
 
     @staticmethod
-    def by_stop_name(route_name, stop_name, _filter: Filter = Filter()):
+    def by_stop_name(route_name, stop_name, _filter=Filter()):
         way = _filter.way_filter
         days = _filter.week_filter
 
@@ -45,9 +48,9 @@ class ArrivalTime(BaseModel):
 
         return res
 
-    @staticmethod
-    def by_stop_id(route_name, stop_id, _filter=Filter()):
-        pass  # TODO implement it
+    def by_stop_id(self, route_name, stop_id, _filter=Filter()):
+        stop_name = StopData.by_id(stop_id)
+        self.by_stop_name(route_name, stop_name, _filter)
 
 
 class StopData(BaseModel):
@@ -57,16 +60,16 @@ class StopData(BaseModel):
     stop_id = IntegerField(null=True)
 
     @staticmethod
-    def get_stop_name_by_id():
-        pass  # TODO implement it
+    def by_id(stop_id):
+        return None  # TODO implement it
 
 
-class ServerTimeFix(BaseModel):
+class RemoteQueriesRecords(BaseModel):
     request_time = TimeField()
     estimated_time = TimeField()
 
 
-DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, ServerTimeFix]
+DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, RemoteQueriesRecords]
 
 
 class TimetableParser:

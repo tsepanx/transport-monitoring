@@ -1,38 +1,35 @@
 import threading
 import time
-from datetime import timedelta, datetime
+from datetime import datetime
 
 from constants import Tags, Filter
+from database import ArrivalTime, RemoteQueriesRecords
 from functions import get_nearest_actual_schedules
-
-from database import ArrivalTime, ServerTimeFix
 from request import YandexApiRequest, Request
 
+MAX_QUERY_ITERATIONS = 100
 
-class ServerManager:
-    def __init__(self, route_name,
-                 interval,
-                 duration=timedelta(seconds=60)):
+
+class RemoteQueryPerformer:
+    def __init__(self, route_name, interval):
         self.interval = interval
-        self.made_iterations = 0
+        self.iterations_passed = 0
 
-        iterations = round(duration.seconds / interval)
         self.main_thread = threading.Thread(target=self.run_async,
-                                            args=[iterations], kwargs={'route_name': route_name,
-                                                                       'filter': Filter(0, 0)})
+                                            kwargs={'route_name': route_name, '_filter': Filter(0, 0)})
         self.main_thread.start()
 
-    def run_async(self, count, **kwargs):
-        while self.made_iterations < count:
+    def run_async(self, **kwargs):
+        while self.iterations_passed < MAX_QUERY_ITERATIONS:
             value = do_request(**kwargs)
-            ServerTimeFix.create(request_time=datetime.now(), estimated_time=value)
+            RemoteQueriesRecords.create(request_time=datetime.now(), estimated_time=value)
 
-            self.made_iterations += 1
-            print(self.made_iterations)
+            self.iterations_passed += 1
+            print(self.iterations_passed)
             time.sleep(self.interval)
 
 
-def do_request(route_name, filter=Filter(0, 0)):
+def do_request(route_name, _filter):
     stop_request = YandexApiRequest(Request.GET_STOP_INFO, route_name)
     stop_request.run()
 
@@ -42,7 +39,8 @@ def do_request(route_name, filter=Filter(0, 0)):
 
     yandex_values = data[route_name][Tags.ESTIMATED]
 
-    database_values = list(map(lambda x: x.arrival_time, ArrivalTime.by_stop_name(route_name, stop_name_ya, filter)))
+    database_values = list(map(lambda x: x.arrival_time,
+                               ArrivalTime.by_stop_name(route_name, stop_name_ya, _filter)))
 
     if not yandex_values:
         print("No Yandex values")
