@@ -2,7 +2,9 @@ import threading
 import time
 from datetime import timedelta, datetime
 
-from constants import *
+from constants import Tags, Filter
+from functions import get_nearest_actual_schedules
+
 from database import ArrivalTime, ServerTimeFix
 from request import YandexApiRequest, Request
 
@@ -11,7 +13,6 @@ class ServerManager:
     def __init__(self, route_name,
                  interval,
                  duration=timedelta(seconds=60)):
-
         self.interval = interval
         self.made_iterations = 0
 
@@ -23,38 +24,31 @@ class ServerManager:
 
     def run_async(self, count, **kwargs):
         while self.made_iterations < count:
-            value = self.main_request_func(**kwargs)
+            value = do_request(**kwargs)
             ServerTimeFix.create(request_time=datetime.now(), estimated_time=value)
 
             self.made_iterations += 1
             print(self.made_iterations)
             time.sleep(self.interval)
 
-    def main_request_func(self, route_name='732', filter=Filter(0, 0)):
-        stop_request = YandexApiRequest(Request.GET_STOP_INFO, route_name)
-        stop_request.run()
 
-        data = stop_request.obtained_data
+def do_request(route_name, filter=Filter(0, 0)):
+    stop_request = YandexApiRequest(Request.GET_STOP_INFO, route_name)
+    stop_request.run()
 
-        stop_name = data[Tags.STOP_NAME]
+    data = stop_request.obtained_data
 
-        estimated_list = data[route_name][Tags.ESTIMATED]
-        db_times = list(map(lambda x: x.arrival_time, ArrivalTime.by_stop_name(route_name, stop_name, filter)))
+    stop_name_ya = data[Tags.STOP_NAME]
 
-        if len(estimated_list) == 0:
-            print("--- No buses on path now ---")
-            return None
+    yandex_values = data[route_name][Tags.ESTIMATED]
 
-        nearest_income = estimated_list[0]
+    database_values = list(map(lambda x: x.arrival_time, ArrivalTime.by_stop_name(route_name, stop_name_ya, filter)))
 
-        close_values = {}
-        for i, t in enumerate(db_times):
-            if t >= nearest_income:
-                close_values = [db_times[i - 1], t]
-                break
+    if not yandex_values:
+        print("No Yandex values")
 
-        print("real time:", nearest_income, "times from db:", *close_values, sep="\n")
-        print(self.made_iterations, "request finished")
-        print("=====\n")
+    nearest_schedules = get_nearest_actual_schedules(database_values, yandex_values[0])
 
-        return nearest_income
+    print(nearest_schedules)
+
+    return yandex_values[0]
