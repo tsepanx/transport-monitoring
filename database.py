@@ -49,7 +49,7 @@ class StopData(BaseModel):
     route = ForeignKeyField(RouteData, related_name='bus')
     direction = CharField()
 
-    stop = ForeignKeyField(YandexStop, related_name='ya_stop')
+    stop = ForeignKeyField(YandexStop, null=True, related_name='ya_stop')
 
     @staticmethod
     def by_id(stop_id):
