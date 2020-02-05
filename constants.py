@@ -44,6 +44,8 @@ class Tags:
     STOP_NAME = "stopName"
 
     BRIEF_SCHEDULE = "BriefSchedule"
+
+    STOP_ID = 'stopId'
     THREAD_ID = "threadId"
     LINE_ID = "lineId"
 

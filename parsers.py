@@ -1,17 +1,18 @@
 import time
 
 from constants import Tags
-from functions import convert_time
+from functions import convert_time, convert
 
 
 def parse_get_stop_info_json(sources):
     res_dict = dict()
 
-    props = sources["data"]  # ["properties"]
-    stop_russian_fullname = props["properties"]["name"]
-    transport_data = props["properties"]["StopMetaData"]["Transport"]
+    props = sources["data"]["properties"]
+    stop_russian_fullname = props["name"]
+    transport_data = props["StopMetaData"]["Transport"]
 
     res_dict[Tags.STOP_NAME] = stop_russian_fullname
+    res_dict[Tags.STOP_ID] = int(props['StopMetaData']['id'][6:])
 
     for route in transport_data:
         if route["type"] != "bus":
@@ -55,6 +56,7 @@ def parse_get_stop_info_json(sources):
                 res_dict[name][Tags.FREQUENCY] = frequency
                 res_dict[name][Tags.ESSENTIAL_STOPS] = [convert_time(first_arrival), convert_time(last_arrival)]
 
+    print(convert(res_dict))
     return res_dict
 
 
