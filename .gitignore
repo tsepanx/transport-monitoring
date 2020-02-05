@@ -10,7 +10,7 @@ __pycache__/
 generated_files/*
 
 private_keys.py
-buses.db
+#buses.db
 
 /ve
 .ven*
