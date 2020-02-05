@@ -2,16 +2,6 @@ import json
 from datetime import datetime, date, time
 
 
-class JsonSerializable(dict):
-
-    def __init__(self, s: str):
-        super().__init__()
-        self.__class__ = json.loads(s)
-
-    def __str__(self):
-        return convert(self)
-
-
 def convert(data: dict) -> str:
     return json.dumps(data, indent=2, separators=(',', ': '), default=str, ensure_ascii=False)
 
@@ -39,6 +29,31 @@ def lewen_length(a, b):
     return current_row[n]
 
 
+def binary_search_left(x, arr):
+    l = -1
+    r = len(arr)
+    while r - l > 1:
+        m = (l + r) // 2
+        if arr[m] <= x:
+            l = m
+        else:
+            r = m
+    return l
+
+
+def get_nearest_actual_schedules(expected_values, actual_value):
+    if actual_value < expected_values[0]:
+        return None, expected_values[0]
+
+    if actual_value > expected_values[-1]:
+        return expected_values[-1], None
+
+    nearest_lower = binary_search_left(actual_value, expected_values)
+    nearest_greater = nearest_lower + 1
+
+    return nearest_lower, nearest_greater
+
+
 def convert_time(value):
     return time(value.tm_hour, value.tm_min, value.tm_sec)
 
@@ -48,3 +63,15 @@ def get_delta(a, b):
     y = datetime.combine(date.today(), b)
     res = abs(x - y)
     return (datetime.min + res).time()
+
+
+def main():
+    arr = sorted([1, 5, 7, 10, 20, 47, 80, 100, 45, 67, 35])
+    print(arr)
+    res = binary_search_left(int(input()), arr)
+
+    print(res, arr[res])
+
+
+if __name__ == '__main__':
+    main()

@@ -1,18 +1,15 @@
-from datetime import timedelta
-
-from database import create_database, ArrivalTime, Filter
+from database import create_database, Schedule, Filter
 from functions import convert
 from request import YandexApiRequest, Request
-from server import ServerManager
+from server import RemoteQueryPerformer
 
 
-def run_server(route_name):
-    duration = int(input("duration: "))
+def run_remote_executor(route_name):
     interval = int(input("interval: "))
 
-    manager = ServerManager(duration=timedelta(seconds=duration), interval=interval, route_name=route_name)
+    performer = RemoteQueryPerformer(interval=interval, route_name=route_name)
 
-    while manager.main_thread.is_alive():
+    while performer.main_thread.is_alive():
         pass
 
 
@@ -24,10 +21,9 @@ def do_request(route_name, request_type=Request.GET_LINE):
 
 
 def filter_database(route_name):
-    # stop_id = ROUTES_FIELDS[route_name]['stop_id']
     stop_name = 'Давыдковская улица, 12'
 
-    print(ArrivalTime.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
+    print(Schedule.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
 
 
 def main():
