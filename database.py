@@ -39,12 +39,27 @@ class RouteData(BaseModel):  # Buses
     name = CharField()
 
 
+class YandexStop(BaseModel):
+    name_ya = TextField()
+    id_ya = IntegerField()
+
+
+class StopData(BaseModel):
+    name_mgt = CharField()
+    route = ForeignKeyField(RouteData, related_name='bus')
+    direction = CharField()
+
+    stop = ForeignKeyField(YandexStop, related_name='ya_stop')
+
+    @staticmethod
+    def by_id(stop_id):
+        return None  # TODO implement it
+
+
 class Schedule(BaseModel):
-    stop_name = CharField()
-    way = CharField()
-    days = CharField()
-    route_name = ForeignKeyField(RouteData, related_name="bus")
-    arrival_time = TimeField()
+    stop = ForeignKeyField(StopData, related_name='stop')
+    weekdays = CharField()
+    time = TimeField()
 
     @staticmethod
     def by_stop_name(route_name, stop_name, _filter=Filter()):
@@ -67,23 +82,6 @@ class Schedule(BaseModel):
     def by_stop_id(self, route_name, stop_id, _filter=Filter()):
         stop_name = StopData.by_id(stop_id)
         self.by_stop_name(route_name, stop_name, _filter)
-
-
-class StopData(BaseModel):
-    stop_name = CharField()
-    way = CharField()
-    route_name = ForeignKeyField(RouteData, related_name="bus")
-
-    stop_id = IntegerField(null=True)
-
-    @staticmethod
-    def by_id(stop_id):
-        return None  # TODO implement it
-
-
-class YandexStop(BaseModel):
-    name_ya = TextField()
-    id_ya = IntegerField()
 
 
 class QueryRecord(BaseModel):
@@ -144,15 +142,13 @@ class TimetableParser:
 
         self.obtained_timetable[Filter(way_filter=way, week_filter=days)] = res_dict
 
-    def obtain_all_timetables(self):
-        _filter = Filter()
-
+    def obtain_all_timetables(self, _filter=Filter()):
         for way in _filter.way_filter:
             for day in _filter.week_filter:
                 self.__obtain_parsed_timetable(days=day, way=way)
 
 
-def obtain_routes_sources(routes_list):
+def obtain_routes_sources(routes_list, _filter=Filter()):
     res = {}
 
     for route_name in routes_list:
@@ -161,7 +157,7 @@ def obtain_routes_sources(routes_list):
         stop_data_source = []
 
         parser = TimetableParser(route_name)
-        parser.obtain_all_timetables()
+        parser.obtain_all_timetables(_filter)
 
         route_row = RouteData.create(name=parser.route_name)
         print(parser.route_name)
@@ -187,6 +183,7 @@ def obtain_routes_sources(routes_list):
 
 
 def insert_many(sources):
+    print(sources)
     for route_name in sources:
         Schedule.insert_many(sources[route_name][Schedule], fields=[
             Schedule.stop_name,
@@ -202,10 +199,13 @@ def insert_many(sources):
         ]).execute()
 
 
-def create_database(routes_list, db=MY_DATABASE):
+def create_database(routes_list, fill_schedule=False, db=MY_DATABASE, _filter=Filter()):
     if not os.path.exists(DATABASE_PATH):
         db.create_tables(DATABASE_TIMETABLES_LIST)
-        sources = obtain_routes_sources(routes_list)
-        insert_many(sources)
     else:
         print("=== database already exists! ===")
+        return
+
+    if fill_schedule:
+        sources = obtain_routes_sources(routes_list, _filter)
+        insert_many(sources)
