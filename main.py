@@ -1,6 +1,6 @@
 from database import create_database, Schedule, Filter
 from functions import convert
-from request import YandexApiRequest, Request
+from request import GetStopInfoApiRequest, Request
 from server import RemoteQueryPerformer
 
 
@@ -13,8 +13,13 @@ def run_remote_executor(route_name):
         pass
 
 
-def do_request(route_name, request_type=Request.GET_LINE):
-    request = YandexApiRequest(request_type, route_name)
+def do_request(route_name, request_type=Request.GET_STOP_INFO):
+    if request_type == Request.GET_STOP_INFO:
+        request = GetStopInfoApiRequest(route_name)
+    elif request_type == Request.GET_LINE:
+        request = GetStopInfoApiRequest(route_name)
+    else:
+        raise Exception('Unknown request type')
 
     request.run()
     print(convert(request.obtained_data))
@@ -27,10 +32,10 @@ def filter_database(route_name):
 
 
 def main():
-    create_database(['104', '732'])
-
     route_name = '732'
-    filter_database(route_name)
+    create_database([route_name], fill_schedule=False, _filter=Filter(0, 0))
+    # filter_database(route_name)
+
     do_request(route_name, request_type=Request.GET_STOP_INFO)
 
 

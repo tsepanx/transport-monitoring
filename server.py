@@ -5,7 +5,7 @@ from datetime import datetime
 from constants import Tags
 from database import Schedule, QueryRecord, Filter
 from functions import get_nearest_actual_schedules
-from request import YandexApiRequest, Request
+from request import GetStopInfoApiRequest
 
 MAX_QUERY_ITERATIONS = 100
 
@@ -30,7 +30,7 @@ class RemoteQueryPerformer:
 
 
 def do_request(route_name, _filter):
-    stop_request = YandexApiRequest(Request.GET_STOP_INFO, route_name)
+    stop_request = GetStopInfoApiRequest(route_name)
     stop_request.run()
 
     data = stop_request.obtained_data
