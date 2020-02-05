@@ -85,7 +85,7 @@ class QueriesRecords(BaseModel):
     estimated_time = TimeField()
 
 
-DATABASE_TIMETABLES_LIST = [RouteData, Schedule, StopData, RemoteQueriesRecords]
+DATABASE_TIMETABLES_LIST = [RouteData, Schedule, StopData, QueriesRecords]
 
 
 class TimetableParser:
