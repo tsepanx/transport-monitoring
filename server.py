@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 
 from constants import Tags
-from database import Schedule, RemoteQueriesRecords, Filter
+from database import Schedule, QueriesRecords, Filter
 from functions import get_nearest_actual_schedules
 from request import YandexApiRequest, Request
 
@@ -22,7 +22,7 @@ class RemoteQueryPerformer:
     def run_async(self, **kwargs):
         while self.iterations_passed < MAX_QUERY_ITERATIONS:
             value = do_request(**kwargs)
-            RemoteQueriesRecords.create(request_time=datetime.now(), estimated_time=value)
+            QueriesRecords.create(request_time=datetime.now(), estimated_time=value)
 
             self.iterations_passed += 1
             print(self.iterations_passed)
