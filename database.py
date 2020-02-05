@@ -7,8 +7,24 @@ import requests
 from bs4 import BeautifulSoup
 from peewee import *
 
-from constants import MY_DATABASE, DATABASE_PATH, Filter
+from constants import MY_DATABASE, DATABASE_PATH
 from functions import lewen_length, convert
+
+
+class Filter:
+    def __init__(self, way_filter=None, week_filter=None):
+        self.ways = ("AB", "BA")
+        self.days = ("1111100", "0000011")
+
+        if isinstance(way_filter, str):
+            self.way_filter = [way_filter]
+        else:
+            self.way_filter = self.ways if way_filter is None else [self.ways[way_filter]]
+
+        if isinstance(week_filter, str):
+            self.week_filter = [week_filter]
+        else:
+            self.week_filter = self.days if week_filter is None else [self.days[week_filter]]
 
 
 class BaseModel(Model):
@@ -23,7 +39,7 @@ class RouteData(BaseModel):
     name = CharField()
 
 
-class ArrivalTime(BaseModel):
+class Schedule(BaseModel):
     stop_name = CharField()
     way = CharField()
     days = CharField()
@@ -36,10 +52,10 @@ class ArrivalTime(BaseModel):
         days = _filter.week_filter
 
         res = []
-        query = ArrivalTime.select().where(
-            (ArrivalTime.way << way) &
-            (ArrivalTime.days << days)
-        ).order_by(ArrivalTime.stop_name)
+        query = Schedule.select().where(
+            (Schedule.way << way) &
+            (Schedule.days << days)
+        ).order_by(Schedule.stop_name)
 
         for row in query:
             if lewen_length(row.stop_name, stop_name) <= 5:
@@ -64,12 +80,12 @@ class StopData(BaseModel):
         return None  # TODO implement it
 
 
-class RemoteQueriesRecords(BaseModel):
+class QueriesRecords(BaseModel):
     request_time = TimeField()
     estimated_time = TimeField()
 
 
-DATABASE_TIMETABLES_LIST = [RouteData, ArrivalTime, StopData, RemoteQueriesRecords]
+DATABASE_TIMETABLES_LIST = [RouteData, Schedule, StopData, RemoteQueriesRecords]
 
 
 class TimetableParser:
@@ -158,7 +174,7 @@ def obtain_routes_sources(routes_list):
                                       routes_filter.week_filter[0])
 
                     arrival_times_source.append(new_source_row)
-        res[route_name][ArrivalTime] = arrival_times_source
+        res[route_name][Schedule] = arrival_times_source
         res[route_name][StopData] = stop_data_source
 
     return res
@@ -166,12 +182,12 @@ def obtain_routes_sources(routes_list):
 
 def insert_many(sources):
     for route_name in sources:
-        ArrivalTime.insert_many(sources[route_name][ArrivalTime], fields=[
-            ArrivalTime.stop_name,
-            ArrivalTime.route_name,
-            ArrivalTime.arrival_time,
-            ArrivalTime.way,
-            ArrivalTime.days]).execute()
+        Schedule.insert_many(sources[route_name][Schedule], fields=[
+            Schedule.stop_name,
+            Schedule.route_name,
+            Schedule.arrival_time,
+            Schedule.way,
+            Schedule.days]).execute()
 
         StopData.insert_many(sources[route_name][StopData], fields=[
             StopData.stop_name,

@@ -1,4 +1,4 @@
-from database import create_database, ArrivalTime, Filter
+from database import create_database, Schedule, Filter
 from functions import convert
 from request import YandexApiRequest, Request
 from server import RemoteQueryPerformer
@@ -23,7 +23,7 @@ def do_request(route_name, request_type=Request.GET_LINE):
 def filter_database(route_name):
     stop_name = 'Давыдковская улица, 12'
 
-    print(ArrivalTime.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
+    print(Schedule.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
 
 
 def main():

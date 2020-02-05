@@ -2,8 +2,8 @@ import threading
 import time
 from datetime import datetime
 
-from constants import Tags, Filter
-from database import ArrivalTime, RemoteQueriesRecords
+from constants import Tags
+from database import Schedule, RemoteQueriesRecords, Filter
 from functions import get_nearest_actual_schedules
 from request import YandexApiRequest, Request
 
@@ -40,7 +40,7 @@ def do_request(route_name, _filter):
     yandex_values = data[route_name][Tags.ESTIMATED]
 
     database_values = list(map(lambda x: x.arrival_time,
-                               ArrivalTime.by_stop_name(route_name, stop_name_ya, _filter)))
+                               Schedule.by_stop_name(route_name, stop_name_ya, _filter)))
 
     if not yandex_values:
         print("No Yandex values")
