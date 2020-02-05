@@ -35,7 +35,7 @@ class BaseModel(Model):
         return convert(vars(self)['__data__'])
 
 
-class RouteData(BaseModel):
+class RouteData(BaseModel):  # Buses
     name = CharField()
 
 
@@ -73,6 +73,7 @@ class StopData(BaseModel):
     stop_name = CharField()
     way = CharField()
     route_name = ForeignKeyField(RouteData, related_name="bus")
+
     stop_id = IntegerField(null=True)
 
     @staticmethod
@@ -80,17 +81,17 @@ class StopData(BaseModel):
         return None  # TODO implement it
 
 
-class QueriesRecords(BaseModel):
-    request_time = TimeField()
-    estimated_time = TimeField()
-
-
-class YandexStops(BaseModel):
+class YandexStop(BaseModel):
     name_ya = TextField()
     id_ya = IntegerField()
 
 
-DATABASE_TIMETABLES_LIST = [RouteData, Schedule, StopData, QueriesRecords, YandexStops]
+class QueryRecord(BaseModel):
+    request_time = TimeField()
+    estimated_time = TimeField()
+
+
+DATABASE_TIMETABLES_LIST = [Schedule, RouteData, StopData, QueryRecord, YandexStop]
 
 
 class TimetableParser:
