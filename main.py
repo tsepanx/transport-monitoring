@@ -36,7 +36,7 @@ def filter_database(route_name):
 def main():
     route_name = '732'
 
-    create_database([route_name], fill_schedule_flag=True, _filter=Filter(0, 0))
+    create_database([route_name, '104'], fill_schedule_flag=True)
     print(convert(filter_database(route_name)))
 
     # do_request(route_name, request_type=Request.GET_STOP_INFO)
