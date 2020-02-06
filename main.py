@@ -3,6 +3,8 @@ from functions import convert
 from request import GetStopInfoApiRequest, Request
 from server import RemoteQueryPerformer
 
+from constants import ROUTES_FIELDS
+
 
 def run_remote_executor(route_name):
     interval = int(input("interval: "))
@@ -22,20 +24,20 @@ def do_request(route_name, request_type=Request.GET_STOP_INFO):
         raise Exception('Unknown request type')
 
     request.run()
-    print(convert(request.obtained_data))
+    return request.obtained_data
 
 
 def filter_database(route_name):
-    stop_name = 'Давыдковская улица, 12'
+    stop_name = ROUTES_FIELDS[route_name]['stop_name']
 
-    print(Schedule.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
+    return Schedule.by_stop_name(route_name, stop_name, Filter(week_filter=0))
 
 
 def main():
     route_name = '732'
 
     create_database([route_name], fill_schedule_flag=True, _filter=Filter(0, 0))
-    filter_database(route_name)
+    print(convert(filter_database(route_name)))
 
     # do_request(route_name, request_type=Request.GET_STOP_INFO)
 

@@ -40,7 +40,8 @@ ROUTES_FIELDS = {
     '732': {
         'line_id': "213_732_bus_mosgortrans",
         'thread_id': "213A_732_bus_mosgortrans",
-        'stop_id': '9644642'}
+        'stop_id': '9644642',
+        'stop_name': 'Давыдковская улица, 12', }
 }
 
 

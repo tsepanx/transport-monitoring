@@ -31,6 +31,19 @@ class BaseModel(Model):
     def __str__(self):
         return convert(vars(self)['__data__'])
 
+    def __iter__(self):
+        simple_attrs = vars(self)['__data__']
+        rel_attrs = vars(self)['__rel__']
+
+        simple_attrs.pop('id')
+
+        for rel in rel_attrs:
+            for simple_rel_attr in rel_attrs[rel]:
+                yield simple_rel_attr
+
+        for attr in simple_attrs:
+            yield attr, simple_attrs[attr]
+
 
 class RouteData(BaseModel):  # Buses
     name = CharField()
@@ -65,7 +78,7 @@ class Schedule(BaseModel):
 
         res = []
         query = Schedule.select().where(
-            (Schedule.stop.direction << way) &  # TODO
+            # (Schedule.stop.direction << way) &  # TODO
             (Schedule.weekdays << days))  # .order_by(Schedule.stop.name_mgt)
 
         for row in query:

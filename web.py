@@ -1,14 +1,28 @@
-from bottle import route, run, template
+from bottle import route, run, template, static_file, abort
+
+from constants import ROUTES_FIELDS
+from main import filter_database
 
 
-@route('/<route_number>')
-def route_timetable(route_number):
-    return template('timetable.tpl', route_number=route_number)
+@route('/static/:path#.+#', name='static')
+def static(path):
+    return static_file(path, root='static')
 
 
-def main():
-    run(host='localhost', port=8000)
+@route('/')
+def index():
+    return template('index.tpl')
+
+
+@route('/<route_name>')
+def route_timetable(route_name):
+    if route_name not in ROUTES_FIELDS:
+        abort(401, "Unknown route")
+
+    data = filter_database(route_name)
+    print(data)
+    return template('timetable.tpl', route_name=route_name, timetable=data)
 
 
 if __name__ == '__main__':
-    main()
+    run(host='localhost', port=8000)
