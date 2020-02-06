@@ -35,14 +35,15 @@ class BaseModel(Model):
         simple_attrs = vars(self)['__data__']
         rel_attrs = vars(self)['__rel__']
 
-        simple_attrs.pop('id')
+        # simple_attrs.pop('id')
 
         for rel in rel_attrs:
             for simple_rel_attr in rel_attrs[rel]:
                 yield simple_rel_attr
 
         for attr in simple_attrs:
-            yield attr, simple_attrs[attr]
+            if attr not in ['id']:
+                yield attr, simple_attrs[attr]
 
 
 class RouteData(BaseModel):  # Buses

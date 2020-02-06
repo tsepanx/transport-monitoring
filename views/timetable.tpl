@@ -11,14 +11,28 @@
 </head>
 <body>
     <h1>Current route name is: {{route_name}} </h1>
+    % some_row = list(map(lambda x: x[0], timetable[0]))
+
     <table class="table table-dark table-hover">
-    %for row in timetable:
+        <thead>
         <tr>
-            % for col in row:
-                <td>{{col}}</td>
+            <th scope="col">#</th>
+            % for title in some_row:
+                <th scope="col">{{title}}</th>
             % end
         </tr>
-    % end
+        </thead>
+
+        <tbody>
+            % for i, row in enumerate(timetable):
+                <tr>
+                    <th scope="row">{{i}}</th>
+                    % for col in row:
+                        <td>{{col[1]}}</td>
+                    % end
+                </tr>
+            % end
+        </tbody>
     </table>
 </body>
 </html>
