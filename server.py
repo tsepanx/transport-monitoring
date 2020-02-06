@@ -2,7 +2,7 @@ import threading
 import time
 from datetime import datetime
 
-from constants import Tags
+from parsers import Tags
 from database import Schedule, QueryRecord, Filter
 from functions import get_nearest_actual_schedules
 from request import GetStopInfoApiRequest

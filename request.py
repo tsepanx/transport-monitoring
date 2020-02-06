@@ -1,6 +1,6 @@
 import enum
 
-from constants import ROUTES_FIELDS, proxy
+from constants import GET_LINE_ID, proxy
 from file import File
 from parsers import parse_get_stop_info_json, parse_get_line_info_json
 
@@ -35,43 +35,56 @@ def build_url(request_type, **kwargs):
 
 
 class YandexApiRequest:
-    def __init__(self, request_type, route_name):
+    def __init__(self, request_type, **kwargs):
         self.request_type = request_type
-        self.route_name = route_name
-        self.url_args = ROUTES_FIELDS[route_name]
         self.obtained_data = None
         self.file = None
 
     def run(self):
-        api_get_func = self.request_type.value['func']
-        raw_data = api_get_func(build_url(self.request_type, **self.url_args))
-        self.__write_to_file(raw_data)
+        yandex_api_func = self.request_type.value['func']
+        raw_data = yandex_api_func(build_url(self.request_type, **self.url_args))
+
         self.obtained_data = parse_request_obtained_json(raw_data, self.request_type)
 
-    def __write_to_file(self, data):
-        self.file = File(self.request_type.value['prefix'] + self.route_name, "json")
+        return raw_data
+
+    def write_to_file(self, data, suffix):
+        self.file = File(self.request_type.value['file_prefix'] + suffix, "json")
         self.file.write_json(data)
 
 
 class GetStopInfoApiRequest(YandexApiRequest):
-    def __init__(self, route_name):
-        super().__init__(Request.GET_STOP_INFO, route_name)
+    def __init__(self, stop_id):
+        self.stop_id = stop_id
+        self.stop_name = None
+
+        self.url_args = {'stop_id': stop_id}
+
+        super().__init__(Request.GET_STOP_INFO, stop_id=stop_id)
 
     def run(self):
-        super().run()
+        data = super().run()
+        self.stop_name = self.obtained_data['stopName']
+
+        super().write_to_file(data, self.stop_id)
+
         self.__write_to_db()
 
     def __write_to_db(self):
-        stop_name = self.obtained_data['stopName']
-        stop_id = self.obtained_data['stopId']
-        YandexStop.create(name_ya=stop_name, id_ya=stop_id)
+        YandexStop.create(name_ya=self.stop_name, id_ya=self.stop_id)
 
 
 class GetLineApiRequest(YandexApiRequest):
     def __init__(self, route_name):
-        super().__init__(Request.GET_LINE, route_name)
+        self.route_name = route_name
+        self.url_args = GET_LINE_ID[route_name]
+        super().__init__(Request.GET_LINE, route_name=route_name)
+
+    def run(self):
+        data = super().run()
+        super().write_to_file(data, self.route_name)
 
 
 class Request(enum.Enum):
-    GET_STOP_INFO = {'func': proxy.get_stop_info, 'prefix': 'stop_'}
-    GET_LINE = {'func': proxy.get_line, 'prefix': 'line_'}
+    GET_STOP_INFO = {'func': proxy.get_stop_info, 'file_prefix': 'stop_'}
+    GET_LINE = {'func': proxy.get_line, 'file_prefix': 'line_'}

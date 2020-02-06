@@ -36,14 +36,19 @@ MY_DATABASE = SqliteDatabase(DATABASE_PATH)
 
 PROXY_CONNECT_TIMEOUT = 5
 
-ROUTES_FIELDS = {
+GET_LINE_ID = {
     '732': {
         'line_id': "213_732_bus_mosgortrans",
         'thread_id': "213A_732_bus_mosgortrans",
     }
 }
 
-TEST_FIELDS = {
-    'stop_id': '9644642',
-    'stop_name': 'Давыдковская улица, 12',
-}
+STOP_FIELDS = [
+    {
+        'stop_id': '9644642',
+        'stop_name': 'Давыдковская улица, 12',
+    },
+    {
+        "stop_id": '9650244'
+    }
+]

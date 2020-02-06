@@ -1,6 +1,6 @@
 from bottle import route, run, template, static_file, abort
 
-from constants import ROUTES_FIELDS
+from constants import STOP_FIELDS
 from main import filter_database
 
 
@@ -16,7 +16,7 @@ def index():
 
 @route('/<route_name>')
 def route_timetable(route_name):
-    if route_name not in ROUTES_FIELDS:
+    if route_name not in STOP_FIELDS:
         abort(401, "Unknown route")
 
     data = filter_database(route_name)

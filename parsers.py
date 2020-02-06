@@ -1,6 +1,6 @@
 import time
 
-from functions import convert_time, convert
+from functions import convert_time
 
 
 class Tags:
@@ -77,7 +77,6 @@ def parse_get_stop_info_json(sources):
                 res_dict[name][Tags.FREQUENCY] = frequency
                 res_dict[name][Tags.ESSENTIAL_STOPS] = [convert_time(first_arrival), convert_time(last_arrival)]
 
-    print(convert(res_dict))
     return res_dict
 
 
