@@ -11,7 +11,7 @@
 </head>
 <body>
     <h1>Current route name is: {{route_name}} </h1>
-    <table border=3px bgcolor="#F0F0F0" bordercolor="green">
+    <table class="table table-dark">
     %for row in timetable:
         <tr>
             % for col in row:
