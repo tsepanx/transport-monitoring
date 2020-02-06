@@ -1,6 +1,6 @@
 import enum
 
-from constants import ROUTES_FIELDS, proxy, Tags
+from constants import ROUTES_FIELDS, proxy
 from file import File
 from parsers import parse_get_stop_info_json, parse_get_line_info_json
 
@@ -62,8 +62,8 @@ class GetStopInfoApiRequest(YandexApiRequest):
         self.__write_to_db()
 
     def __write_to_db(self):
-        stop_name = self.obtained_data[Tags.STOP_NAME]
-        stop_id = self.obtained_data[Tags.STOP_ID]
+        stop_name = self.obtained_data['stopName']
+        stop_id = self.obtained_data['stopId']
         YandexStop.create(name_ya=stop_name, id_ya=stop_id)
 
 

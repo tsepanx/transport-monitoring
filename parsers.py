@@ -1,18 +1,39 @@
 import time
 
-from constants import Tags
 from functions import convert_time, convert
+
+
+class Tags:
+    STOP_NAME = "stopName"
+
+    BRIEF_SCHEDULE = "BriefSchedule"
+
+    STOP_ID = 'stopId'
+    THREAD_ID = "threadId"
+    LINE_ID = "lineId"
+
+    EVENTS = "Events"
+
+    ESTIMATED = "Estimated"
+    SCHEDULED = "Scheduled"
+
+    ESSENTIAL_STOPS = "EssentialStops"
+
+    FREQUENCY = "Frequency"
+
+    STOP_META_DATA = "StopMetaData"
+    PROPERTIES = "properties"
 
 
 def parse_get_stop_info_json(sources):
     res_dict = dict()
 
-    props = sources["data"]["properties"]
+    props = sources["data"][Tags.PROPERTIES]
     stop_russian_fullname = props["name"]
-    transport_data = props["StopMetaData"]["Transport"]
+    transport_data = props[Tags.STOP_META_DATA]["Transport"]
 
     res_dict[Tags.STOP_NAME] = stop_russian_fullname
-    res_dict[Tags.STOP_ID] = int(props['StopMetaData']['id'][6:])
+    res_dict[Tags.STOP_ID] = int(props[Tags.STOP_META_DATA]['id'][6:])
 
     for route in transport_data:
         if route["type"] != "bus":

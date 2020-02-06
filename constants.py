@@ -40,28 +40,10 @@ ROUTES_FIELDS = {
     '732': {
         'line_id': "213_732_bus_mosgortrans",
         'thread_id': "213A_732_bus_mosgortrans",
-        'stop_id': '9644642',
-        'stop_name': 'Давыдковская улица, 12', }
+    }
 }
 
-
-class Tags:
-    STOP_NAME = "stopName"
-
-    BRIEF_SCHEDULE = "BriefSchedule"
-
-    STOP_ID = 'stopId'
-    THREAD_ID = "threadId"
-    LINE_ID = "lineId"
-
-    EVENTS = "Events"
-
-    ESTIMATED = "Estimated"
-    SCHEDULED = "Scheduled"
-
-    ESSENTIAL_STOPS = "EssentialStops"
-
-    FREQUENCY = "Frequency"
-
-    STOP_META_DATA = "StopMetaData"
-    PROPERTIES = "properties"
+TEST_FIELDS = {
+    'stop_id': '9644642',
+    'stop_name': 'Давыдковская улица, 12',
+}
