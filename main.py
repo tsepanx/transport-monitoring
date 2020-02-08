@@ -1,5 +1,5 @@
 from constants import STOP_FIELDS
-from database import Schedule, Filter
+from database import Schedule, Filter, StopData
 from functions import convert
 from request import GetStopInfoApiRequest, GetLineApiRequest, Request
 from server import RemoteQueryPerformer
@@ -26,10 +26,8 @@ def do_request(route_name, request_type=Request.GET_STOP_INFO):
     return request.obtained_data
 
 
-def filter_database(route_name):
-    stop_name = STOP_FIELDS['stop_name']
-
-    return Schedule.by_stop_name(route_name, stop_name, Filter(week_filter=0))
+# def filter_database(route_name, stop_id):
+#     return Schedule.by_stop_id(route_name, stop_id)
 
 
 def main():

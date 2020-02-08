@@ -11,27 +11,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>Current route name is: {{route_name}}</h1>
+        <h1>Current route name is: {{route_name}} </h1>
 
         <div class="row"><div class="col-12">
-            % some_row = list(map(lambda x: x[0], timetable[0]))
-            <table class="table table-dark table-hover table-striped">
-                <thead>
-                <tr>
+            <table class="table table-dark table-hover table-responsible">
+                % titles = list(map(lambda x: x[0], stops_list[0]))
+                <thead><tr>
                     <th scope="col">#</th>
-                    % for title in some_row:
+                    % for title in titles:
                         <th scope="col">{{title}}</th>
                     % end
-                </tr>
-                </thead>
-
+                    <th scope="col">link</th>
+                </tr></thead>
                 <tbody>
-                    % for i, row in enumerate(timetable):
+                    % for i, stop in enumerate(stops_list):
                         <tr>
-                            <th scope="row">{{i}}</th>
-                            % for col in row:
+                            <th scope="row">{{i + 1}}</th>
+                            % for col in stop:
                                 <td>{{col[1]}}</td>
                             % end
+                            <td><a href="/{{route_name}}/stop/{{stop.id}}" >Link</a></td>
+                            %#<td><a href="https://www.google.com/">www</a></td>
+                            %#<td><a href="">Blah Blah</a></td>
                         </tr>
                     % end
                 </tbody>

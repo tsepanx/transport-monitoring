@@ -35,8 +35,6 @@ class BaseModel(Model):
         simple_attrs = vars(self)['__data__']
         rel_attrs = vars(self)['__rel__']
 
-        # simple_attrs.pop('id')
-
         for rel in rel_attrs:
             for simple_rel_attr in rel_attrs[rel]:
                 yield simple_rel_attr
@@ -64,7 +62,9 @@ class StopData(BaseModel):
 
     @staticmethod
     def by_id(stop_id):
-        return None  # TODO implement it
+        query = StopData.select().where(StopData.id == stop_id)
+        for row in query:
+            return row
 
 
 class Schedule(BaseModel):
@@ -73,7 +73,7 @@ class Schedule(BaseModel):
     time = TimeField()
 
     @staticmethod
-    def by_stop_name(route_name, stop_name, _filter=Filter()):
+    def by_stop_id(route_name, stop_id, _filter=Filter()):
         way = _filter.way_filter
         days = _filter.week_filter
 
@@ -84,15 +84,11 @@ class Schedule(BaseModel):
 
         for row in query:
             if row.stop.direction in way:
-                if lewen_length(row.stop.name_mgt, stop_name) <= 5:
+                if row.stop.id == int(stop_id):
                     if row.stop.route.name == route_name:
                         res.append(row)
 
         return res
-
-    def by_stop_id(self, route_name, stop_id, _filter=Filter()):
-        stop_name = StopData.by_id(stop_id)
-        self.by_stop_name(route_name, stop_name, _filter)
 
 
 class QueryRecord(BaseModel):
@@ -208,5 +204,5 @@ def create_database(routes_list, fill_schedule_flag=False, db=MY_DATABASE, _filt
         fill_schedule(sources)
 
 
-def get_full_table(table: BaseModel):
-    yield table.select()
+def get_full_table(table):
+    return table.select()

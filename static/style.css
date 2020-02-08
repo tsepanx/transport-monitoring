@@ -14,6 +14,10 @@ body {
   background-color: #5a6268;
 }
 
+div {
+  border: 3px;
+}
+
 /*tr:nth-child(even) {*/
 /*  background-color: #4d4d4d;*/
 /*}*/
