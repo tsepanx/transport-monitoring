@@ -4,10 +4,10 @@
     <title>{{route_name}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link rel="stylesheet" href="static/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="static/style.css" type="text/css">
+    <link rel="stylesheet" href="/static/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" type = "text/javascript"></script>
-    <script src="static/bootstrap.js" type = "text/javascript"></script>
+    <script src="/static/bootstrap.js" type = "text/javascript"></script>
 </head>
 <body>
     <div class="container">
@@ -30,9 +30,8 @@
                             % for col in stop:
                                 <td>{{col[1]}}</td>
                             % end
-                            <td><a href="/{{route_name}}/stop/{{stop.id}}" >Link</a></td>
-                            %#<td><a href="https://www.google.com/">www</a></td>
-                            %#<td><a href="">Blah Blah</a></td>
+                            <td><a href="/{{route_name}}/{{stop.id}}" >Link</a></td>
+                            %#<td><a href="/" >Link</a></td>
                         </tr>
                     % end
                 </tbody>

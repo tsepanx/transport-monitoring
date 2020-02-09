@@ -11,9 +11,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Current route name is: {{route_name}}</h1>
+        <h1>Current route is: {{route_name}}</h1>
+        <h1>Current stop is: {{stop_name}}</h1>
 
-        <div class="row"><div class="col-12">
+        <div class="row"><div class="col-8">
             % some_row = list(map(lambda x: x[0], timetable[0]))
             <table class="table table-dark table-hover table-striped">
                 <thead>
