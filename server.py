@@ -15,11 +15,11 @@ class RemoteQueryPerformer:
         self.interval = interval
         self.iterations_passed = 0
 
-        self.main_thread = threading.Thread(target=self.run_async,
+        self.main_thread = threading.Thread(target=self.main,
                                             kwargs={'route_name': route_name, '_filter': Filter(0, 0)})
         self.main_thread.start()
 
-    def run_async(self, **kwargs):
+    def main(self, **kwargs):
         while self.iterations_passed < MAX_QUERY_ITERATIONS:
             value = do_request(**kwargs)
             QueryRecord.create(request_time=datetime.now(), estimated_time=value)
