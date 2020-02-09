@@ -10,43 +10,46 @@ from request import GetStopInfoApiRequest
 MAX_QUERY_ITERATIONS = 100
 
 
-class RemoteQueryPerformer:
-    def __init__(self, route_name, interval):
-        self.interval = interval
-        self.iterations_passed = 0
-
-        self.main_thread = threading.Thread(target=self.main,
-                                            kwargs={'route_name': route_name, '_filter': Filter(0, 0)})
-        self.main_thread.start()
-
-    def main(self, **kwargs):
-        while self.iterations_passed < MAX_QUERY_ITERATIONS:
-            value = do_request(**kwargs)
-            QueryRecord.create(request_time=datetime.now(), estimated_time=value)
-
-            self.iterations_passed += 1
-            print(self.iterations_passed)
-            time.sleep(self.interval)
-
-
 def do_request(route_name, _filter):
     stop_request = GetStopInfoApiRequest(route_name)
     stop_request.run()
 
     data = stop_request.obtained_data
 
-    stop_name_ya = data[Tags.STOP_NAME]
+    return data
 
-    yandex_values = data[route_name][Tags.ESTIMATED]
 
-    database_values = list(map(lambda x: x.arrival_time,
-                               Schedule.by_stop_name(route_name, stop_name_ya, _filter)))
+class RemoteQueryPerformer:
+    def __init__(self, route_name, interval):
+        self.interval = interval
+        self.iterations_passed = 0
 
-    if not yandex_values:
-        print("No Yandex values")
+        self.main_thread = threading.Thread(target=self.main, args=[route_name, Filter(0, 0)])
+        self.main_thread.start()
 
-    nearest_schedules = get_nearest_actual_schedules(database_values, yandex_values[0])
+    def main(self, route_name, _filter):
+        while self.iterations_passed < MAX_QUERY_ITERATIONS:
+            data = do_request(route_name, _filter)
 
-    print(nearest_schedules)
+            stop_name_ya = data[Tags.STOP_NAME]
+            yandex_values = data[route_name][Tags.ESTIMATED]
 
-    return yandex_values[0]
+            if not yandex_values:
+                print("No Yandex values")
+                QueryRecord.create(request_time=datetime.now(),
+                                   estimated_time=None)
+
+            else:
+                database_values = list(map(lambda x: x.arrival_time,
+                                           Schedule.by_attribute(route_name, attr_value=stop_name_ya, _filter=_filter)))
+
+                borders = get_nearest_actual_schedules(database_values, yandex_values[0])
+
+                QueryRecord.create(request_time=datetime.now(),
+                                   estimated_time=yandex_values[0],
+                                   left_db_border=borders[0],
+                                   right_db_border=borders[1])
+
+            self.iterations_passed += 1
+            print(self.iterations_passed)
+            time.sleep(self.interval)

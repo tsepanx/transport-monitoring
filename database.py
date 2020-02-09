@@ -60,12 +60,6 @@ class StopData(BaseModel):
 
     ya_stop = ForeignKeyField(YandexStop, null=True, related_name='ya_stop', backref='stop')
 
-    @staticmethod
-    def by_id(stop_id):
-        query = StopData.select().where(StopData.id == stop_id)
-        for row in query:
-            return row
-
 
 class Schedule(BaseModel):
     stop = ForeignKeyField(StopData, related_name='stop', backref='schedule')
@@ -90,10 +84,30 @@ class Schedule(BaseModel):
 
         return res
 
+    @staticmethod
+    def by_attribute(route_name, attr='name_mgt', attr_value=None, _filter=Filter()):
+        way = _filter.way_filter
+        days = _filter.week_filter
+
+        res = []
+        query = Schedule.select().where(
+            # (Schedule.stop.direction << way) &  # TODO
+            (Schedule.weekdays << days))  # .order_by(Schedule.stop.name_mgt)
+
+        for row in query:
+            if row.stop.direction in way:
+                if getattr(row.stop, attr) == attr_value:
+                    if row.stop.route.name == route_name:
+                        res.append(row)
+
+        return res
+
 
 class QueryRecord(BaseModel):
     request_time = TimeField()
-    estimated_time = TimeField()
+    estimated_time = TimeField(null=True)
+    left_db_border = TimeField(null=True)
+    right_db_border = TimeField(null=True)
 
 
 DATABASE_TIMETABLES_LIST = [Schedule, RouteData, StopData, QueryRecord, YandexStop]
