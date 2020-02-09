@@ -43,10 +43,22 @@ GET_LINE_ID = {
     }
 }
 
+YA_MGT_STOPS_MATCJING = {
+    'Давыдковская улица, 12': 'Давыдковская ул., 12'
+}
+
+
+def determine_same_stop_names(ya_name, mgt_name):
+    return YA_MGT_STOPS_MATCJING[ya_name] == mgt_name or ya_name == mgt_name
+
+
 STOP_FIELDS = [
     {
         'stop_id': '9644642',
         'stop_name': 'Давыдковская улица, 12',
+    },
+    {
+        'stop_id': '9640951',
     },
     {
         "stop_id": '9650244'

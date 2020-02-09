@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from peewee import *
 
-from constants import MY_DATABASE, DATABASE_PATH, does_exist
-from functions import lewen_length, convert
+from constants import MY_DATABASE, DATABASE_PATH, does_exist, determine_same_stop_names
+from functions import convert
 
 
 class Filter:
@@ -67,36 +67,17 @@ class Schedule(BaseModel):
     time = TimeField()
 
     @staticmethod
-    def by_stop_id(route_name, stop_id, _filter=Filter()):
-        way = _filter.way_filter
-        days = _filter.week_filter
-
-        res = []
-        query = Schedule.select().where(
-            # (Schedule.stop.direction << way) &  # TODO
-            (Schedule.weekdays << days))  # .order_by(Schedule.stop.name_mgt)
-
-        for row in query:
-            if row.stop.direction in way:
-                if row.stop.id == int(stop_id):
-                    if row.stop.route.name == route_name:
-                        res.append(row)
-
-        return res
-
-    @staticmethod
     def by_attribute(route_name, attr='name_mgt', attr_value=None, _filter=Filter()):
         way = _filter.way_filter
         days = _filter.week_filter
 
         res = []
-        query = Schedule.select().where(
-            # (Schedule.stop.direction << way) &  # TODO
-            (Schedule.weekdays << days))  # .order_by(Schedule.stop.name_mgt)
+        query = Schedule.select().where(Schedule.weekdays << days)
 
         for row in query:
             if row.stop.direction in way:
-                if getattr(row.stop, attr) == attr_value:
+                db_attr = getattr(row.stop, attr)
+                if determine_same_stop_names(attr_value, db_attr):
                     if row.stop.route.name == route_name:
                         res.append(row)
 
