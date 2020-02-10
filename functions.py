@@ -6,29 +6,6 @@ def convert(data: dict) -> str:
     return json.dumps(data, indent=2, separators=(',', ': '), default=str, ensure_ascii=False)
 
 
-def is_today_workday():
-    d = date.today().isoweekday()
-    return 1 if d not in [6, 7] else 0
-
-
-def lewen_length(a, b):
-    n, m = len(a), len(b)
-    if n > m:
-        a, b = b, a
-        n, m = m, n
-
-    current_row = range(n + 1)
-    for i in range(1, m + 1):
-        previous_row, current_row = current_row, [i] + [0] * n
-        for j in range(1, n + 1):
-            add, delete, change = previous_row[j] + 1, current_row[j - 1] + 1, previous_row[j - 1]
-            if a[j - 1] != b[i - 1]:
-                change += 1
-            current_row[j] = min(add, delete, change)
-
-    return current_row[n]
-
-
 def binary_search_left(x, arr):
     l = -1
     r = len(arr)
@@ -42,30 +19,40 @@ def binary_search_left(x, arr):
 
 
 def get_nearest_actual_schedules(expected_values, actual_value):
+    int_values = []
+
+    actual_value = actual_value.hour * 60 + actual_value.minute
+
+    for i in range(1, len(expected_values)):
+        if expected_values[i] < expected_values[i - 1]:
+            day_change = i
+            break
+    else:
+        raise Exception
+
     i = len(expected_values) - 1
-    while expected_values[i].hour > 0:
-        expected_values[i] += timedelta(days=1)
+    while i >= day_change:
+        int_values.append(expected_values[i].hour * 60 + expected_values[i].minute + 60 * 24)
         i -= 1
 
-    if actual_value < expected_values[0]:
-        return None, expected_values[0]
+    while i >= 0:
+        int_values.append(expected_values[i].hour * 60 + expected_values[i].minute)
+        i -= 1
 
-    if actual_value > expected_values[-1]:
-        return expected_values[-1], None
+    int_values.reverse()
 
-    nearest_lower = binary_search_left(actual_value, expected_values)
+    if actual_value < int_values[0]:
+        actual_value += 24 * 60
+
+    if int_values[-1] <= actual_value <= int_values[0]:
+        return int_values[-1], int_values[0]
+
+    nearest_lower = binary_search_left(actual_value, int_values)
     nearest_greater = nearest_lower + 1
 
+    print(int_values)
+
     return nearest_lower, nearest_greater
-
-
-def get_nearest_actual_schedules2(expected_values, actual_value):
-    if expected_values[-1] <= actual_value <= expected_values[0]:
-        return expected_values[-1], expected_values[0]
-
-    for i, e in enumerate(expected_values):
-        if actual_value >= e:
-            return i, i + 1
 
 
 def convert_time(value):
@@ -91,10 +78,10 @@ def main():
            time(19, 34), time(19, 45), time(20, 4), time(20, 24), time(20, 44), time(21, 4), time(21, 21), time(21, 38),
            time(21, 57), time(22, 27), time(22, 57), time(23, 27), time(23, 57), time(0, 27), time(0, 57), time(1, 27),
            time(1, 57)]
-    print(arr)
-    res = get_nearest_actual_schedules(arr, time(10, 20))
 
-    print(res, arr[res])
+    res = get_nearest_actual_schedules(arr, time(1, 40))
+
+    print(res)
 
 
 if __name__ == '__main__':
