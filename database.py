@@ -200,7 +200,3 @@ def create_database(routes_list, fill_schedule_flag=False, db=MY_DATABASE, _filt
     if fill_schedule_flag:
         sources = gather_schedule_sources(routes_list, _filter)
         fill_schedule(sources)
-
-
-def get_full_table(table):
-    return table.select()

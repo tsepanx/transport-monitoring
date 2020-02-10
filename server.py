@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from parsers import Tags
 from database import Schedule, QueryRecord, Filter, create_database
-from functions import get_nearest_actual_schedules, get_nearest_actual_schedules2
+from functions import get_nearest_actual_schedules
 from request import GetStopInfoApiRequest
 from constants import STOP_FIELDS
 from functions import convert
