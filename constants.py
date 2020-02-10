@@ -49,7 +49,11 @@ YA_MGT_STOPS_MATCJING = {
 
 
 def determine_same_stop_names(ya_name, mgt_name):
-    return YA_MGT_STOPS_MATCJING[ya_name] == mgt_name or ya_name == mgt_name
+    if YA_MGT_STOPS_MATCJING.get(ya_name):
+        return YA_MGT_STOPS_MATCJING[ya_name] == mgt_name or ya_name == mgt_name
+
+    else:
+        return ya_name == mgt_name
 
 
 STOP_FIELDS = [

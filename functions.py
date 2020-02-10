@@ -92,7 +92,7 @@ def main():
            time(21, 57), time(22, 27), time(22, 57), time(23, 27), time(23, 57), time(0, 27), time(0, 57), time(1, 27),
            time(1, 57)]
     print(arr)
-    res = binary_search_left(time(10, 20), arr)
+    res = get_nearest_actual_schedules(arr, time(10, 20))
 
     print(res, arr[res])
 
