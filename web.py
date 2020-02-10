@@ -65,7 +65,9 @@ def route_stops(route_name):
 
 @app.route('/<route_name>/<stop_id>')
 def stop_timetable(route_name, stop_id):
-    table = Schedule.by_attribute(route_name, attr='id', attr_value=stop_id)
+    stop_id = int(stop_id)
+
+    table = Schedule.by_attribute(route_name, stop_id=stop_id)
     stop_name = table[0].stop.name_mgt
 
     res_table = filter_table(table, exclude_fields=['ya_stop', 'stop', 'route', 'name', 'name_mgt'])

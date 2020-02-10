@@ -67,7 +67,7 @@ class Schedule(BaseModel):
     time = TimeField()
 
     @staticmethod
-    def by_attribute(route_name, attr='name_mgt', attr_value=None, _filter=Filter()):
+    def by_attribute(route_name, stop_id=None, stop_name=None, _filter=Filter()):
         way = _filter.way_filter
         days = _filter.week_filter
 
@@ -76,10 +76,13 @@ class Schedule(BaseModel):
 
         for row in query:
             if row.stop.direction in way:
-                db_attr = getattr(row.stop, attr)
-                if determine_same_stop_names(attr_value, db_attr):
-                    if row.stop.route.name == route_name:
-                        res.append(row)
+                if (stop_id is not None) and stop_id != row.stop.id:
+                    continue
+                elif (stop_name is not None) and not determine_same_stop_names(stop_name, row.stop.name_mgt):
+                    continue
+
+                if row.stop.route.name == route_name:
+                    res.append(row)
 
         return res
 

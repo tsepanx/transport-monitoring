@@ -46,7 +46,7 @@ class RemoteQueryPerformer:
 
             else:
                 database_values = list(map(lambda x: datetime.now() + timedelta(hours=x.time.hour, minutes=x.time.minute),
-                                           Schedule.by_attribute(route_name, attr_value=stop_name_ya, _filter=_filter)))
+                                           Schedule.by_attribute(route_name, stop_name=stop_name_ya, _filter=_filter)))
 
                 print(database_values)
                 borders = get_nearest_actual_schedules(database_values, yandex_values[0])
