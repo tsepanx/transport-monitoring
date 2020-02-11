@@ -3,7 +3,7 @@ import sys
 
 from bottle import run, template, static_file, abort, Bottle, debug
 
-from database import RouteData, StopData, Schedule
+from database import RouteData, StopData, Schedule, QueryRecord
 
 
 def filter_table(timetable, exclude_fields=None):
@@ -73,6 +73,13 @@ def stop_timetable(route_name, stop_id):
     res_table = filter_table(table, exclude_fields=['ya_stop', 'stop', 'route', 'name', 'name_mgt'])
 
     return template('timetable.tpl', route_name=route_name, timetable=res_table, stop_name=stop_name)
+
+
+@app.route('/query_records')
+def query_requests():
+    query = QueryRecord.select()
+
+    return template('records.tpl', records=query)
 
 
 if __name__ == '__main__':
