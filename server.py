@@ -64,4 +64,4 @@ class RemoteQueryPerformer:
 
 if __name__ == '__main__':
     create_database(['732'], fill_schedule_flag=True)
-    handler = RemoteQueryPerformer(STOP_FIELDS[0]['stop_id'], '732', 30)
+    handler = RemoteQueryPerformer(STOP_FIELDS[0]['stop_id'], '732', 90)
