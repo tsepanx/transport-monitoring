@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Records</title>
+    <title>Default table page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <link rel="stylesheet" href="/static/bootstrap.css" type="text/css">
@@ -13,7 +13,7 @@
     <div class="container">
         <div class="row"><div class="col-12">
             <table class="table table-dark table-hover table-responsible">
-                % titles = list(map(lambda x: x[0], records[0]))
+                % titles = list(map(lambda x: x[0], table[0]))
                 <thead><tr>
                     <th scope="col">#</th>
                     % for title in titles:
@@ -21,10 +21,10 @@
                     % end
                 </tr></thead>
                 <tbody>
-                    % for i, stop in enumerate(records):
+                    % for i in range(len(table)):
                         <tr>
                             <th scope="row">{{i + 1}}</th>
-                            % for col in stop:
+                            % for col in table[i]:
                                 <td>{{col[1]}}</td>
                             % end
                         </tr>

@@ -62,6 +62,10 @@ class RemoteQueryPerformer:
             time.sleep(self.interval)
 
 
-if __name__ == '__main__':
+def main():
     create_database(['732'], fill_schedule_flag=True)
-    handler = RemoteQueryPerformer(STOP_FIELDS[0]['stop_id'], '732', 90)
+    RemoteQueryPerformer(STOP_FIELDS[0]['stop_id'], '732', 90)
+
+
+if __name__ == '__main__':
+    main()

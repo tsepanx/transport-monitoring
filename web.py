@@ -1,9 +1,11 @@
 import os
 import sys
+import threading
 
 from bottle import run, template, static_file, abort, Bottle, debug
 
 from database import RouteData, StopData, Schedule, QueryRecord
+from server import main
 
 
 def filter_table(timetable, exclude_fields=None):
@@ -46,7 +48,7 @@ def index():
 
 
 @app.route('/<route_name>')
-def route_stops(route_name):
+def route_stops_table(route_name):
     for row in RouteData.select():
         if row.name == route_name:
             break
@@ -79,8 +81,9 @@ def stop_timetable(route_name, stop_id):
 def query_requests():
     query = QueryRecord.select()
 
-    return template('records.tpl', records=query)
+    return template('default_table.tpl', table=query)
 
 
 if __name__ == '__main__':
+    threading.Thread(target=main()).start()
     run(app, host='localhost', port=8000)
