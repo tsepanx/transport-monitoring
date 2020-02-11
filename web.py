@@ -32,13 +32,11 @@ static_dir = os.path.join(parent_dir, 'static')
 
 @app.route('/<some_pth>/static/:path#.+#', name='static')  # TODO try another code impl.
 def static(path, some_pth):
-    print(path)
     return static_file(path, root=static_dir)
 
 
 @app.route('/static/:path#.+#', name='static')
 def static(path):
-    print(path)
     return static_file(path, root=static_dir)
 
 
@@ -63,6 +61,7 @@ def route_stops_table(route_name):
             route_stops.append(route_stop)
 
     return template('route.tpl', route_name=route_name, stops_list=route_stops)
+    # return template('default_table.tpl', table=route_stops)
 
 
 @app.route('/<route_name>/<stop_id>')
@@ -74,7 +73,7 @@ def stop_timetable(route_name, stop_id):
 
     res_table = filter_table(table, exclude_fields=['ya_stop', 'stop', 'route', 'name', 'name_mgt'])
 
-    return template('timetable.tpl', route_name=route_name, timetable=res_table, stop_name=stop_name)
+    return template('default_table.tpl', table=res_table)
 
 
 @app.route('/query_records')
@@ -85,5 +84,5 @@ def query_requests():
 
 
 if __name__ == '__main__':
-    threading.Thread(target=main()).start()
+    # threading.Thread(target=main()).start()
     run(app, host='localhost', port=8000)
