@@ -88,8 +88,8 @@ class Schedule(BaseModel):
 
 
 class QueryRecord(BaseModel):
-    request_time = TimeField()
-    estimated_time = TimeField(null=True)
+    request_time = DateTimeField()
+    bus_income = TimeField(null=True)
     left_db_border = TimeField(null=True)
     right_db_border = TimeField(null=True)
 

@@ -50,8 +50,6 @@ def get_nearest_actual_schedules(expected_values, actual_value):
     nearest_lower = binary_search_left(actual_value, int_values)
     nearest_greater = nearest_lower + 1
 
-    print(int_values)
-
     return nearest_lower, nearest_greater
 
 

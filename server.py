@@ -1,19 +1,20 @@
 import threading
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from parsers import Tags
-from database import Schedule, QueryRecord, Filter, create_database
-from functions import get_nearest_actual_schedules
-from request import GetStopInfoApiRequest
 from constants import STOP_FIELDS
+from database import Schedule, QueryRecord, Filter, create_database
 from functions import convert
+from functions import get_nearest_actual_schedules
+from parsers import Tags
+from request import GetStopInfoApiRequest
 
 MAX_QUERY_ITERATIONS = 100
 
 
 def do_request(stop_id, _filter):
     stop_request = GetStopInfoApiRequest(stop_id)
+
     stop_request.run()
 
     data = stop_request.obtained_data
@@ -41,22 +42,20 @@ class RemoteQueryPerformer:
 
             if not yandex_values:
                 print("No Yandex values")
-                QueryRecord.create(request_time=datetime.now(),
-                                   estimated_time=None)
+                QueryRecord.create(request_time=datetime.now(), bus_income=None)
 
             else:
-                database_values = list(map(lambda x: datetime.now() + timedelta(hours=x.time.hour, minutes=x.time.minute),
+                database_values = list(map(lambda x: x.time,
                                            Schedule.by_attribute(route_name, stop_name=stop_name_ya, _filter=_filter)))
 
-                print(database_values)
                 borders = get_nearest_actual_schedules(database_values, yandex_values[0])
+                borders_values = database_values[borders[0]], database_values[borders[1]]
 
-                print(*yandex_values, borders)
+                print(f"Next incomes: {yandex_values}", borders_values)
 
-                QueryRecord.create(request_time=datetime.now(),
-                                   estimated_time=yandex_values[0],
-                                   left_db_border=borders[0],
-                                   right_db_border=borders[1])
+                QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
+                                   left_db_border=borders_values[0],
+                                   right_db_border=borders_values[1])
 
             self.iterations_passed += 1
             print(self.iterations_passed)
