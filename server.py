@@ -34,17 +34,13 @@ class RemoteQueryPerformer:
 
     def main(self, stop_id, route_name, _filter):
         while self.iterations_passed < MAX_QUERY_ITERATIONS:
-            data = do_request(stop_id, _filter)
+            try:
+                data = do_request(stop_id, _filter)
 
-            stop_name_ya = data[Tags.STOP_NAME]
-            print(stop_name_ya)
-            yandex_values = data[route_name][Tags.ESTIMATED]
+                stop_name_ya = data[Tags.STOP_NAME]
+                print(stop_name_ya)
+                yandex_values = data[route_name][Tags.ESTIMATED]
 
-            if not yandex_values:
-                print("No Yandex values")
-                QueryRecord.create(request_time=datetime.now(), bus_income=None)
-
-            else:
                 database_values = list(map(lambda x: x.time,
                                            Schedule.by_attribute(route_name, stop_name=stop_name_ya, _filter=_filter)))
 
@@ -56,6 +52,9 @@ class RemoteQueryPerformer:
                 QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
                                    left_db_border=borders_values[0],
                                    right_db_border=borders_values[1])
+            except Exception:
+                print("No Yandex values")
+                QueryRecord.create(request_time=datetime.now())
 
             self.iterations_passed += 1
             print(self.iterations_passed)
