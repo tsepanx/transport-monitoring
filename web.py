@@ -84,5 +84,5 @@ def query_requests():
 
 
 if __name__ == '__main__':
-    # threading.Thread(target=main()).start()
+    threading.Thread(target=main()).start()
     run(app, host='localhost', port=8000)
