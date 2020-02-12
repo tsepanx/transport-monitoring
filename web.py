@@ -30,11 +30,6 @@ parent_dir = os.path.dirname(my_module)
 static_dir = os.path.join(parent_dir, 'static')
 
 
-@app.route('/<some_pth>/static/:path#.+#', name='static')  # TODO try another code impl.
-def static(path, some_pth):
-    return static_file(path, root=static_dir)
-
-
 @app.route('/static/:path#.+#', name='static')
 def static(path):
     return static_file(path, root=static_dir)
@@ -61,7 +56,6 @@ def route_stops_table(route_name):
             route_stops.append(route_stop)
 
     return template('route.tpl', route_name=route_name, stops_list=route_stops)
-    # return template('default_table.tpl', table=route_stops)
 
 
 @app.route('/<route_name>/<stop_id>')
