@@ -9,9 +9,9 @@ from functions import get_nearest_actual_schedules
 from parsers import Tags
 from request import GetStopInfoApiRequest
 
-MAX_QUERY_ITERATIONS = 500
+MAX_QUERY_ITERATIONS = float('inf')
 
-DEFAULT_TIMEOUT = 90
+DEFAULT_TIMEOUT = 30
 
 
 def do_request(stop_id, _filter):
