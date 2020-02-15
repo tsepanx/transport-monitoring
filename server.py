@@ -4,7 +4,7 @@ from datetime import datetime
 
 from constants import STOP_FIELDS
 from database import Schedule, QueryRecord, Filter, create_database
-from functions import convert
+from functions import convert, time_to_seconds
 from functions import get_nearest_actual_schedules
 from parsers import Tags
 from request import GetStopInfoApiRequest
@@ -14,7 +14,7 @@ MAX_QUERY_ITERATIONS = float('inf')
 DEFAULT_TIMEOUT = 30
 
 
-def do_request(stop_id, _filter):
+def get_data_from_request(stop_id, _filter):
     stop_request = GetStopInfoApiRequest(stop_id)
     stop_request.run()
 
@@ -34,7 +34,7 @@ class RemoteQueryPerformer:
     def main(self, stop_id, route_name, _filter):
         while self.iterations_passed < MAX_QUERY_ITERATIONS:
             try:
-                data = do_request(stop_id, _filter)
+                data = get_data_from_request(stop_id, _filter)
                 stop_name_ya = data[Tags.STOP_NAME]
 
                 print(convert(data))
@@ -49,7 +49,14 @@ class RemoteQueryPerformer:
 
                 print(*yandex_values, borders_values)
 
-                self.timeout = DEFAULT_TIMEOUT
+                # self.timeout = DEFAULT_TIMEOUT
+                now = datetime.time(datetime.now())
+                now_secs = time_to_seconds(now)
+
+                ya_secs = time_to_seconds(yandex_values[0])
+
+                self.timeout = (ya_secs - now_secs) // 2
+
                 QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
                                    left_db_border=borders_values[0],
                                    right_db_border=borders_values[1])
