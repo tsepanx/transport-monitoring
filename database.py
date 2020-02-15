@@ -92,6 +92,7 @@ class QueryRecord(BaseModel):
     bus_income = TimeField(null=True)
     left_db_border = TimeField(null=True)
     right_db_border = TimeField(null=True)
+    timeout = IntegerField()
 
 
 DATABASE_TIMETABLES_LIST = [Schedule, RouteData, StopData, QueryRecord, YandexStop]

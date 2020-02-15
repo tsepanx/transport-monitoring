@@ -60,11 +60,12 @@ class RemoteQueryPerformer:
 
                 QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
                                    left_db_border=borders_values[0],
-                                   right_db_border=borders_values[1])
+                                   right_db_border=borders_values[1],
+                                   timeout=self.timeout)
             except Exception as e:
                 print("No Yandex values", e)
                 self.timeout += DEFAULT_TIMEOUT
-                QueryRecord.create(request_time=datetime.now())
+                QueryRecord.create(request_time=datetime.now(), timeout=self.timeout)
 
             self.iterations_passed += 1
             print(self.iterations_passed, 'Requests passed, timeout:', self.timeout)
