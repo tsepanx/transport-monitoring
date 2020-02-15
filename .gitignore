@@ -18,6 +18,7 @@ private_keys.py
 static/bootstrap.css
 static/bootstrap.js
 
+*.db
 *.db-journal
 views/test.html
 
