@@ -19,6 +19,7 @@ static/bootstrap.css
 static/bootstrap.js
 
 *.db
+!buses.db
 *.db-journal
 views/test.html
 
