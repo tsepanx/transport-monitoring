@@ -12,6 +12,7 @@ from request import GetStopInfoApiRequest
 MAX_QUERY_ITERATIONS = float('inf')
 
 DEFAULT_TIMEOUT = 30
+MIN_TIMEOUT = 10
 
 
 def get_data_from_request(stop_id, _filter):
@@ -55,14 +56,14 @@ class RemoteQueryPerformer:
 
                 ya_secs = time_to_seconds(yandex_values[0])
 
-                self.timeout = (ya_secs - now_secs) // 2
+                self.timeout = max(MIN_TIMEOUT, (ya_secs - now_secs) // 2)
 
                 QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
                                    left_db_border=borders_values[0],
                                    right_db_border=borders_values[1])
             except Exception as e:
                 print("No Yandex values", e)
-                self.timeout += 30
+                self.timeout += DEFAULT_TIMEOUT
                 QueryRecord.create(request_time=datetime.now())
 
             self.iterations_passed += 1
