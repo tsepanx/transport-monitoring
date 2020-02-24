@@ -26,9 +26,9 @@ def build_url(request_type, **kwargs):
 
         res_url += prefix + stop_url_prefix + stop_id
     elif request_type == Request.GET_LINE:
-        id = kwargs['line_id']
+        line_id = kwargs['line_id']
         thread_id = kwargs['thread_id']
-        res_url += f"?&masstransit[lineId]={id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
+        res_url += f"?&masstransit[lineId]={line_id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
 
     print(res_url)
     return res_url
