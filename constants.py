@@ -1,6 +1,6 @@
 import os
+import peewee as pw
 
-from peewee import *
 from yandex_transport_webdriver_api import YandexTransportProxy
 
 
@@ -32,7 +32,10 @@ create_if_not_exists(PROJECT_PREFIX + GENERATED_DIR)
 
 DATABASE_PATH = PROJECT_PREFIX + "buses.db"
 
-MY_DATABASE = SqliteDatabase(DATABASE_PATH)
+MY_DATABASE = pw.SqliteDatabase(DATABASE_PATH)
+
+myDB = pw.MySQLDatabase("mydb", host="...", port=3306, user="user",
+                        passwd="password")
 
 PROXY_CONNECT_TIMEOUT = 5
 
