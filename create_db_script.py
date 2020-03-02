@@ -5,12 +5,13 @@ import peewee as pw
 from functions import convert
 
 db_path = PROJECT_PREFIX + 'transport'
-db = pw.PostgresqlDatabase(db_path)
+# db = pw.PostgresqlDatabase(db_path)
+pg_db = pw.PostgresqlDatabase('transport', user='stepan', password='password', host='95.85.18.95', port=5432)
 
 
 class BaseModel(pw.Model):
     class Meta:
-        database = db
+        database = pg_db
 
     def __str__(self):
         return convert(vars(self)['__data__'])
@@ -40,4 +41,4 @@ if __name__ == '__main__':
     tables = [QueryRecord]
 
     if not does_exist(db_path):
-        db.create_tables(tables)
+        pg_db.create_tables(tables)
