@@ -5,7 +5,7 @@ import peewee as pw
 from functions import convert
 
 db_path = PROJECT_PREFIX + 'transport'
-db = pw.SqliteDatabase(db_path)
+db = pw.PostgresqlDatabase(db_path)
 
 
 class BaseModel(pw.Model):
@@ -36,7 +36,8 @@ class QueryRecord(BaseModel):
     timeout = pw.IntegerField()
 
 
-tables = [QueryRecord]
+if __name__ == '__main__':
+    tables = [QueryRecord]
 
-if not does_exist(db_path):
-    db.create_tables(tables)
+    if not does_exist(db_path):
+        db.create_tables(tables)
