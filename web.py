@@ -1,11 +1,9 @@
 import os
 import sys
-import threading
 
-from bottle import run, template, static_file, abort, Bottle, debug
+from bottle import template, static_file, abort, Bottle, debug
 
 from database import RouteData, StopData, Schedule, QueryRecord
-from server import main
 
 
 def filter_table(timetable, exclude_fields=None):
@@ -75,8 +73,3 @@ def query_requests():
     query = QueryRecord.select()
 
     return template('default_table.tpl', table=query)
-
-
-if __name__ == '__main__':
-    threading.Thread(target=main()).start()
-    run(app, host='localhost', port=8000)
