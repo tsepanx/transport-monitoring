@@ -1,10 +1,7 @@
-from constants import does_exist, PROJECT_PREFIX
-
 import peewee as pw
 
 from functions import convert
 
-db_path = PROJECT_PREFIX + 'transport'
 # db = pw.PostgresqlDatabase(db_path)
 pg_db = pw.PostgresqlDatabase('transport', user='stepan', password='password', host='95.85.18.95', port=5432)
 
@@ -39,6 +36,4 @@ class QueryRecord(BaseModel):
 
 if __name__ == '__main__':
     tables = [QueryRecord]
-
-    if not does_exist(db_path):
-        pg_db.create_tables(tables)
+    pg_db.create_tables(tables)
