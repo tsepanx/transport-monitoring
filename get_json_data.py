@@ -11,7 +11,7 @@ do_request('732', Request.GET_LINE)
 
 
 
-with open("line_732.json", "r") as read_file:
+with open("generated_files/line_732.json", "r") as read_file:
     data = json.load(read_file)
 
 features_list = data['data']['features'][0]['features']
