@@ -1,12 +1,16 @@
 import os
+import peewee as pw
 
-from peewee import *
 from yandex_transport_webdriver_api import YandexTransportProxy
+
+
+def does_exist(path):
+    return os.path.exists(path)
 
 
 def create_if_not_exists(path):
     print(path)
-    if not os.path.exists(path):
+    if not does_exist(path):
         print('Creating ', path)
         os.mkdir(path)
 
@@ -28,33 +32,42 @@ create_if_not_exists(PROJECT_PREFIX + GENERATED_DIR)
 
 DATABASE_PATH = PROJECT_PREFIX + "buses.db"
 
-MY_DATABASE = SqliteDatabase(DATABASE_PATH)
+MY_DATABASE = pw.SqliteDatabase(DATABASE_PATH)
+
+myDB = pw.MySQLDatabase("mydb", host="...", port=3306, user="user",
+                        passwd="password")
 
 PROXY_CONNECT_TIMEOUT = 5
 
-ROUTES_FIELDS = {
+GET_LINE_ID = {
     '732': {
         'line_id': "213_732_bus_mosgortrans",
         'thread_id': "213A_732_bus_mosgortrans",
-        'stop_id': '9644642'}
+    }
+}
+
+YA_MGT_STOPS_MATCJING = {
+    'Давыдковская улица, 12': 'Давыдковская ул., 12'
 }
 
 
-class Tags:
-    STOP_NAME = "stopName"
+def determine_same_stop_names(ya_name, mgt_name):
+    if YA_MGT_STOPS_MATCJING.get(ya_name):
+        return YA_MGT_STOPS_MATCJING[ya_name] == mgt_name or ya_name == mgt_name
 
-    BRIEF_SCHEDULE = "BriefSchedule"
-    THREAD_ID = "threadId"
-    LINE_ID = "lineId"
+    else:
+        return ya_name == mgt_name
 
-    EVENTS = "Events"
 
-    ESTIMATED = "Estimated"
-    SCHEDULED = "Scheduled"
-
-    ESSENTIAL_STOPS = "EssentialStops"
-
-    FREQUENCY = "Frequency"
-
-    STOP_META_DATA = "StopMetaData"
-    PROPERTIES = "properties"
+STOP_FIELDS = [
+    {
+        'stop_id': '9644642',
+        'stop_name': 'Давыдковская улица, 12',
+    },
+    {
+        'stop_id': '9640951',
+    },
+    {
+        "stop_id": '9650244'
+    }
+]

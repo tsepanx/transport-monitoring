@@ -1,37 +1,40 @@
-from database import create_database, Schedule, Filter
+import threading
+
+from bottle import run
+
+from constants import STOP_FIELDS
 from functions import convert
-from request import YandexApiRequest, Request
-from server import RemoteQueryPerformer
+from request import GetStopInfoApiRequest, GetLineApiRequest, Request
+from web import app
+
+import server
 
 
-def run_remote_executor(route_name):
-    interval = int(input("interval: "))
-
-    performer = RemoteQueryPerformer(interval=interval, route_name=route_name)
-
-    while performer.main_thread.is_alive():
-        pass
-
-
-def do_request(route_name, request_type=Request.GET_LINE):
-    request = YandexApiRequest(request_type, route_name)
+def do_request(route_name, request_type=Request.GET_STOP_INFO):
+    if request_type == Request.GET_STOP_INFO:
+        request = GetStopInfoApiRequest(STOP_FIELDS[1]['stop_id'])
+    elif request_type == Request.GET_LINE:
+        request = GetLineApiRequest(route_name)
+    else:
+        raise Exception('Unknown request type')
 
     request.run()
-    print(convert(request.obtained_data))
+    return request.obtained_data
 
 
-def filter_database(route_name):
-    stop_name = 'Давыдковская улица, 12'
+def main_old():
+    route_name = '732'
 
-    print(Schedule.by_stop_name(route_name, stop_name, Filter(week_filter=0)))
+    # create_database([route_name, '104'], fill_schedule_flag=True)
+    # print(convert(filter_database(route_name)))
+
+    data = do_request(route_name, request_type=Request.GET_LINE)
+    print(convert(data))
 
 
 def main():
-    create_database(['104', '732'])
-
-    route_name = '732'
-    filter_database(route_name)
-    do_request(route_name, request_type=Request.GET_STOP_INFO)
+    threading.Thread(target=server.main()).start()
+    run(app, host='localhost', port=8000)
 
 
 if __name__ == '__main__':

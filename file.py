@@ -12,10 +12,9 @@ class File:
         is_already_created = os.path.exists(self.full_name)
 
         self.__open("r" if is_already_created else "w+")
-        print(self.full_name, self.__extension)
 
     def __open(self, _type):
-        print(self.full_name)
+        print(self.full_name, self.__extension, "'open'", _type)
         self.__file_object = open(self.full_name, _type)
 
     def __write(self, data):

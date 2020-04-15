@@ -10,10 +10,18 @@ __pycache__/
 generated_files/*
 
 private_keys.py
-buses.db
+#buses.db
 
 /ve
 .ven*
+
+static/bootstrap.css
+static/bootstrap.js
+
+*.db
+!buses.db
+*.db-journal
+views/test.html
 
 # ___________________________ !!!
 
