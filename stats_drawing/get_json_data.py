@@ -2,16 +2,19 @@ from main import *
 import json
 import random
 
+
 def swap(swap_list):
     a = swap_list[0]
     swap_list[0] = swap_list[1]
     swap_list[1] = a
 
+
 def generate_random_latency(stop_list):
     latency_list = []
-    for i in range(len(stop_list)-1):
+    for i in range(len(stop_list) - 1):
         latency_list.append(random.randint(0, 2))
     return latency_list
+
 
 def add_green_feature(features):
     feature = {
@@ -49,27 +52,19 @@ def add_red_feature(features):
     features.append(feature)
 
 
-
-
-
 do_request('732', Request.GET_LINE)
-
-
-
 
 with open("generated_files/line_732.json", "r") as read_file:
     data = json.load(read_file)
-
 
 features_list = data['data']['features'][0]['features']
 points_list = []
 stop_coordinates_list = []
 
-
 for feature in features_list:
     if 'coordinates' in feature:
-            swap(feature['coordinates'])
-            stop_coordinates_list.append(feature['coordinates'])
+        swap(feature['coordinates'])
+        stop_coordinates_list.append(feature['coordinates'])
 
     # if 'bounds' in feature:
     #     for bounds in feature['bounds']:
@@ -86,8 +81,6 @@ for feature in features_list:
 for item in points_list:
     print(item)
 
-
-
 res_dict = {
     "type": "FeatureCollection",
     "features": [
@@ -101,7 +94,7 @@ latency_list = generate_random_latency(stop_coordinates_list)
 # print(len(points_list))
 
 
-for i in range(len(latency_list)-1):
+for i in range(len(latency_list) - 1):
     if latency_list[i] == 0:
         add_green_feature(res_dict["features"])
         res_dict["features"][i]["geometry"]["coordinates"] = points_list[i]
@@ -128,7 +121,6 @@ for i in range(len(latency_list)-1):
 #     }
 #
 #      res_dict["features"].append((stop_feature))
-
 
 
 with open("generated_files/polyline.json", "w") as write_file:
