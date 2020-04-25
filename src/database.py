@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from peewee import *
 
-from constants import MY_DATABASE, DATABASE_PATH, does_exist, determine_same_stop_names
-from functions import convert
+from src.constants import MY_DATABASE, DATABASE_PATH, does_exist, determine_same_stop_names
+from src.functions import convert
 
 
 class Filter:
@@ -94,6 +94,7 @@ class QueryRecord(BaseModel):
     right_db_border = TimeField(null=True)
     timeout = IntegerField()
     stop_id = ForeignKeyField(StopData, null=True, related_name='stop', backref='queryrecord')
+
 
 DATABASE_TIMETABLES_LIST = [Schedule, RouteData, StopData, QueryRecord, YandexStop]
 

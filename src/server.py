@@ -2,12 +2,12 @@ import threading
 import time
 from datetime import datetime
 
-from constants import STOP_FIELDS
-from database import Schedule, QueryRecord, Filter, create_database
-from functions import convert, time_to_seconds
-from functions import get_nearest_actual_schedules
-from parsers import Tags
-from request import GetStopInfoApiRequest
+from src.constants import STOP_FIELDS
+from src.database import Schedule, QueryRecord, Filter, create_database
+from src.functions import convert, time_to_seconds
+from src.functions import get_nearest_actual_schedules
+from src.utils.parsers import Tags
+from src.utils.request import GetStopInfoApiRequest
 
 MAX_QUERY_ITERATIONS = float('inf')
 

@@ -15,13 +15,13 @@ private_keys.py
 /ve
 .ven*
 
-static/bootstrap.css
-static/bootstrap.js
+src/web/static/bootstrap.css
+src/web/static/bootstrap.js
 
 *.db
 !buses.db
 *.db-journal
-views/test.html
+src/web/templates/test.html
 
 # ___________________________ !!!
 

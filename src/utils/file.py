@@ -1,8 +1,8 @@
 import json
 import os
 
-from constants import get_full_filename
-from functions import convert
+from src.constants import get_full_filename
+from src.functions import convert
 
 
 class File:

@@ -1,4 +1,4 @@
-from main import *
+from src.main import *
 import json
 import random
 

@@ -67,12 +67,13 @@ def get_delta(a, b):
     res = abs(x - y)
     return (datetime.min + res).time()
 
+
 def average_of_massive_elements(massive):
     if len(massive) > 0:
         sum = 0
         for i in range(len(massive)):
             sum += massive[i]
-        return sum/len(massive)
+        return sum / len(massive)
     else:
         return None
 

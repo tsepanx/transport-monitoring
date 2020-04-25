@@ -2,12 +2,12 @@ import threading
 
 from bottle import run
 
-from constants import STOP_FIELDS
-from functions import convert
-from request import GetStopInfoApiRequest, GetLineApiRequest, Request
-from web import app
+from src.constants import STOP_FIELDS
+from src.functions import convert
+from src.utils.request import GetStopInfoApiRequest, GetLineApiRequest, Request
+from src.web import app
 
-import server
+from src import server
 
 
 def do_request(route_name, request_type=Request.GET_STOP_INFO):
@@ -34,7 +34,7 @@ def main_old():
 
 def main():
     threading.Thread(target=server.main()).start()
-    run(app, host='localhost', port=8000)
+    run(app, host='localhost', port=3000)
 
 
 if __name__ == '__main__':

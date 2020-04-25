@@ -1,7 +1,7 @@
 import datetime
 
-from functions import get_delta, average_of_massive_elements
-from database import QueryRecord
+from src.functions import get_delta, average_of_massive_elements
+from src.database import QueryRecord
 
 records = QueryRecord.select().where(QueryRecord.bus_income != None)
 
