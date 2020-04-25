@@ -1,9 +1,9 @@
 import datetime
 
-from src.functions import get_delta, average_of_massive_elements
-from src.database import QueryRecord
+from src.utils.time import get_delta
+from src.database.models import QueryRecord
 
-records = QueryRecord.select().where(QueryRecord.bus_income != None)
+records = QueryRecord.select().where(QueryRecord.bus_income is not None)
 
 arr = {}
 
@@ -16,6 +16,16 @@ for row in records:
     prev = row
 
 lateness_dict_stops = {}
+
+
+def average_of_massive_elements(massive):
+    if len(massive) > 0:
+        sum = 0
+        for i in range(len(massive)):
+            sum += massive[i]
+        return sum / len(massive)
+    else:
+        return None
 
 
 def get_stop_delay(stop_id, arr):

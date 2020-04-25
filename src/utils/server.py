@@ -2,17 +2,48 @@ import threading
 import time
 from datetime import datetime
 
-from src.constants import STOP_FIELDS
-from src.database import Schedule, QueryRecord, Filter, create_database
-from src.functions import convert, time_to_seconds
-from src.functions import get_nearest_actual_schedules
+from src.constants import STOP_FIELDS, MAX_QUERY_ITERATIONS, DEFAULT_TIMEOUT, MIN_TIMEOUT
+from src.database.models import Schedule, QueryRecord, Filter
+from src.database.functions import create_database
+from src.utils.functions import convert
 from src.utils.parsers import Tags
 from src.utils.request import GetStopInfoApiRequest
+from src.utils.time import time_to_seconds
 
-MAX_QUERY_ITERATIONS = float('inf')
 
-DEFAULT_TIMEOUT = 30
-MIN_TIMEOUT = 10
+def get_nearest_actual_schedules(expected_values, actual_value):
+    int_values = []
+
+    actual_value = actual_value.hour * 60 + actual_value.minute
+
+    for i in range(1, len(expected_values)):
+        if expected_values[i] < expected_values[i - 1]:
+            day_change = i
+            break
+    else:
+        raise Exception
+
+    i = len(expected_values) - 1
+    while i >= day_change:
+        int_values.append(expected_values[i].hour * 60 + expected_values[i].minute + 60 * 24)
+        i -= 1
+
+    while i >= 0:
+        int_values.append(expected_values[i].hour * 60 + expected_values[i].minute)
+        i -= 1
+
+    int_values.reverse()
+
+    if actual_value < int_values[0]:
+        actual_value += 24 * 60
+
+    if int_values[-1] <= actual_value <= int_values[0]:
+        return int_values[-1], int_values[0]
+
+    nearest_lower = binary_search_left(actual_value, int_values)
+    nearest_greater = nearest_lower + 1
+
+    return nearest_lower, nearest_greater
 
 
 def get_data_from_request(stop_id, _filter):
@@ -79,3 +110,15 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def binary_search_left(x, arr):
+    l = -1
+    r = len(arr)
+    while r - l > 1:
+        m = (l + r) // 2
+        if arr[m] <= x:
+            l = m
+        else:
+            r = m
+    return l

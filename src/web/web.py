@@ -3,7 +3,7 @@ import sys
 
 from bottle import template, static_file, abort, Bottle, debug
 
-from src.database import RouteData, StopData, Schedule, QueryRecord
+from src.database.models import RouteData, StopData, Schedule, QueryRecord
 
 
 def filter_table(timetable, exclude_fields=None):

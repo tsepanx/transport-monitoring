@@ -4,7 +4,7 @@ from src.constants import GET_LINE_ID, proxy
 from src.utils.file import File
 from src.utils.parsers import parse_get_stop_info_json, parse_get_line_info_json
 
-from src.database import YandexStop
+from src.database.models import YandexStop
 
 
 def parse_request_obtained_json(sources, request_type):

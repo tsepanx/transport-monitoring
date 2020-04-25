@@ -2,12 +2,15 @@ import threading
 
 from bottle import run
 
-from src.constants import STOP_FIELDS
-from src.functions import convert
+from src.constants import STOP_FIELDS, PROJECT_PREFIX, GENERATED_DIR
+from src.utils.functions import convert
+from src.utils.file import create_if_not_exists
 from src.utils.request import GetStopInfoApiRequest, GetLineApiRequest, Request
-from src.web import app
+from src.web.web import app
 
-from src import server
+from src.utils import server
+
+create_if_not_exists(PROJECT_PREFIX + GENERATED_DIR)
 
 
 def do_request(route_name, request_type=Request.GET_STOP_INFO):
