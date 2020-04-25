@@ -19,7 +19,7 @@ src/web/static/bootstrap.css
 src/web/static/bootstrap.js
 
 *.db
-!buses.db
+!src/buses.db
 *.db-journal
 src/web/templates/test.html
 

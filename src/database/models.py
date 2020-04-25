@@ -98,7 +98,7 @@ class QueryRecord(BaseModel):
     left_db_border = TimeField(null=True)
     right_db_border = TimeField(null=True)
     timeout = IntegerField()
-    stop_id = ForeignKeyField(StopData, null=True, related_name='stop', backref='queryrecord')
+    # stop_id = ForeignKeyField(StopData, null=True, related_name='stop', backref='queryrecord')
 
 
 DATABASE_TIMETABLES_LIST = [Schedule, RouteData, StopData, QueryRecord, YandexStop]

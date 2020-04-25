@@ -2,7 +2,7 @@ import os
 import peewee as pw
 from yandex_transport_webdriver_api import YandexTransportProxy
 
-GENERATED_DIR = "generated_files/"
+GENERATED_DIR = "static/"
 PROJECT_PREFIX = os.path.dirname(__file__) + "/"
 
 DATABASE_PATH = PROJECT_PREFIX + "buses.db"
