@@ -1,6 +1,6 @@
 import enum
 
-from src.constants import GET_LINE_ID, proxy
+from src.constants import GET_LINE_FIELDS, proxy
 from src.utils.file import File
 from src.utils.parsers import parse_get_stop_info_json, parse_get_line_info_json
 
@@ -77,7 +77,7 @@ class GetStopInfoApiRequest(YandexApiRequest):
 class GetLineApiRequest(YandexApiRequest):
     def __init__(self, route_name):
         self.route_name = route_name
-        self.url_args = GET_LINE_ID[route_name]
+        self.url_args = GET_LINE_FIELDS[route_name]
         super().__init__(Request.GET_LINE, route_name=route_name)
 
     def run(self):

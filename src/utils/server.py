@@ -2,7 +2,7 @@ import threading
 import time
 from datetime import datetime
 
-from src.constants import STOP_FIELDS, MAX_QUERY_ITERATIONS, DEFAULT_TIMEOUT, MIN_TIMEOUT
+from src.constants import STOP_FIELDS, SERVER_MAX_QUERY_ITERATIONS, SERVER_DEFAULT_TIMEOUT, SERVER_MIN_TIMEOUT
 from src.database.models import Schedule, QueryRecord, Filter
 from src.database.functions import create_database
 from src.utils.functions import convert
@@ -57,14 +57,14 @@ def get_data_from_request(stop_id, _filter):
 
 class RemoteQueryPerformer:
     def __init__(self, stop_id, route_name):
-        self.timeout = DEFAULT_TIMEOUT
+        self.timeout = SERVER_DEFAULT_TIMEOUT
         self.iterations_passed = 0
 
         self.main_thread = threading.Thread(target=self.main, args=[stop_id, route_name, Filter(0, 0)])
         self.main_thread.start()
 
     def main(self, stop_id, route_name, _filter):
-        while self.iterations_passed < MAX_QUERY_ITERATIONS:
+        while self.iterations_passed < SERVER_MAX_QUERY_ITERATIONS:
             try:
                 data = get_data_from_request(stop_id, _filter)
                 stop_name_ya = data[Tags.STOP_NAME]
@@ -81,13 +81,13 @@ class RemoteQueryPerformer:
 
                 print(*yandex_values, borders_values)
 
-                # self.timeout = DEFAULT_TIMEOUT
+                # self.timeout = SERVER_DEFAULT_TIMEOUT
                 now = datetime.time(datetime.now())
                 now_secs = time_to_seconds(now)
 
                 ya_secs = time_to_seconds(yandex_values[0])
 
-                self.timeout = max(MIN_TIMEOUT, (ya_secs - now_secs) // 2)
+                self.timeout = max(SERVER_MIN_TIMEOUT, (ya_secs - now_secs) // 2)
 
                 QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
                                    left_db_border=borders_values[0],
@@ -95,7 +95,7 @@ class RemoteQueryPerformer:
                                    timeout=self.timeout)
             except Exception as e:
                 print("No Yandex values", e)
-                self.timeout += DEFAULT_TIMEOUT
+                self.timeout += SERVER_DEFAULT_TIMEOUT
                 QueryRecord.create(request_time=datetime.now(), timeout=self.timeout)
 
             self.iterations_passed += 1

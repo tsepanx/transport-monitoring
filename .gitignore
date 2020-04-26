@@ -10,7 +10,6 @@ __pycache__/
 generated_files/*
 
 private_keys.py
-#buses.db
 
 /ve
 .ven*
@@ -19,7 +18,7 @@ src/web/static/bootstrap.css
 src/web/static/bootstrap.js
 
 *.db
-!src/buses.db
+!src/database/old/buses_old.db
 *.db-journal
 src/web/templates/test.html
 
