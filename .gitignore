@@ -7,21 +7,20 @@ __pycache__/
 
 .idea/
 .vscode/
-generated_files/*
+static/
 
 private_keys.py
-#buses.db
 
 /ve
 .ven*
 
-static/bootstrap.css
-static/bootstrap.js
+src/web/static/bootstrap.css
+src/web/static/bootstrap.js
 
 *.db
-!buses.db
+!src/database/old/buses_old.db
 *.db-journal
-views/test.html
+src/web/templates/test.html
 
 # ___________________________ !!!
 

@@ -1,6 +1,6 @@
 import peewee as pw
 
-from functions import convert
+from src.utils.functions import convert
 
 # db = pw.PostgresqlDatabase(db_path)
 pg_db = pw.PostgresqlDatabase('transport', user='stepan', password='password', host='95.85.18.95', port=5432)

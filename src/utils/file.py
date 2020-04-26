@@ -1,8 +1,8 @@
 import json
 import os
 
-from constants import get_full_filename
-from functions import convert
+from src.constants import PROJECT_PREFIX, GENERATED_DIR
+from src.utils.functions import convert
 
 
 class File:
@@ -36,3 +36,23 @@ class File:
 
     def read_json(self):
         return json.loads(self.__read())
+
+
+def does_exist(path):
+    return os.path.exists(path)
+
+
+def create_if_not_exists(path):
+    print(path)
+    if not does_exist(path):
+        print('Creating ', path)
+        os.mkdir(path)
+
+
+def remove_if_exists(path):
+    if os.path.exists(path):
+        os.remove(path)
+
+
+def get_full_filename(filename, ext="json"):
+    return PROJECT_PREFIX + GENERATED_DIR + filename + "." + ext

@@ -1,6 +1,6 @@
 import time
 
-from functions import convert_time
+from src.utils.time import convert_time
 
 
 class Tags:
