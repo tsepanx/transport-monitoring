@@ -3,7 +3,8 @@ import time
 from datetime import datetime
 
 from src.constants import STOP_FIELDS, SERVER_MAX_QUERY_ITERATIONS, SERVER_DEFAULT_TIMEOUT, SERVER_MIN_TIMEOUT
-from src.database.models import Schedule, QueryRecord, Filter
+from src.database.models import Schedule, QueryRecord
+from src.database.timetable_parsing import Filter
 from src.database.functions import create_database
 from src.utils.functions import convert
 from src.utils.parsers import Tags
