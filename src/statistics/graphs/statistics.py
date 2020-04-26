@@ -1,9 +1,9 @@
 import datetime
 
 from src.utils.time import get_delta
-from src.database.models import QueryRecord
+from src.database.models import Request
 
-records = QueryRecord.select().where(QueryRecord.bus_income is not None)
+records = Request.select().where(Request.bus_income is not None)
 
 arr = {}
 
@@ -32,10 +32,10 @@ def get_stop_delay(stop_id, arr):
     lateness_list = []
 
     for i in arr:
-        if get_delta(i.bus_income, i.left_db_border) <= get_delta(i.bus_income, i.right_db_border):
-            lateness_list.append(get_delta(i.bus_income, i.left_db_border))
+        if get_delta(i.bus_income, i.schedule_left) <= get_delta(i.bus_income, i.schedule_right):
+            lateness_list.append(get_delta(i.bus_income, i.schedule_left))
         else:
-            lateness_list.append(get_delta(i.bus_income, i.right_db_border))
+            lateness_list.append(get_delta(i.bus_income, i.schedule_right))
 
     lateness_dict = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [],
                      13: [], 14: [], 15: [], 16: [], 17: [], 18: [], 19: [], 20: [], 21: [], 22: [], 23: []}

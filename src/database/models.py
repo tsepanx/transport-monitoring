@@ -1,7 +1,7 @@
 from peewee import *
 
 from src.constants import MY_DATABASE
-from src.database.utils import Filter
+from src.database.filter import Filter
 from src.utils.functions import convert
 
 
@@ -34,7 +34,7 @@ class YandexStop(BaseModel):
     id_ya = IntegerField()
 
 
-class StopData(BaseModel):
+class Stop(BaseModel):
     name_mgt = CharField()
     route = ForeignKeyField(RouteData, related_name='bus', backref='stop')
     direction = CharField()
@@ -43,7 +43,7 @@ class StopData(BaseModel):
 
 
 class Schedule(BaseModel):
-    stop = ForeignKeyField(StopData, related_name='stop', backref='schedule')
+    stop = ForeignKeyField(Stop, related_name='stop', backref='schedule')
     weekdays = CharField()
     time = TimeField()
 
@@ -77,10 +77,13 @@ class Schedule(BaseModel):
         return res
 
 
-class QueryRecord(BaseModel):
-    request_time = DateTimeField()
+class Request(BaseModel):
+    time = DateTimeField()
     bus_income = TimeField(null=True)
-    left_db_border = TimeField(null=True)
-    right_db_border = TimeField(null=True)
+    stop_id = ForeignKeyField(Stop, null=True, related_name='stop', backref='request')
+    schedule_left = TimeField(null=True)
+    schedule_right = TimeField(null=True)
     timeout = IntegerField()
-    stop_id = ForeignKeyField(StopData, null=True, related_name='stop', backref='queryrecord')
+
+
+DB_TABLES = [Schedule, RouteData, Stop, Request, YandexStop]

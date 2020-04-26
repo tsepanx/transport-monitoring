@@ -2,9 +2,12 @@ import threading
 import time
 from datetime import datetime
 
+import peewee
+
 from src.constants import STOP_FIELDS, SERVER_MAX_QUERY_ITERATIONS, SERVER_DEFAULT_TIMEOUT, SERVER_MIN_TIMEOUT
-from src.database.models import Schedule, QueryRecord
-from src.database.utils import create_database, Filter
+from src.database.models import Schedule, Request
+from src.database.filter import Filter
+from src.database.functions import create_database
 from src.utils.functions import convert
 from src.utils.parsers import Tags
 from src.utils.request import GetStopInfoApiRequest
@@ -89,14 +92,16 @@ class RemoteQueryPerformer:
 
                 self.timeout = max(SERVER_MIN_TIMEOUT, (ya_secs - now_secs) // 2)
 
-                QueryRecord.create(request_time=datetime.now(), bus_income=yandex_values[0],
-                                   left_db_border=borders_values[0],
-                                   right_db_border=borders_values[1],
-                                   timeout=self.timeout)
+                Request.create(time=datetime.now(),
+                               bus_income=yandex_values[0],
+                               # stop_id=peewee.f,
+                               schedule_left=borders_values[0],
+                               schedule_right=borders_values[1],
+                               timeout=self.timeout)
             except Exception as e:
                 print("No Yandex values", e)
                 self.timeout += SERVER_DEFAULT_TIMEOUT
-                QueryRecord.create(request_time=datetime.now(), timeout=self.timeout)
+                Request.create(time=datetime.now(), timeout=self.timeout)
 
             self.iterations_passed += 1
             print(self.iterations_passed, 'Requests passed, timeout:', self.timeout)

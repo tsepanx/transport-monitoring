@@ -3,8 +3,8 @@ import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from src.database.utils import Filter
-from src.database.models import RouteData, StopData, Schedule
+from src.database.filter import Filter
+from src.database.models import RouteData, Stop, Schedule
 
 
 def gather_schedule_sources(routes_list, _filter=Filter()):
@@ -21,10 +21,10 @@ def gather_schedule_sources(routes_list, _filter=Filter()):
 
         for routes_filter in parser.obtained_timetable:
             for name_mgt in parser.obtained_timetable[routes_filter]:
-                stop_row = StopData.create(name_mgt=name_mgt,
-                                           route=route_row,
-                                           direction=routes_filter.way_filter[0],
-                                           stop_id=None)
+                stop_row = Stop.create(name_mgt=name_mgt,
+                                       route=route_row,
+                                       direction=routes_filter.way_filter[0],
+                                       stop_id=None)
 
                 for arrival_time in parser.obtained_timetable[routes_filter][name_mgt]:
                     new_source_row = (stop_row, routes_filter.week_filter[0], arrival_time)
