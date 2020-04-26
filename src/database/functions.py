@@ -5,7 +5,7 @@ from src.database.filter import Filter
 from src.utils.file import does_exist
 
 
-def create_database(routes_list, fill_schedule_flag=False, db=MY_DATABASE, _filter=Filter()):
+def create_database(routes, fill_schedule_flag=False, db=MY_DATABASE, _filter=Filter()):
     if not does_exist(DATABASE_PATH):
         db.create_tables(DB_TABLES)
     else:
@@ -13,5 +13,5 @@ def create_database(routes_list, fill_schedule_flag=False, db=MY_DATABASE, _filt
         return
 
     if fill_schedule_flag:
-        sources = gather_schedule_sources(routes_list, _filter)
+        sources = gather_schedule_sources(routes, _filter)
         fill_schedule(sources)

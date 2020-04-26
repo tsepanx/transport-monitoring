@@ -2,6 +2,8 @@ from src.main import *
 import json
 import random
 
+from src.utils.request import do_request
+
 
 def swap(swap_list):
     a = swap_list[0]

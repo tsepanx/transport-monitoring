@@ -1,6 +1,6 @@
 import enum
 
-from src.constants import GET_LINE_FIELDS, proxy
+from src.constants import GET_LINE_FIELDS, proxy, STOP_FIELDS
 from src.utils.file import File
 from src.utils.parsers import parse_get_stop_info_json, parse_get_line_info_json
 
@@ -8,9 +8,9 @@ from src.database.models import YandexStop
 
 
 def parse_request_obtained_json(sources, request_type):
-    if request_type == Request.GET_STOP_INFO:
+    if request_type == RequestEnum.GET_STOP_INFO:
         return parse_get_stop_info_json(sources)
-    elif request_type == Request.GET_LINE:
+    elif request_type == RequestEnum.GET_LINE:
         return parse_get_line_info_json(sources)
 
 
@@ -19,13 +19,13 @@ def build_url(request_type, **kwargs):
 
     res_url = base_url + ''
 
-    if request_type == Request.GET_STOP_INFO:
+    if request_type == RequestEnum.GET_STOP_INFO:
         stop_id = str(kwargs['stop_id'])
         prefix = "?masstransit[stopId]="
         stop_url_prefix = "stop__" if len(stop_id) == 7 else ''
 
         res_url += prefix + stop_url_prefix + stop_id
-    elif request_type == Request.GET_LINE:
+    elif request_type == RequestEnum.GET_LINE:
         line_id = kwargs['line_id']
         thread_id = kwargs['thread_id']
         res_url += f"?&masstransit[lineId]={line_id}&masstransit[threadId]={thread_id}&mode=stop&z=18"
@@ -60,7 +60,7 @@ class GetStopInfoApiRequest(YandexApiRequest):
 
         self.url_args = {'stop_id': stop_id}
 
-        super().__init__(Request.GET_STOP_INFO, stop_id=stop_id)
+        super().__init__(RequestEnum.GET_STOP_INFO, stop_id=stop_id)
 
     def run(self):
         data = super().run()
@@ -78,13 +78,25 @@ class GetLineApiRequest(YandexApiRequest):
     def __init__(self, route_name):
         self.route_name = route_name
         self.url_args = GET_LINE_FIELDS[route_name]
-        super().__init__(Request.GET_LINE, route_name=route_name)
+        super().__init__(RequestEnum.GET_LINE, route_name=route_name)
 
     def run(self):
         data = super().run()
         super().write_to_file(data, self.route_name)
 
 
-class Request(enum.Enum):
+class RequestEnum(enum.Enum):
     GET_STOP_INFO = {'func': proxy.get_stop_info, 'file_prefix': 'stop_'}
     GET_LINE = {'func': proxy.get_line, 'file_prefix': 'line_'}
+
+
+def do_request(route_name, request_type=RequestEnum.GET_STOP_INFO):
+    if request_type == RequestEnum.GET_STOP_INFO:
+        req = GetStopInfoApiRequest(STOP_FIELDS[2]['stop_id'])
+    elif request_type == RequestEnum.GET_LINE:
+        req = GetLineApiRequest(route_name)
+    else:
+        raise Exception('Unknown request type')
+
+    req.run()
+    return req.obtained_data

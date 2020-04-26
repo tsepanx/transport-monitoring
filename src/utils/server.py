@@ -2,12 +2,10 @@ import threading
 import time
 from datetime import datetime
 
-import peewee
-
 from src.constants import STOP_FIELDS, SERVER_MAX_QUERY_ITERATIONS, SERVER_DEFAULT_TIMEOUT, SERVER_MIN_TIMEOUT
-from src.database.models import Schedule, Request
 from src.database.filter import Filter
 from src.database.functions import create_database
+from src.database.models import Schedule, Request
 from src.utils.functions import convert
 from src.utils.parsers import Tags
 from src.utils.request import GetStopInfoApiRequest

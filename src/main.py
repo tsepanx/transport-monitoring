@@ -2,27 +2,12 @@ import threading
 
 from bottle import run
 
-from src.constants import STOP_FIELDS, PROJECT_PREFIX, GENERATED_DIR
-from src.utils.functions import convert
-from src.utils.file import create_if_not_exists
-from src.utils.request import GetStopInfoApiRequest, GetLineApiRequest, Request
-from src.web.web import app
-
+from src.constants import PROJECT_PREFIX, GENERATED_DIR, proxy
 from src.utils import server
-
-create_if_not_exists(PROJECT_PREFIX + GENERATED_DIR)
-
-
-def do_request(route_name, request_type=Request.GET_STOP_INFO):
-    if request_type == Request.GET_STOP_INFO:
-        request = GetStopInfoApiRequest(STOP_FIELDS[1]['stop_id'])
-    elif request_type == Request.GET_LINE:
-        request = GetLineApiRequest(route_name)
-    else:
-        raise Exception('Unknown request type')
-
-    request.run()
-    return request.obtained_data
+from src.utils.file import create_if_not_exists
+from src.utils.functions import convert
+from src.utils.request import do_request, RequestEnum
+from src.web.web import app
 
 
 def main_old():
@@ -31,14 +16,20 @@ def main_old():
     # create_database([route_name, '104'], fill_schedule_flag=True)
     # print(convert(filter_database(route_name)))
 
-    data = do_request(route_name, request_type=Request.GET_LINE)
-    print(convert(data))
+    # data = do_request(route_name, request_type=RequestEnum.GET_STOP_INFO)
+    # print(convert(data))
+    # proxy.get_stop_info('https://yandex.ru/maps/213/moscow/?masstransit[stopId]=stop__9650244', blocking=False)
 
 
 def main():
+    # Start doing requests
     threading.Thread(target=server.main()).start()
+
+    # Run the web
     run(app, host='localhost', port=3000)
 
 
 if __name__ == '__main__':
+    create_if_not_exists(PROJECT_PREFIX + GENERATED_DIR)
     main()
+    # main_old()
