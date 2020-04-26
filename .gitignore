@@ -7,7 +7,7 @@ __pycache__/
 
 .idea/
 .vscode/
-generated_files/*
+static/
 
 private_keys.py
 
