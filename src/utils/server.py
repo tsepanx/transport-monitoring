@@ -4,8 +4,7 @@ from datetime import datetime
 
 from src.constants import STOP_FIELDS, SERVER_MAX_QUERY_ITERATIONS, SERVER_DEFAULT_TIMEOUT, SERVER_MIN_TIMEOUT
 from src.database.models import Schedule, QueryRecord
-from src.database.timetable_parsing import Filter
-from src.database.functions import create_database
+from src.database.utils import create_database, Filter
 from src.utils.functions import convert
 from src.utils.parsers import Tags
 from src.utils.request import GetStopInfoApiRequest

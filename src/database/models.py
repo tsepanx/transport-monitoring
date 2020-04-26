@@ -1,7 +1,7 @@
 from peewee import *
 
 from src.constants import MY_DATABASE
-from src.database.timetable_parsing import Filter
+from src.database.utils import Filter
 from src.utils.functions import convert
 
 
@@ -84,6 +84,3 @@ class QueryRecord(BaseModel):
     right_db_border = TimeField(null=True)
     timeout = IntegerField()
     stop_id = ForeignKeyField(StopData, null=True, related_name='stop', backref='queryrecord')
-
-
-DB_TABLES = [Schedule, RouteData, StopData, QueryRecord, YandexStop]
